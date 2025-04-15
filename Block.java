@@ -1,3 +1,3 @@
-public class Block {
+public abstract class Block {
     // PLEASE WOKR
 }
