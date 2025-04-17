@@ -105,12 +105,16 @@ public abstract class Block {
         }
     }
 
-    abstract boolean receive();
+    public boolean receive(double timeReceived) {
+    	int accuracy = Math.abs(receiveTime) - timeReceived;
+    	if (accuracy < 1.0) return true;
+    	else return false;
+    }
     
     /**
 	 * Calculates the time that the block should enter, all double parameters
 	 */
-	public static double calculateEnterTime(double speed, double finalTime, double enterX, double enterY, double receiveX, double receiveY) {
+	public double calculateEnterTime(double speed, double finalTime, double enterX, double enterY, double receiveX, double receiveY) {
 		double distanceX, distanceY, distance;
 		
 		// Calculate the distance in X and Y components
