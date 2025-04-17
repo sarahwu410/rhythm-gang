@@ -106,4 +106,21 @@ public abstract class Block {
     }
 
     abstract boolean receive();
+    
+    /**
+	 * Calculates the time that the block should enter, all double parameters
+	 */
+	public static double calculateEnterTime(double speed, double finalTime, double enterX, double enterY, double receiveX, double receiveY) {
+		double distanceX, distanceY, distance;
+		
+		// Calculate the distance in X and Y components
+		distanceX = Math.abs(receiveX - enterX);
+		distanceY = Math.abs(receiveY - enterY);
+		
+		// Find the total distance
+		distance = Math.sqrt((Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
+		
+		// Find the enter time
+		return (finalTime - (distance/speed));
+	}
 }
