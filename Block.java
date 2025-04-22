@@ -96,7 +96,28 @@ public abstract class Block implements KeyListener {
         }
     }
 
-    abstract boolean receive();
+    public boolean receive(double timeReceived) {
+    	int accuracy = Math.abs(receiveTime) - timeReceived;
+    	if (accuracy < 1.0) return true;
+    	else return false;
+    }
+    
+    /**
+	 * Calculates the time that the block should enter, all double parameters
+	 */
+	public double calculateEnterTime(double speed, double finalTime, double enterX, double enterY, double receiveX, double receiveY) {
+		double distanceX, distanceY, distance;
+		
+		// Calculate the distance in X and Y components
+		distanceX = Math.abs(receiveX - enterX);
+		distanceY = Math.abs(receiveY - enterY);
+		
+		// Find the total distance
+		distance = Math.sqrt((Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
+		
+		// Find the enter time
+		return (finalTime - (distance/speed));
+	}
 
     @Override
     public abstract void keyTyped(KeyEvent e);
