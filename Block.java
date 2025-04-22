@@ -1,4 +1,7 @@
-public abstract class Block {
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+
+public abstract class Block implements KeyListener {
     int x, y, length, width;
     int speed;
     String button; // which button corrosponds to a particular block
@@ -29,9 +32,6 @@ public abstract class Block {
             } else if (this.button.equalsIgnoreCase("Y")) {
                 this.x = 0;
                 this.y = 0;
-            } else if (this.button.equalsIgnoreCase("Z")) {
-                this.x = 0;
-                this.y = 0;
             }
         } else if (this.level.equalsIgnoreCase("medium")) {
             this.length = 1000;
@@ -50,9 +50,6 @@ public abstract class Block {
                 this.x = 0;
                 this.y = 0;
             } else if (this.button.equalsIgnoreCase("Y")) {
-                this.x = 0;
-                this.y = 0;
-            } else if (this.button.equalsIgnoreCase("Z")) {
                 this.x = 0;
                 this.y = 0;
             }
@@ -75,9 +72,6 @@ public abstract class Block {
             } else if (this.button.equalsIgnoreCase("Y")) {
                 this.x = 0;
                 this.y = 0;
-            } else if (this.button.equalsIgnoreCase("Z")) {
-                this.x = 0;
-                this.y = 0;
             }
         } else if (this.level.equalsIgnoreCase("boss")) {
             this.length = 1000;
@@ -98,12 +92,18 @@ public abstract class Block {
             } else if (this.button.equalsIgnoreCase("Y")) {
                 this.x = 0;
                 this.y = 0;
-            } else if (this.button.equalsIgnoreCase("Z")) {
-                this.x = 0;
-                this.y = 0;
             }
         }
     }
 
     abstract boolean receive();
+
+    @Override
+    public abstract void keyTyped(KeyEvent e);
+
+    @Override
+    public abstract void keyPressed(KeyEvent e);
+
+    @Override
+    public abstract void keyReleased(KeyEvent e);
 }
