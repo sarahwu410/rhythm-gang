@@ -8,7 +8,6 @@ public class HoldBlock extends Block {
         this.holdLen = holdLen;
     }
 
-    @Override
     boolean receive() {
         if (holdLen == 0) return true;
         else return false;

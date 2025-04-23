@@ -9,7 +9,6 @@ public class SpamBlock extends Block {
         this.endTime = endTime;
     }
 
-    @Override
     boolean receive() {
         if (numSpam==0) return true;
         else return false;

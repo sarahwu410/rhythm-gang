@@ -5,7 +5,6 @@ public class TapBlock extends Block{
         super(level, button, enterTime, receiveTime);
     }
 
-    @Override
     boolean receive() {
         return true;
     }
