@@ -1,0 +1,92 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.*;
+
+
+public class testYourBlocksHERE implements KeyListener {
+
+    DrawPanel panel;
+    Timer timer;
+
+    public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new testYourBlocksHERE();
+	}
+
+
+
+    testYourBlocksHERE() {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.addKeyListener(this);
+        panel = new DrawPanel();
+
+        timer = new Timer(1,new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                
+
+                //use this timer to do actions like move block
+                
+
+            }
+
+        });
+
+
+        frame.add(panel);
+        frame.setVisible(true);
+        timer.start();
+    }
+
+    public class DrawPanel extends JPanel{
+        
+        DrawPanel() {
+            this.setBackground(Color.BLACK);
+        }
+
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            Graphics2D g2 = (Graphics2D)g;
+
+            //draw your blocks here
+            //for ex: g2.setPaint(Color.WHITE);
+            //g2.fillRect(b.x,b.y,b.width.b.height);
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
+    }
+
+
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // TODO Auto-generated method stub
+        if (e.getKeyCode() == KeyEvent.VK_Q) {
+            System.exit(0);
+        }
+    }
+
+
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
+    }
+
+}
