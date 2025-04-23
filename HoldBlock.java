@@ -10,7 +10,7 @@ public class HoldBlock extends Block {
 
     boolean receive(int timeReceived) {
         int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
-    	if (accuracy < 1.0 && holdLen == 0) return true;
+    	if (accuracy < 1000 && holdLen == 0) return true;
     	else return false;
     }
 
