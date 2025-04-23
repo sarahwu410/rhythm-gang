@@ -9,9 +9,10 @@ public class SpamBlock extends Block {
         this.endTime = endTime;
     }
 
-    boolean receive() {
-        if (numSpam==0) return true;
-        else return false;
+    boolean receive(int timeReceived) {
+        int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
+    	if (accuracy < 1.0 && numSpam == 0) return true;
+    	else return false;
     }
 
     @Override

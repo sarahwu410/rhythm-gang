@@ -5,8 +5,11 @@ public class TapBlock extends Block{
         super(level, button, enterTime, receiveTime);
     }
 
-    boolean receive() {
-        return true;
+    @Override
+    boolean receive(int timeReceived) {
+        int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
+    	if (accuracy < 1.0) return true;
+    	else return false;
     }
 
     @Override
@@ -15,15 +18,15 @@ public class TapBlock extends Block{
     @Override
     public void keyPressed(KeyEvent e) {
         if (button.equalsIgnoreCase("A")) {
-            if (e.getKeyCode()==KeyEvent.VK_A) receive();
+            if (e.getKeyCode()==KeyEvent.VK_A) receive(this.timeReceived);
         } else if (button.equalsIgnoreCase("B")) {
-            if (e.getKeyCode()==KeyEvent.VK_B) receive();
+            if (e.getKeyCode()==KeyEvent.VK_B) receive(this.timeReceived);
         } else if (button.equalsIgnoreCase("C")) {
-            if (e.getKeyCode()==KeyEvent.VK_C) receive();
+            if (e.getKeyCode()==KeyEvent.VK_C) receive(this.timeReceived);
         } else if (button.equalsIgnoreCase("X")) {
-            if (e.getKeyCode()==KeyEvent.VK_X) receive();
+            if (e.getKeyCode()==KeyEvent.VK_X) receive(this.timeReceived);
         } else if (button.equalsIgnoreCase("Y")) {
-            if (e.getKeyCode()==KeyEvent.VK_Y) receive();
+            if (e.getKeyCode()==KeyEvent.VK_Y) receive(this.timeReceived);
         }
     }
 
