@@ -7,6 +7,7 @@ public abstract class Block implements KeyListener {
     String button; // which button corrosponds to a particular block
     int enterTime;
     int receiveTime;
+    int timeReceived;
     String level; // each level has it's own preset coordinates, dimensions, etc.
 
     Block (String level, String button, int enterTime, int receiveTime) {
@@ -96,11 +97,7 @@ public abstract class Block implements KeyListener {
         }
     }
 
-    public boolean receive(double timeReceived) {
-    	int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
-    	if (accuracy < 1.0) return true;
-    	else return false;
-    }
+    abstract boolean receive(int timeReceived);
     
     /**
 	 * Calculates the time that the block should enter, all double parameters
