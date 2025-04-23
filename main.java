@@ -46,7 +46,6 @@ public class main implements KeyListener {
 	easyPanel easypanel;
 	testpanel testpanel;
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		new main();
 	}
 	
@@ -117,7 +116,6 @@ public class main implements KeyListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				tc++;
 				if (testcount == 12) testcount = 0;
 				else if (tc%8==0)testcount++;
@@ -286,14 +284,10 @@ public class main implements KeyListener {
 
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 		if (currentpanel.equals("title")) {
 			if (e.getKeyCode() == KeyEvent.VK_S) {
 				if (tier <= 3) tier++;
@@ -390,9 +384,5 @@ public class main implements KeyListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void keyReleased(KeyEvent e) {}
 }
