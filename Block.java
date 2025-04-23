@@ -97,7 +97,7 @@ public abstract class Block implements KeyListener {
     }
 
     public boolean receive(double timeReceived) {
-    	int accuracy = Math.abs(receiveTime) - timeReceived;
+    	int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
     	if (accuracy < 1.0) return true;
     	else return false;
     }

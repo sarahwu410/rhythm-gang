@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class receiveTimeReader {
+public class ReceiveTimeReader {
 	
 	/**
 	 * Reads in the receive times from a .txt file. Format is strict-->receiveTime keyName
