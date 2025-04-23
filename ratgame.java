@@ -46,10 +46,10 @@ public class ratgame implements KeyListener{
 		frame.setUndecorated(true);
 		
 	
-		backgroundmusic = new Audio("res/Chess Type Beat Slowed.wav");
+		backgroundmusic = new Audio("res/Audio/Chess Type Beat Slowed.wav");
 		
-		loadAll("res/ratspin (",21,ratspin);
-		loadAll("res/ratdance (", 29, ratdance);
+		loadAll("res/ratdance/ratspin (",21,ratspin);
+		loadAll("res/ratdance/ratdance (", 29, ratdance);
 		frame.addKeyListener(this);
 		
 		timer = new Timer(1, new ActionListener() {
@@ -57,20 +57,12 @@ public class ratgame implements KeyListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if (miliseconds == 2000) timer.stop();
-				if (loading) {
-					if (ratspincount == ratspin.size() -1) ratspincount = 0;
-					else ratspincount++;
-				}
+				
 				if (!loading) {
-					miliseconds = (int) (backgroundmusic.clip.getMicrosecondPosition()/1000);
 					timercounter++;
 					
 					if (timercounter%50 == 0) miss = false;
 					
-					if (ratdancecount == ratdance.size() -1) ratdancecount = 0;
-					else if (timercounter%100 == 0)ratdancecount++;
-					System.out.println(timercounter);
 					switch (timercounter/10) {
 					case 0: {
 						break;
@@ -96,7 +88,7 @@ public class ratgame implements KeyListener{
 						if (b.appear + 501 == miliseconds) hit = false;
 					}
 				}
-				panel.repaint();
+				
 				
 				
 			}
@@ -110,9 +102,35 @@ public class ratgame implements KeyListener{
 		
 		frame.add(panel);
 		frame.setVisible(true);
+		
 		blocks.add(new Block("left", 1000));
 		blocks.add(new Block("Right", 47000));
+
 		timer.start();
+		GameLoop();
+	}
+
+
+	public void GameLoop() {
+		while (true) {
+			if (loading) {
+				if (ratspincount == ratspin.size() -1) ratspincount = 0;
+				else ratspincount++;
+			}
+			if (!loading) {
+				miliseconds = backgroundmusic.getTime();
+				if (ratdancecount == ratdance.size() -1) ratdancecount = 0;
+				else if (miliseconds%45 == 0)ratdancecount++;
+			}
+			panel.repaint();
+			try {
+				Thread.sleep(8);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 	}
 	
 	public void loadAll(String filepath, int amount, ArrayList<Image> array) {
@@ -179,36 +197,7 @@ public class ratgame implements KeyListener{
 			}
 		}
 	}
-	public class Audio {
-		Clip clip;
-		AudioInputStream audioinput;
-		File file;
-		
-		Audio(String file) {
-			this.file = new File(file);
-			try {
-				audioinput = AudioSystem.getAudioInputStream(this.file);
-				clip = AudioSystem.getClip();
-				clip.open(audioinput);
-			} catch (UnsupportedAudioFileException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (LineUnavailableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-		}
-		
-		
-		public void playAudio() {
-			clip.start();
-		}
-		
-		public void stopAudio() {
-			clip.stop();
-		}
-		
-	}
+	
 	
 	public class Image {
 		String filename;

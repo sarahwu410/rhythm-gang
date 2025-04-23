@@ -3,7 +3,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import javax.swing.*;
 
 
@@ -12,12 +11,11 @@ public class testYourBlocksHERE implements KeyListener {
     DrawPanel panel;
     Timer timer;
 
-    public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		new testYourBlocksHERE();
-	}
 
-
+    //you can use this area to create block objects
+    //ex: b = new HoldBLock(x,y,speed......
+    //or just create an arraylist of blocks
+    
 
     testYourBlocksHERE() {
         JFrame frame = new JFrame();
@@ -27,6 +25,7 @@ public class testYourBlocksHERE implements KeyListener {
         frame.addKeyListener(this);
         panel = new DrawPanel();
 
+
         timer = new Timer(1,new ActionListener() {
 
             @Override
@@ -35,6 +34,12 @@ public class testYourBlocksHERE implements KeyListener {
                 
 
                 //use this timer to do actions like move block
+                
+
+
+
+
+
                 
 
             }
@@ -62,6 +67,15 @@ public class testYourBlocksHERE implements KeyListener {
             //draw your blocks here
             //for ex: g2.setPaint(Color.WHITE);
             //g2.fillRect(b.x,b.y,b.width.b.height);
+
+
+
+
+
+
+
+
+
         }
     }
 
@@ -88,5 +102,11 @@ public class testYourBlocksHERE implements KeyListener {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
     }
+
+    
+    public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new testYourBlocksHERE();
+	}
 
 }

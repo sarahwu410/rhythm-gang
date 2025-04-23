@@ -12,11 +12,12 @@ import javax.swing.*;
 
 public class main implements KeyListener {
 	
+
+	//load of images
 	BufferedImage title;
 	BufferedImage play;
 	BufferedImage instruction;
 	BufferedImage quit;
-	TitlePanel titlepanel;
 	BufferedImage arrow;
 	BufferedImage play2;
 	BufferedImage instruction2;
@@ -25,17 +26,32 @@ public class main implements KeyListener {
 	BufferedImage instructionbutton;
 	BufferedImage quitbutton;
 	BufferedImage ratpanel;
-	CardLayout cardlayout;
 	BufferedImage mp;
 	BufferedImage hp;
 	BufferedImage bp;
+
+	//a layout that switches between panels
+	CardLayout cardlayout;
+	
+	//a panel that contains the other panels
 	JPanel mainpanel;
+
+	//panels
+	TitlePanel titlepanel;
+	testpanel testpanel;
+	easyPanel easypanel;
 	mediumPanel mediumpanel;
 	hardPanel hardpanel;
 	bossPanel bosspanel;
+
+	//keeps tract of what panel we are on
 	String currentpanel = "title";
+
+	//arraylist of images to loop through, usually with repeating images	
 	ArrayList<BufferedImage> sa = new ArrayList<BufferedImage>();
 	ArrayList<BufferedImage> ta = new ArrayList<BufferedImage>();
+
+	//loads of variables
 	boolean scroll = false;
 	Timer timer;
 	int tier = 1;
@@ -43,75 +59,52 @@ public class main implements KeyListener {
 	int testcount = 0;
 	int tc = 0;
 	boolean scrollpaused = false;
-	easyPanel easypanel;
-	testpanel testpanel;
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		new main();
 	}
 	
+
 	main() {
+
+		//frame
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setUndecorated(true);
-		title = loadImage("res/title.png");
-		play = loadImage("res/play.png");
-		instruction = loadImage("res/instruction.png");
-		quit = loadImage("res/quit.png");
-		arrow = loadImage("res/arrow.png");
-		play2 = loadImage("res/play2.png");
-		instruction2 = loadImage("res/instruction2.png");
-		quit2 = loadImage("res/quit2.png");
-		ratpanel = loadImage("res/ratpanel.png");
-		mp = loadImage("res/mediumpanel.png");
-		hp = loadImage("res/hardpanel.png");
-		bp = loadImage("res/bosspanel.png");
-		sa.add(loadImage("res/scroll (1).png"));
-		sa.add(loadImage("res/scroll (2).png"));
-		sa.add(loadImage("res/scroll (3).png"));
-		sa.add(loadImage("res/scroll (4).png"));
-		sa.add(loadImage("res/scroll (5).png"));
-		sa.add(loadImage("res/scroll (6).png"));
-		sa.add(loadImage("res/scroll (7).png"));
-		sa.add(loadImage("res/scroll (8).png"));
-		sa.add(loadImage("res/scroll (9).png"));
-		sa.add(loadImage("res/scroll (10).png"));
-		sa.add(loadImage("res/scroll (11).png"));
-		sa.add(loadImage("res/scroll (12).png"));
-		sa.add(loadImage("res/scroll (13).png"));
-		sa.add(loadImage("res/scroll (14).png"));
-		sa.add(loadImage("res/scroll (15).png"));
-		sa.add(loadImage("res/scroll (16).png"));
-		sa.add(loadImage("res/scroll (17).png"));
-		sa.add(loadImage("res/scroll (18).png"));
-		sa.add(loadImage("res/scroll (19).png"));
-		sa.add(loadImage("res/scroll (20).png"));
-		sa.add(loadImage("res/scroll (21).png"));
-		sa.add(loadImage("res/scroll (22).png"));
-		sa.add(loadImage("res/scroll (23).png"));
-		ta.add(loadImage("res/test (1).png"));
-		ta.add(loadImage("res/test (2).png"));
-		ta.add(loadImage("res/test (3).png"));
-		ta.add(loadImage("res/test (4).png"));
-		ta.add(loadImage("res/test (5).png"));
-		ta.add(loadImage("res/test (6).png"));
-		ta.add(loadImage("res/test (7).png"));
-		ta.add(loadImage("res/test (8).png"));
-		ta.add(loadImage("res/test (9).png"));
-		ta.add(loadImage("res/test (10).png"));
-		ta.add(loadImage("res/test (11).png"));
-		ta.add(loadImage("res/test (12).png"));
-		ta.add(loadImage("res/test (13).png"));
+
+		//iniziatilze a lot of images
+		title = loadImage("res/titlescreen/title.png");
+		play = loadImage("res/titlescreen/play.png");
+		instruction = loadImage("res/titlescreen/instruction.png");
+		quit = loadImage("res/titlescreen/quit.png");
+		arrow = loadImage("res/titlescreen/arrow.png");
+		play2 = loadImage("res/titlescreen/play2.png");
+		instruction2 = loadImage("res/titlescreen/instruction2.png");
+		quit2 = loadImage("res/titlescreen/quit2.png");
+		ratpanel = loadImage("res/titlescreen/ratpanel.png");
+		mp = loadImage("res/titlescreen/mediumpanel.png");
+		hp = loadImage("res/titlescreen/hardpanel.png");
+		bp = loadImage("res/titlescreen/bosspanel.png");
+
+
+		loadAll("res/titlescreen/scroll (",23, sa);
+		loadAll("res/titlescreen/test (",13, ta);
 
 		cardlayout = new CardLayout();
 		mainpanel = new JPanel(cardlayout);
+
+
+		titlepanel = new TitlePanel();
+		testpanel = new testpanel();
+		easypanel = new easyPanel();
 		mediumpanel = new mediumPanel();
 		hardpanel = new hardPanel();
 		bosspanel = new bossPanel();
-		testpanel = new testpanel();
-		titlepanel = new TitlePanel();
-		easypanel = new easyPanel();
+	
+		
+		
 		
 		timer = new Timer(1, new ActionListener() {
 
@@ -278,10 +271,16 @@ public class main implements KeyListener {
 			if (scroll)g2.drawImage(sa.get(sc), 0, 0, titlepanel.getWidth(), titlepanel.getHeight(), null);
 		}
 		
+	
 		
 		
 		
-		
+	}
+
+	public void loadAll(String filepath, int amount, ArrayList<BufferedImage> array) {
+		for (int i = 1; i <= amount; i++ ) {
+			array.add(loadImage(filepath + String.valueOf(i) + ").png"));
+		}
 	}
 
 
