@@ -7,7 +7,6 @@ public abstract class Block implements KeyListener {
     String button; // which button corrosponds to a particular block
     int enterTime;
     int receiveTime;
-    int timeReceived;
     String level; // each level has it's own preset coordinates, dimensions, etc.
 
     Block (String level, String button, int enterTime, int receiveTime) {
@@ -97,10 +96,10 @@ public abstract class Block implements KeyListener {
         }
     }
 
-    abstract boolean receive(int timeReceived);
-
-    public void getTimeReceived(int timeReceived) {
-        this.timeReceived = timeReceived;
+    public boolean receive(double timeReceived) {
+    	int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
+    	if (accuracy < 1.0) return true;
+    	else return false;
     }
     
     /**
@@ -119,6 +118,23 @@ public abstract class Block implements KeyListener {
 		// Find the enter time
 		return (finalTime - (distance/speed));
 	}
+
+    /**
+     * Determines movement of blocks
+     */
+    public static double blockMovement(double enterX, double enterY, double receiveX, double receiveY, double speed, double finalTime) {
+        double distanceX, distanceY, distance;
+
+        // Calculate the distance in X and Y components
+        distanceX = Math.abs(receiveX - enterX);
+        distanceY = Math.abs(receiveY - enterY);
+
+        // Find the total distance
+        distance = Math.sqrt((Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
+
+        // Return the calculated enter time based on speed and final time
+        return finalTime - (distance / speed);
+    }
 
     @Override
     public abstract void keyTyped(KeyEvent e);
