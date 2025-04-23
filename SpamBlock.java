@@ -11,7 +11,7 @@ public class SpamBlock extends Block {
 
     boolean receive(int timeReceived) {
         int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
-    	if (accuracy < 1.0 && numSpam == 0) return true;
+    	if (accuracy < 1000 && numSpam == 0) return true;
     	else return false;
     }
 
