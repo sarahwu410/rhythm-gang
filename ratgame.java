@@ -19,7 +19,6 @@ public class ratgame implements KeyListener{
 	
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		new ratgame();
 	}
 	
@@ -55,9 +54,7 @@ public class ratgame implements KeyListener{
 		timer = new Timer(1, new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
+			public void actionPerformed(ActionEvent e) {				
 				if (!loading) {
 					timercounter++;
 					
@@ -126,7 +123,6 @@ public class ratgame implements KeyListener{
 			try {
 				Thread.sleep(8);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -269,15 +265,11 @@ public class ratgame implements KeyListener{
 
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent e) {}
 
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getKeyCode() == KeyEvent.VK_A) {
 			backgroundmusic.playAudio();
 			loading = false;
@@ -311,9 +303,6 @@ public class ratgame implements KeyListener{
 
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyReleased(KeyEvent e) {}
 
 }

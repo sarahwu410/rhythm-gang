@@ -30,9 +30,6 @@ public class testYourBlocksHERE implements KeyListener {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                
-
                 //use this timer to do actions like move block
                 
 
@@ -81,7 +78,6 @@ public class testYourBlocksHERE implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
     }
 
@@ -89,7 +85,6 @@ public class testYourBlocksHERE implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
         if (e.getKeyCode() == KeyEvent.VK_Q) {
             System.exit(0);
         }
@@ -98,15 +93,9 @@ public class testYourBlocksHERE implements KeyListener {
 
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
-    }
+    public void keyReleased(KeyEvent e) {}
 
     
-    public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		new testYourBlocksHERE();
-	}
+    public static void main(String[] args) {}
 
 }
