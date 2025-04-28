@@ -8,8 +8,7 @@ public abstract class Block implements KeyListener {
     int enterTime;
     int receiveTime;
     int timeReceived;
-    double velocityX, velocityY;
-    Receiver receiver;
+    int velocityX, velocityY;
     String level; // each level has it's own preset coordinates, dimensions, etc.
 
     Block (String level, String button, int enterTime, int receiveTime) {
@@ -21,7 +20,7 @@ public abstract class Block implements KeyListener {
         if (this.level.equalsIgnoreCase("easy")) {
             this.length = 100;
             this.width = 100;
-            this.speed = 5;
+            this.speed = 500;
             if (this.button.equalsIgnoreCase("A")) {
                 this.x = 0;
                 this.y = 0;
@@ -120,28 +119,27 @@ public abstract class Block implements KeyListener {
 		return (finalTime - (distance/speed));
 	}
 
-    /**
-	 * Block Movemeent
-	 */
-    public void setReceiver(Receiver aReceiver, Receiver bReceiver, Receiver cReceiver, Receiver xReceiver, Receiver yReceiver) {
-        switch (button.toUpperCase()) {
-            case "A" -> this.receiver = aReceiver;
-            case "B" -> this.receiver = bReceiver;
-            case "C" -> this.receiver = cReceiver;
-            case "X" -> this.receiver = xReceiver;
-            case "Y" -> this.receiver = yReceiver;
-        }
-    }
+    // /**
+	//  * Block Movemeent
+	//  */
+    // public void setReceiver(Receiver aReceiver, Receiver bReceiver, Receiver cReceiver, Receiver xReceiver, Receiver yReceiver) {
+    //     switch (button.toUpperCase()) {
+    //         case "A" -> this.receiver = aReceiver;
+    //         case "B" -> this.receiver = bReceiver;
+    //         case "C" -> this.receiver = cReceiver;
+    //         case "X" -> this.receiver = xReceiver;
+    //         case "Y" -> this.receiver = yReceiver;
+    //     }
+    // }
 
-    public void calculateVelocity() {
-        velocityX = (double)(receiver.x - x) / speed;
-        velocityY = (double)(receiver.y - y) / speed;
+    public void calculateVelocity(Receiver r) {
+        this.velocityX = (r.x - this.x) / this.speed;
+        this.velocityY = (r.y - this.y) / this.speed;
     }
 
     public void move() {
-        this.calculateVelocity();
-        this.x += velocityX;
-        this.y += velocityY;
+        this.x += this.velocityX;
+        this.y += this.velocityY;
     }
 
     @Override
