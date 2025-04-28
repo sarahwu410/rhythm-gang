@@ -1,4 +1,7 @@
 import java.awt.event.KeyListener;
+
+import javax.sound.midi.Receiver;
+
 import java.awt.event.KeyEvent;
 
 public abstract class Block implements KeyListener {
@@ -8,6 +11,8 @@ public abstract class Block implements KeyListener {
     int enterTime;
     int receiveTime;
     int timeReceived;
+    double velocityX, velocityY;
+    Receiver receiver;
     String level; // each level has it's own preset coordinates, dimensions, etc.
 
     Block (String level, String button, int enterTime, int receiveTime) {
@@ -117,21 +122,31 @@ public abstract class Block implements KeyListener {
 	}
 
     /**
-     * Determines movement of blocks
-     */
-    public static double blockMovement(double enterX, double enterY, double receiveX, double receiveY, double speed, double finalTime) {
-        double distanceX, distanceY, distance;
-
-        // Calculate the distance in X and Y components
-        distanceX = Math.abs(receiveX - enterX);
-        distanceY = Math.abs(receiveY - enterY);
-
-        // Find the total distance
-        distance = Math.sqrt((Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
-
-        // Return the calculated enter time based on speed and final time
-        return finalTime - (distance / speed);
+	 * Block Movemeent
+	 */
+    public void setReceiver(Receiver aReceiver, Receiver bReceiver, Receiver cReceiver, Receiver xReceiver, Receiver yReceiver) {
+        switch (button.toUpperCase()) {
+            case "A" -> this.receiver = aReceiver;
+            case "B" -> this.receiver = bReceiver;
+            case "C" -> this.receiver = cReceiver;
+            case "X" -> this.receiver = xReceiver;
+            case "Y" -> this.receiver = yReceiver;
+        }
     }
+
+    public void calculateVelocity() {
+        double framesToReach = receiveTime - enterTime;
+        if (framesToReach == 0) framesToReach = 1;
+        velocityX = (double)(receiver.x - x) / framesToReach;
+        velocityY = (double)(receiver.y - y) / framesToReach;
+    }
+
+    public void move() {
+        this.x += velocityX;
+        this.y += velocityY;
+    }
+
+	}
 
     @Override
     public abstract void keyTyped(KeyEvent e);
