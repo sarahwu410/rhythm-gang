@@ -1,7 +1,4 @@
 import java.awt.event.KeyListener;
-
-import javax.sound.midi.Receiver;
-
 import java.awt.event.KeyEvent;
 
 public abstract class Block implements KeyListener {
@@ -147,8 +144,6 @@ public abstract class Block implements KeyListener {
         this.x += velocityX;
         this.y += velocityY;
     }
-
-	}
 
     @Override
     public abstract void keyTyped(KeyEvent e);

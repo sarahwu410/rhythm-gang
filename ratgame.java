@@ -9,11 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 public class ratgame implements KeyListener{
 	
@@ -289,14 +284,6 @@ public class ratgame implements KeyListener{
 				backgroundmusic.playAudio();
 				timer.restart();
 				timerstopped = false;
-			}
-		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			for (Block b: blocks) {
-				if (2750 - 500 > miliseconds && 2750 + 500 < miliseconds) {
-					hit = true;
-				}
 			}
 		}
 	}

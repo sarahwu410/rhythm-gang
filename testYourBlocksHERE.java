@@ -11,11 +11,8 @@ public class testYourBlocksHERE implements KeyListener {
     DrawPanel panel;
     Timer timer;
 
-
-    //you can use this area to create block objects
-    //ex: b = new HoldBLock(x,y,speed......
-    //or just create an arraylist of blocks
-    
+    Block testBlock = new TapBlock("easy", "A", 0, 10000);
+    Receiver testReceiver = new Receiver(100, 100);
 
     testYourBlocksHERE() {
         JFrame frame = new JFrame();
@@ -25,25 +22,14 @@ public class testYourBlocksHERE implements KeyListener {
         frame.addKeyListener(this);
         panel = new DrawPanel();
 
-
         timer = new Timer(1,new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                //use this timer to do actions like move block
-                
-
-
-
-
-
-                
-
+                testBlock.move();
+                frame.repaint();
             }
 
         });
-
-
         frame.add(panel);
         frame.setVisible(true);
         timer.start();
@@ -61,18 +47,11 @@ public class testYourBlocksHERE implements KeyListener {
 
             Graphics2D g2 = (Graphics2D)g;
 
-            //draw your blocks here
-            //for ex: g2.setPaint(Color.WHITE);
-            //g2.fillRect(b.x,b.y,b.width.b.height);
+            g2.setPaint(Color.WHITE);
+            g2.fillRect(testBlock.x, testBlock.y, testBlock.length, testBlock.width);
 
-
-
-
-
-
-
-
-
+            g2.setPaint(Color.BLUE);
+            g2.fillRect(testReceiver.x, testReceiver.y, 1000, 1000);
         }
     }
 
