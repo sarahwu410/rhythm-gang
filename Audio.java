@@ -19,10 +19,8 @@ public class Audio {
             clip = AudioSystem.getClip();
             clip.open(audioinput);
         } catch (UnsupportedAudioFileException | IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (LineUnavailableException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }	
     }
