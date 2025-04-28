@@ -19,9 +19,9 @@ public abstract class Block implements KeyListener {
         this.button = button;
 
         if (this.level.equalsIgnoreCase("easy")) {
-            this.length = 1000;
-            this.width = 1000;
-            this.speed = 1;
+            this.length = 100;
+            this.width = 100;
+            this.speed = 5;
             if (this.button.equalsIgnoreCase("A")) {
                 this.x = 0;
                 this.y = 0;
@@ -39,8 +39,8 @@ public abstract class Block implements KeyListener {
                 this.y = 0;
             }
         } else if (this.level.equalsIgnoreCase("medium")) {
-            this.length = 1000;
-            this.width = 1000;
+            this.length = 100;
+            this.width = 100;
             this.speed = 1;
             if (this.button.equalsIgnoreCase("A")) {
                 this.x = 0;
@@ -59,8 +59,8 @@ public abstract class Block implements KeyListener {
                 this.y = 0;
             }
         } else if (this.level.equalsIgnoreCase("hard")) {
-            this.length = 1000;
-            this.width = 1000;
+            this.length = 100;
+            this.width = 100;
             this.speed = 1;
             if (this.button.equalsIgnoreCase("A")) {
                 this.x = 0;
@@ -79,8 +79,8 @@ public abstract class Block implements KeyListener {
                 this.y = 0;
             }
         } else if (this.level.equalsIgnoreCase("boss")) {
-            this.length = 1000;
-            this.width = 1000;
+            this.length = 100;
+            this.width = 100;
             this.speed = 1;
             if (this.button.equalsIgnoreCase("A")) {
                 this.x = 0;
@@ -134,13 +134,12 @@ public abstract class Block implements KeyListener {
     }
 
     public void calculateVelocity() {
-        double framesToReach = receiveTime - enterTime;
-        if (framesToReach == 0) framesToReach = 1;
-        velocityX = (double)(receiver.x - x) / framesToReach;
-        velocityY = (double)(receiver.y - y) / framesToReach;
+        velocityX = (double)(receiver.x - x) / speed;
+        velocityY = (double)(receiver.y - y) / speed;
     }
 
     public void move() {
+        this.calculateVelocity();
         this.x += velocityX;
         this.y += velocityY;
     }

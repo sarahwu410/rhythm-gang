@@ -12,7 +12,7 @@ public class testYourBlocksHERE implements KeyListener {
     Timer timer;
 
     Block testBlock = new TapBlock("easy", "A", 0, 10000);
-    Receiver testReceiver = new Receiver(100, 100);
+    Receiver testReceiver = new Receiver(500, 500);
 
     testYourBlocksHERE() {
         JFrame frame = new JFrame();
@@ -51,7 +51,7 @@ public class testYourBlocksHERE implements KeyListener {
             g2.fillRect(testBlock.x, testBlock.y, testBlock.length, testBlock.width);
 
             g2.setPaint(Color.BLUE);
-            g2.fillRect(testReceiver.x, testReceiver.y, 1000, 1000);
+            g2.fillRect(testReceiver.x, testReceiver.y, 100, 100);
         }
     }
 
