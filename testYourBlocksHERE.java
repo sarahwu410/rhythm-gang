@@ -10,8 +10,10 @@ public class testYourBlocksHERE implements KeyListener {
 
     DrawPanel panel;
     Timer timer;
+    int milliElapsed;
 
-    Block testBlock = new TapBlock("easy", "A", 0, 10000);
+    Block testBlock = new TapBlock("easy", "A", 0, 110);
+    Boolean startOver = false;
     Receiver testReceiver = new Receiver(1000, 500);
 
     testYourBlocksHERE() {
@@ -28,6 +30,7 @@ public class testYourBlocksHERE implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 testBlock.move();
                 frame.repaint();
+                milliElapsed++; // NOT ACTUALLY COUNTING IN MILLISECONDS?
             }
 
         });
@@ -51,21 +54,51 @@ public class testYourBlocksHERE implements KeyListener {
             g2.setPaint(Color.BLUE);
             g2.fillRect(testReceiver.x, testReceiver.y, 100, 100);
 
-            g2.setPaint(Color.WHITE);
-            g2.fillRect(testBlock.x, testBlock.y, testBlock.length, testBlock.width);
+            if (startOver) {
+                milliElapsed = 0; // Reset time
+                // reset block
+                testBlock = new TapBlock("easy", "A", 0, 10000);
+                testBlock.calculateVelocity(testReceiver);
+                startOver = false;
+            } else {
+                g2.setPaint(Color.WHITE);
+                g2.fillRect(testBlock.x, testBlock.y, testBlock.length, testBlock.width);
+            }
         }
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
+        //throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
     }
 
 
 
     @Override
     public void keyPressed(KeyEvent e) {
+
+        // BLOCK DOES NOT PICK UP KEY EVENTS, ONLY WINDOW DOES, MUST REMOVE FROM BLOCKS AT SOME POINT
+        // I'M SORRY BUT I USED CHATGPT AND LEARNED THAT THEY SHOULDN'T BOTH BE IMPLEMENTING KEY LISTENERS
+        // I tested it myself and only the key events in this window are picked up and nothing in the blocks
+        // I tested this by adding a print statement to the TapBlock class and it wasn't picked up
+
+        // If the key event text matches the block button
+        if (KeyEvent.getKeyText(e.getKeyCode()).equalsIgnoreCase(testBlock.button)) { 
+            if (testBlock.receive(milliElapsed)) {
+                System.out.println("Woohoo!");
+            } else {
+                System.out.println("Boo! *Throws tomato");
+            }
+            startOver = true;
+            System.out.println(milliElapsed);
+        }
         if (e.getKeyCode() == KeyEvent.VK_Q) {
+            System.out.println("Quitter.");
+            System.exit(0);
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_Q) {
+            System.out.println("Quitter.");
             System.exit(0);
         }
     }

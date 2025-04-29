@@ -19,7 +19,10 @@ public class TapBlock extends Block{
     @Override
     public void keyPressed(KeyEvent e) {
         if (button.equalsIgnoreCase("A")) {
-            if (e.getKeyCode()==KeyEvent.VK_A) receive(this.timeReceived);
+            if (e.getKeyCode()==KeyEvent.VK_A) {
+                receive(this.timeReceived);
+                System.out.println("Registered.");
+            }
         } else if (button.equalsIgnoreCase("B")) {
             if (e.getKeyCode()==KeyEvent.VK_B) receive(this.timeReceived);
         } else if (button.equalsIgnoreCase("C")) {
