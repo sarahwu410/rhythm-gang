@@ -10,12 +10,14 @@ public abstract class Block implements KeyListener {
     int timeReceived;
     int velocityX, velocityY;
     String level; // each level has it's own preset coordinates, dimensions, etc.
+    Boolean received;
 
     Block (String level, String button, int enterTime, int receiveTime) {
         this.enterTime = enterTime;
         this.receiveTime = receiveTime;
         this.level = level;
         this.button = button;
+        this.received = false;
 
         if (this.level.equalsIgnoreCase("easy")) {
             this.length = 100;
@@ -105,7 +107,7 @@ public abstract class Block implements KeyListener {
     /**
 	 * Calculates the time that the block should enter, all double parameters
 	 */
-	public double calculateEnterTime(double speed, double finalTime, double enterX, double enterY, double receiveX, double receiveY) {
+	public void calculateEnterTime(double speed, int finalTime, double enterX, double enterY, double receiveX, double receiveY) {
 		double distanceX, distanceY, distance;
 		
 		// Calculate the distance in X and Y components
@@ -116,7 +118,7 @@ public abstract class Block implements KeyListener {
 		distance = Math.sqrt((Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
 		
 		// Find the enter time
-		return (finalTime - (distance/speed));
+		this.enterTime = (int) (finalTime - (distance/speed));
 	}
 
     // /**

@@ -8,7 +8,8 @@ public class TapBlock extends Block{
     @Override
     boolean receive(int timeReceived) {
         this.timeReceived = timeReceived;
-        int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
+        int accuracy = (int) (Math.abs(receiveTime - timeReceived));
+        this.received = true;
     	if (accuracy < 1000) return true;
     	else return false;
     }

@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.*;
 
+import java.util.Random; // To change colors of blocks
 
 public class testYourBlocksHERE implements KeyListener {
 
@@ -12,9 +13,13 @@ public class testYourBlocksHERE implements KeyListener {
     Timer timer;
     int milliElapsed;
 
-    Block testBlock = new TapBlock("easy", "A", 0, 110);
+    Block[] testBlocks;
+    double[][] receiveTimes;
+    Random rand = new Random();
+
+    //Block testBlock = new TapBlock("easy", "A", 0, 500);
     Boolean startOver = false;
-    Receiver testReceiver = new Receiver(1000, 500);
+    Receiver testReceiver = new Receiver(1000, 500, 100, 100);
 
     testYourBlocksHERE() {
         JFrame frame = new JFrame();
@@ -23,14 +28,29 @@ public class testYourBlocksHERE implements KeyListener {
         frame.setUndecorated(true);
         frame.addKeyListener(this);
         panel = new DrawPanel();
-        testBlock.calculateVelocity(testReceiver);
+
+        // Store receive times
+        receiveTimes = receiveTimeReader.find("A", "res\\testReceiveTimes.txt");
+        System.out.println("Receive times: " + receiveTimes[0].length);
+        // Create an array for the blocks
+        testBlocks = new Block[receiveTimes[0].length];
+        System.out.println("There are " + testBlocks.length + " blocks.");
+        // Load up the blocks
+        for (int i = 0; i < receiveTimes[0].length; i++) {
+            testBlocks[i] = new TapBlock("easy", "A", 0, (int) (receiveTimes[0][i] * 1000));
+            testBlocks[i].calculateVelocity(testReceiver);
+            testBlocks[i].calculateEnterTime(testBlocks[i].speed, testBlocks[i].receiveTime, testBlocks[i].x, testBlocks[i].y, testReceiver.x, testReceiver.y);
+            System.out.println("Block loaded. Enter time: " + testBlocks[i].enterTime);
+        }
 
         timer = new Timer(1,new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                testBlock.move();
+                for (Block b: testBlocks) {
+                    if (milliElapsed > b.enterTime) b.move(); // Only move them if they are meant to appear
+                }
                 frame.repaint();
-                milliElapsed++; // NOT ACTUALLY COUNTING IN MILLISECONDS?
+                milliElapsed++; // NOT ACTUALLY COUNTING IN MILLISECONDS? Something weird is going on...
             }
 
         });
@@ -52,17 +72,30 @@ public class testYourBlocksHERE implements KeyListener {
             Graphics2D g2 = (Graphics2D)g;
 
             g2.setPaint(Color.BLUE);
-            g2.fillRect(testReceiver.x, testReceiver.y, 100, 100);
+            g2.fillRect(testReceiver.x, testReceiver.y, testReceiver.width, testReceiver.height);
 
+            // Figure out what blocks to draw
+            for (int i = 0; i < testBlocks.length; i++) {
+                g2.setPaint(new Color(rand.nextInt(10), 252, rand.nextInt(150)));
+                // If the block has not been received and has reached its enter time
+                if (milliElapsed > testBlocks[i].enterTime && !  testBlocks[i].received) {
+                    g2.fillRect(testBlocks[i].x, testBlocks[i].y, testBlocks[i].length, testBlocks[i].width);
+                } if (i == testBlocks.length - 1 && testBlocks[i].received) { // If the last block has been received
+                    startOver = true;
+                }
+            }
+            
+            // Do the beginning process again
             if (startOver) {
                 milliElapsed = 0; // Reset time
-                // reset block
-                testBlock = new TapBlock("easy", "A", 0, 10000);
-                testBlock.calculateVelocity(testReceiver);
+                for (int i = 0; i < receiveTimes[0].length; i++) {
+                    testBlocks[i] = new TapBlock("easy", "A", 0, (int) receiveTimes[0][i] * 1000);
+                    testBlocks[i].received = false;
+                    testBlocks[i].calculateVelocity(testReceiver);
+                    testBlocks[i].calculateEnterTime(testBlocks[i].speed, testBlocks[i].receiveTime, testBlocks[i].x, testBlocks[i].y, testReceiver.x, testReceiver.y);
+                    System.out.println("Block reloaded.");
+                }
                 startOver = false;
-            } else {
-                g2.setPaint(Color.WHITE);
-                g2.fillRect(testBlock.x, testBlock.y, testBlock.length, testBlock.width);
             }
         }
     }
@@ -76,21 +109,17 @@ public class testYourBlocksHERE implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-
-        // BLOCK DOES NOT PICK UP KEY EVENTS, ONLY WINDOW DOES, MUST REMOVE FROM BLOCKS AT SOME POINT
-        // I'M SORRY BUT I USED CHATGPT AND LEARNED THAT THEY SHOULDN'T BOTH BE IMPLEMENTING KEY LISTENERS
-        // I tested it myself and only the key events in this window are picked up and nothing in the blocks
-        // I tested this by adding a print statement to the TapBlock class and it wasn't picked up
-
-        // If the key event text matches the block button
-        if (KeyEvent.getKeyText(e.getKeyCode()).equalsIgnoreCase(testBlock.button)) { 
-            if (testBlock.receive(milliElapsed)) {
-                System.out.println("Woohoo!");
-            } else {
-                System.out.println("Boo! *Throws tomato");
+        // If the key event text matches the block button, tell the user the result
+        for (Block b: testBlocks) {
+            if (KeyEvent.getKeyText(e.getKeyCode()).equalsIgnoreCase(b.button) && ! b.received) { 
+                if (b.receive(milliElapsed)) {
+                    System.out.println("Woohoo!");
+                } else {
+                    System.out.println("Boo! *Throws tomato");
+                }
+                System.out.println("Received: " + milliElapsed);
+                break;
             }
-            startOver = true;
-            System.out.println(milliElapsed);
         }
         if (e.getKeyCode() == KeyEvent.VK_Q) {
             System.out.println("Quitter.");
@@ -98,7 +127,6 @@ public class testYourBlocksHERE implements KeyListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_Q) {
-            System.out.println("Quitter.");
             System.exit(0);
         }
     }
