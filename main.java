@@ -37,6 +37,7 @@ public class main implements KeyListener {
 	JPanel mainpanel;
 
 	//panels
+
 	TitlePanel titlepanel;
 	testpanel testpanel;
 	easyPanel easypanel;
@@ -82,7 +83,7 @@ public class main implements KeyListener {
 		play2 = loadImage("res/titlescreen/play2.png");
 		instruction2 = loadImage("res/titlescreen/instruction2.png");
 		quit2 = loadImage("res/titlescreen/quit2.png");
-		ratpanel = loadImage("res/titlescreen/ratpanel.png");
+		ratpanel = loadImage("res/background/jungle_temple.png");
 		mp = loadImage("res/titlescreen/mediumpanel.png");
 		hp = loadImage("res/titlescreen/hardpanel.png");
 		bp = loadImage("res/titlescreen/bosspanel.png");
@@ -182,8 +183,8 @@ public class main implements KeyListener {
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D)g;
-		
-			g2.drawImage(ta.get(testcount),0,0,mainpanel.getWidth(),mainpanel.getHeight(),null);
+			g2.setPaint(Color.WHITE);
+			g2.drawString("test :)", 500, 500);
 	
 		}
 	}

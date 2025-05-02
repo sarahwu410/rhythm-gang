@@ -137,6 +137,5 @@ public class testYourBlocksHERE implements KeyListener {
     public void keyReleased(KeyEvent e) {}
 
     
-    public static void main(String[] args) {}
-
+    public static void main(String[] args) {new testYourBlocksHERE();}
 }

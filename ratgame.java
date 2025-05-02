@@ -124,7 +124,7 @@ public class ratgame implements KeyListener{
 
 	}
 	
-	public void loadAll(String filepath, int amount, ArrayList<Image> array) {
+	public static void loadAll(String filepath, int amount, ArrayList<Image> array) {
 		for (int i = 1; i <= amount; i++ ) {
 			array.add(new Image(filepath + String.valueOf(i) + ").png"));
 		}
@@ -190,33 +190,6 @@ public class ratgame implements KeyListener{
 	}
 	
 	
-	public class Image {
-		String filename;
-		private BufferedImage img;
-		Image(String filename) {
-			this.filename = filename;
-			img = loadImage(this.filename);
-		}
-		
-		public BufferedImage getImage() {
-			return img;
-		}
-		
-		
-		static BufferedImage loadImage(String filename) {
-			BufferedImage img = null;
-			try{
-				img = ImageIO.read(new File(filename));
-			} catch (IOException e) {
-				System.out.println(e.toString());
-				JOptionPane.showMessageDialog(null, "An image failed to load: " + filename, "Error", JOptionPane.ERROR_MESSAGE);
-			}
-			//DEBUG
-			//if (img == null) System.out.println("null");
-			//else System.out.printf("w=%d, h=%d%n",img.getWidth(), img.getHeight());
-			return img;
-		}
-	}
 	public class DrawPanel extends JPanel{
 		
 		DrawPanel() {
