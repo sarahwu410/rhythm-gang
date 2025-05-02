@@ -25,7 +25,6 @@ public abstract class Block implements KeyListener {
             this.width = 100;
             this.speed = 500;
             if (this.button.equalsIgnoreCase("A")) {
-                this.width = 10000;
                 this.x = 300;
                 this.y = 0;
             } else if (this.button.equalsIgnoreCase("B")) {
@@ -139,8 +138,8 @@ public abstract class Block implements KeyListener {
     // }
 
     public void calculateVelocity(Receiver r) {
-        this.velocityX = (r.x - this.x2) / 300;
-        this.velocityY = (r.y - this.y2) / 300;
+        this.velocityX = (r.x - this.x2) / this.speed;
+        this.velocityY = (r.y - this.y2) / this.speed;
     }
 
     public void move() {
@@ -149,6 +148,8 @@ public abstract class Block implements KeyListener {
         x = (int)x2;
         y = (int)y2;
     }
+
+    
 
     @Override
     public abstract void keyTyped(KeyEvent e);

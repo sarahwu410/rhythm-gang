@@ -20,7 +20,8 @@ public class spamblocktest implements KeyListener {
 
     int simplec = 0;
     int stairc = 0;
-    SpamBlock testBlock = new SpamBlock("easy", "A", 0, 450, 1000, 1000000);
+    SpamBlock testBlock = new SpamBlock("easy", "A", 0, 450, 1000, 1000);
+    
     Boolean startOver = false;
     Receiver testReceiver = new Receiver(300,700,100,100);
     int hit = 0;
@@ -32,6 +33,7 @@ public class spamblocktest implements KeyListener {
     ArrayList<Image> staircase = new ArrayList<Image>();
     JFrame frame;
 
+    int s = 400;
 
     spamblocktest() {
         frame = new JFrame();
@@ -40,25 +42,29 @@ public class spamblocktest implements KeyListener {
         frame.setUndecorated(true);
         frame.addKeyListener(this);
         panel = new DrawPanel();
+        testBlock.speed = 300;
         testBlock.calculateVelocity(testReceiver);
+        
         ratgame.loadAll("res/easylevel/simple_run (", 17, simplerun);
         
         timer = new Timer(1,new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hiteffect.life();
-
                 milliElapsed = testAudio.getTime();
-                if (stairc < 700) stairc +=5;
-                else stairc = 0;
-                
-                if (milliElapsed % 4 == 0) {
-                    if (simplec < 14 ) simplec ++;
-                    else simplec = 0;
-                }
-                //added an audio so that the milliseconds passed will be based off how far into the audio it has been
-                testBlock.move();
-                frame.repaint();
+                hiteffect.life();
+                    if (s < 400) s += 1;
+    
+                    
+                    if (stairc < 700) stairc +=5;
+                    else stairc = 0;
+                    
+                    if (milliElapsed % (s/100) == 0) {
+                        if (simplec < 17 ) simplec ++;
+                        else simplec = 0;
+                    }
+                    //added an audio so that the milliseconds passed will be based off how far into the audio it has been
+                    if (testBlock.y - testReceiver.width <= testReceiver.y || milliElapsed >= testBlock.endTime) testBlock.move();
+                    frame.repaint();
             }
 
         });
@@ -74,13 +80,10 @@ public class spamblocktest implements KeyListener {
     public void runGame() {
 
         while (true) {
+           
             
             
             
-            if (milliElapsed % 50 == 0) {
-                
-                perfect.move();
-            }
            
                 
             
@@ -129,6 +132,9 @@ public class spamblocktest implements KeyListener {
         }
     }
 
+
+    
+
     @Override
     public void keyTyped(KeyEvent e) {
         //throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
@@ -147,6 +153,8 @@ public class spamblocktest implements KeyListener {
         // If the key event text matches the block button
         if (KeyEvent.getKeyText(e.getKeyCode()).equalsIgnoreCase(testBlock.button)) {
             if (testBlock.checkTime(milliElapsed)) {
+                if (s > 200) s-=5;
+                stairc += 1;
                 hitsound.playAudio();
                 hit += 1;
                 hiteffect.appear = true;
