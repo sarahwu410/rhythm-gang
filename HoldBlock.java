@@ -2,10 +2,18 @@ import java.awt.event.KeyEvent;
 
 public class HoldBlock extends Block {
     int holdLen;
+    int headX;
+    int headY;
+    int tailX;
+    int tailY;
 
     public HoldBlock(String level, String button, int enterTime, int receiveTime, int holdLen) {
         super(level, button, enterTime, receiveTime);
         this.holdLen = holdLen;
+        this.headX = enterposition;
+        this.headY = ;
+        this.tailX = psoition - speed*holdlength;
+        this.tailY = -10;
     }
 
     boolean receive(int timeReceived) {
@@ -15,6 +23,13 @@ public class HoldBlock extends Block {
     	else return false;
     }
 
+    public void move() {
+        headX += velocityX;
+        headY += velocityY;
+        tailX += velocityX;
+        tailY += velocityY;
+    }
+2
     @Override
     public void keyTyped(KeyEvent e) {}
 
