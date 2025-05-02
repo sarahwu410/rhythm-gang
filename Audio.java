@@ -11,7 +11,7 @@ public class Audio {
     Clip clip;
     AudioInputStream audioinput;
     File file;
-    
+    boolean playing = false;
     Audio(String file) {
         this.file = new File(file);
         try {
@@ -27,7 +27,16 @@ public class Audio {
     
     
     public void playAudio() {
-        clip.start();
+        if(!playing) {
+            clip.start();
+            playing = true;
+        }
+        if (playing) {
+            clip.setFramePosition(0);
+            clip.start();
+            playing = false;
+        }
+        
     }
     
     public void stopAudio() {
@@ -35,8 +44,10 @@ public class Audio {
     }
 
     public int getTime() {
-        long mircoseconds = clip.getMicrosecondPosition()/1000;
-        int miliseconds = (int)mircoseconds;
+        double test;
+        long mircoseconds = clip.getMicrosecondPosition()/10000;
+        test = (double)mircoseconds;
+        int miliseconds = (int) test;
         return miliseconds;
     }
     

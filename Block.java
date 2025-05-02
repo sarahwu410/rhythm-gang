@@ -3,12 +3,13 @@ import java.awt.event.KeyEvent;
 
 public abstract class Block implements KeyListener {
     int x, y, length, width;
+    double x2,y2;
     int speed;
     String button; // which button corrosponds to a particular block
     int enterTime;
     int receiveTime;
     int timeReceived;
-    int velocityX, velocityY;
+    double velocityX, velocityY;
     String level; // each level has it's own preset coordinates, dimensions, etc.
     Boolean received;
 
@@ -24,7 +25,8 @@ public abstract class Block implements KeyListener {
             this.width = 100;
             this.speed = 500;
             if (this.button.equalsIgnoreCase("A")) {
-                this.x = 0;
+                this.width = 10000;
+                this.x = 300;
                 this.y = 0;
             } else if (this.button.equalsIgnoreCase("B")) {
                 this.x = 0;
@@ -100,6 +102,8 @@ public abstract class Block implements KeyListener {
                 this.y = 0;
             }
         }
+        this.x2 = x;
+        this.y2 = y;
     }
 
     abstract boolean receive(int timeReceived);
@@ -135,13 +139,15 @@ public abstract class Block implements KeyListener {
     // }
 
     public void calculateVelocity(Receiver r) {
-        this.velocityX = (r.x - this.x) / this.speed;
-        this.velocityY = (r.y - this.y) / this.speed;
+        this.velocityX = (r.x - this.x2) / 300;
+        this.velocityY = (r.y - this.y2) / 300;
     }
 
     public void move() {
-        this.x += this.velocityX;
-        this.y += this.velocityY;
+        this.x2 += this.velocityX;
+        this.y2 += this.velocityY;
+        x = (int)x2;
+        y = (int)y2;
     }
 
     @Override
@@ -152,4 +158,5 @@ public abstract class Block implements KeyListener {
 
     @Override
     public abstract void keyReleased(KeyEvent e);
+
 }
