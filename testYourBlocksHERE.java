@@ -33,7 +33,7 @@ public class testYourBlocksHERE implements KeyListener {
         panel = new DrawPanel();
 
         // Store receive timess
-        receiveTimes = receiveTimeReader.find("A", "res/testReceiveTimes.txt");
+        receiveTimes = ReceiveTimeReader.find("A", "res/testReceiveTimes.txt");
         System.out.println("Receive times: " + receiveTimes[0].length);
         // Create an array for the blocks
         testBlocks = new Block[receiveTimes[0].length];
