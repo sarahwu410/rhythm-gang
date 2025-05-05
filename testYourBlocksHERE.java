@@ -19,9 +19,9 @@ public class testYourBlocksHERE implements KeyListener {
 
     //Block testBlock = new TapBlock("easy", "A", 0, 500);
     Boolean startOver = false;
-    Audio bpm60 = new Audio("res/Audio/15-minutes-of-silence.wav");
+    Audio testAudio = new Audio("res/Audio/15-minutes-of-silence.wav");
     int beat = 0;
-    int bpm60Time;
+    int testAudioTime;
     Receiver testReceiver = new Receiver(1000, 500, 100, 100);
 
     testYourBlocksHERE() {
@@ -33,7 +33,7 @@ public class testYourBlocksHERE implements KeyListener {
         panel = new DrawPanel();
 
         // Store receive times
-        receiveTimes = receiveTimeReader.find("A", "res\\testReceiveTimes.txt");
+        receiveTimes = receiveTimeReader.find("A", "res\testReceiveTimes.txt");
         System.out.println("Receive times: " + receiveTimes[0].length);
         // Create an array for the blocks
         testBlocks = new Block[receiveTimes[0].length];
@@ -53,8 +53,8 @@ public class testYourBlocksHERE implements KeyListener {
                     if (milliElapsed > b.enterTime) b.move(); // Only move them if they are meant to appear
                 }
                 frame.repaint();
-                bpm60Time = bpm60.getTime();
-                if (bpm60Time%1000 == 0) beat += 1;
+                testAudioTime = testAudio.getTime();
+                beat = testAudioTime/1000;
                 milliElapsed++; // NOT ACTUALLY COUNTING IN MILLISECONDS? Something weird is going on...
             }
 
@@ -62,7 +62,7 @@ public class testYourBlocksHERE implements KeyListener {
         frame.add(panel);
         frame.setVisible(true);
         timer.start();
-        bpm60.playAudio();
+        testAudio.playAudio();
 
        
     }
@@ -106,8 +106,8 @@ public class testYourBlocksHERE implements KeyListener {
                 startOver = false;
             }
 
-            g2.drawString("bpm60.getTime(): " + Integer.toString(bpm60Time), 10, 500);
-            g2.drawString("bpm60Time: " + Integer.toString(beat), 10, 600);
+            g2.drawString("testAudio.getTime(): " + Integer.toString(testAudioTime), 10, 500);
+            g2.drawString("testAudioTime: " + Integer.toString(beat), 10, 600);
             g2.setPaint(Color.BLUE);
             g2.fillRect(testReceiver.x, testReceiver.y, testReceiver.width, testReceiver.height);
 

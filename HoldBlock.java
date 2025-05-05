@@ -29,7 +29,7 @@ public class HoldBlock extends Block {
         tailX += velocityX;
         tailY += velocityY;
     }
-2
+
     @Override
     public void keyTyped(KeyEvent e) {}
 
