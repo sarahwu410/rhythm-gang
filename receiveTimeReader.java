@@ -18,10 +18,10 @@ public class ReceiveTimeReader {
 	 * @param fileWithTimes	The .txt file with receive times and note names
 	 * @return	The receive times of all the notes in a double 2D array (receiveTimes[keyName][notes from end to beginning])
 	 */
-	public static Double[][] find(String keys, String fileWithTimes) {
+	public static double[][] find(String keys, String fileWithTimes) {
 		// Stuff
 		File textFile = new File(fileWithTimes);
-		Double[][] receiveTimes = null; // Will store all the receive times
+		double[][] receiveTimes = null; // Will store all the receive times
 		int totalNotes=0;
 		HashMap<String, Integer> myKey = new HashMap<String, Integer>(); // Links a key to a location in the 2D array
 		// The readers
@@ -56,7 +56,7 @@ public class ReceiveTimeReader {
 			// Let the user know how many notes they are so they can assure they match
 			System.out.println("Total Notes: " + totalNotes);
 			// Initialize the array with receive times
-			receiveTimes = new Double[(keys.split("")).length][totalNotes];
+			receiveTimes = new double[(keys.split("")).length][totalNotes];
 			// Associate each key to a position
 			for (int i = 0; i < (keys.split("")).length; i++) {
 				myKey.put((keys.split(""))[i], i);
@@ -88,6 +88,7 @@ public class ReceiveTimeReader {
 		}
 		
 		// Return all the receive times
+		System.out.println("I am returning a double 2d array with " + receiveTimes.length + " dif. notes and " + receiveTimes[0].length + " notes");
 		return receiveTimes;
 	}
 }

@@ -7,8 +7,10 @@ public class TapBlock extends Block{
 
     @Override
     boolean receive(int timeReceived) {
-        int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
-    	if (accuracy < 1.0) return true;
+        this.timeReceived = timeReceived;
+        int accuracy = (int) (Math.abs(receiveTime - timeReceived));
+        this.received = true;
+    	if (accuracy < 1000) return true;
     	else return false;
     }
 
@@ -18,7 +20,10 @@ public class TapBlock extends Block{
     @Override
     public void keyPressed(KeyEvent e) {
         if (button.equalsIgnoreCase("A")) {
-            if (e.getKeyCode()==KeyEvent.VK_A) receive(this.timeReceived);
+            if (e.getKeyCode()==KeyEvent.VK_A) {
+                receive(this.timeReceived);
+                System.out.println("Registered.");
+            }
         } else if (button.equalsIgnoreCase("B")) {
             if (e.getKeyCode()==KeyEvent.VK_B) receive(this.timeReceived);
         } else if (button.equalsIgnoreCase("C")) {

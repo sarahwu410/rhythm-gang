@@ -2,18 +2,34 @@ import java.awt.event.KeyEvent;
 
 public class HoldBlock extends Block {
     int holdLen;
+    int headX;
+    int headY;
+    int tailX;
+    int tailY;
 
     public HoldBlock(String level, String button, int enterTime, int receiveTime, int holdLen) {
         super(level, button, enterTime, receiveTime);
         this.holdLen = holdLen;
+        this.headX = enterposition;
+        this.headY = ;
+        this.tailX = psoition - speed*holdlength;
+        this.tailY = -10;
     }
 
     boolean receive(int timeReceived) {
+        this.timeReceived = timeReceived;
         int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
-    	if (accuracy < 1.0 && holdLen == 0) return true;
+    	if (accuracy < 1000 && holdLen == 0) return true;
     	else return false;
     }
 
+    public void move() {
+        headX += velocityX;
+        headY += velocityY;
+        tailX += velocityX;
+        tailY += velocityY;
+    }
+2
     @Override
     public void keyTyped(KeyEvent e) {}
 

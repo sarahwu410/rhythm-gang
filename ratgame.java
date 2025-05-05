@@ -9,17 +9,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 public class ratgame implements KeyListener{
 	
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		new ratgame();
 	}
 	
@@ -46,31 +40,21 @@ public class ratgame implements KeyListener{
 		frame.setUndecorated(true);
 		
 	
-		backgroundmusic = new Audio("res/Chess Type Beat Slowed.wav");
+		backgroundmusic = new Audio("res/Audio/Chess Type Beat Slowed.wav");
 		
-		loadAll("res/ratspin (",21,ratspin);
-		loadAll("res/ratdance (", 29, ratdance);
+		loadAll("res/ratdance/ratspin (",21,ratspin);
+		loadAll("res/ratdance/ratdance (", 29, ratdance);
 		frame.addKeyListener(this);
 		
 		timer = new Timer(1, new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if (miliseconds == 2000) timer.stop();
-				if (loading) {
-					if (ratspincount == ratspin.size() -1) ratspincount = 0;
-					else ratspincount++;
-				}
+			public void actionPerformed(ActionEvent e) {				
 				if (!loading) {
-					miliseconds = (int) (backgroundmusic.clip.getMicrosecondPosition()/1000);
 					timercounter++;
 					
 					if (timercounter%50 == 0) miss = false;
 					
-					if (ratdancecount == ratdance.size() -1) ratdancecount = 0;
-					else if (timercounter%100 == 0)ratdancecount++;
-					System.out.println(timercounter);
 					switch (timercounter/10) {
 					case 0: {
 						break;
@@ -96,7 +80,7 @@ public class ratgame implements KeyListener{
 						if (b.appear + 501 == miliseconds) hit = false;
 					}
 				}
-				panel.repaint();
+				
 				
 				
 			}
@@ -110,12 +94,37 @@ public class ratgame implements KeyListener{
 		
 		frame.add(panel);
 		frame.setVisible(true);
+		
 		blocks.add(new Block("left", 1000));
 		blocks.add(new Block("Right", 47000));
+
 		timer.start();
+		GameLoop();
+	}
+
+
+	public void GameLoop() {
+		while (true) {
+			if (loading) {
+				if (ratspincount == ratspin.size() -1) ratspincount = 0;
+				else ratspincount++;
+			}
+			if (!loading) {
+				miliseconds = backgroundmusic.getTime();
+				if (ratdancecount == ratdance.size() -1) ratdancecount = 0;
+				else if (miliseconds%45 == 0)ratdancecount++;
+			}
+			panel.repaint();
+			try {
+				Thread.sleep(8);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 	
-	public void loadAll(String filepath, int amount, ArrayList<Image> array) {
+	public static void loadAll(String filepath, int amount, ArrayList<Image> array) {
 		for (int i = 1; i <= amount; i++ ) {
 			array.add(new Image(filepath + String.valueOf(i) + ").png"));
 		}
@@ -179,64 +188,8 @@ public class ratgame implements KeyListener{
 			}
 		}
 	}
-	public class Audio {
-		Clip clip;
-		AudioInputStream audioinput;
-		File file;
-		
-		Audio(String file) {
-			this.file = new File(file);
-			try {
-				audioinput = AudioSystem.getAudioInputStream(this.file);
-				clip = AudioSystem.getClip();
-				clip.open(audioinput);
-			} catch (UnsupportedAudioFileException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (LineUnavailableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-		}
-		
-		
-		public void playAudio() {
-			clip.start();
-		}
-		
-		public void stopAudio() {
-			clip.stop();
-		}
-		
-	}
 	
-	public class Image {
-		String filename;
-		private BufferedImage img;
-		Image(String filename) {
-			this.filename = filename;
-			img = loadImage(this.filename);
-		}
-		
-		public BufferedImage getImage() {
-			return img;
-		}
-		
-		
-		static BufferedImage loadImage(String filename) {
-			BufferedImage img = null;
-			try{
-				img = ImageIO.read(new File(filename));
-			} catch (IOException e) {
-				System.out.println(e.toString());
-				JOptionPane.showMessageDialog(null, "An image failed to load: " + filename, "Error", JOptionPane.ERROR_MESSAGE);
-			}
-			//DEBUG
-			//if (img == null) System.out.println("null");
-			//else System.out.printf("w=%d, h=%d%n",img.getWidth(), img.getHeight());
-			return img;
-		}
-	}
+	
 	public class DrawPanel extends JPanel{
 		
 		DrawPanel() {
@@ -280,15 +233,11 @@ public class ratgame implements KeyListener{
 
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent e) {}
 
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getKeyCode() == KeyEvent.VK_A) {
 			backgroundmusic.playAudio();
 			loading = false;
@@ -310,21 +259,10 @@ public class ratgame implements KeyListener{
 				timerstopped = false;
 			}
 		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			for (Block b: blocks) {
-				if (2750 - 500 > miliseconds && 2750 + 500 < miliseconds) {
-					hit = true;
-				}
-			}
-		}
 	}
 
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyReleased(KeyEvent e) {}
 
 }
