@@ -32,8 +32,8 @@ public class testYourBlocksHERE implements KeyListener {
         frame.addKeyListener(this);
         panel = new DrawPanel();
 
-        // Store receive times
-        receiveTimes = receiveTimeReader.find("A", "res\testReceiveTimes.txt");
+        // Store receive timess
+        receiveTimes = receiveTimeReader.find("A", "res/testReceiveTimes.txt");
         System.out.println("Receive times: " + receiveTimes[0].length);
         // Create an array for the blocks
         testBlocks = new Block[receiveTimes[0].length];
@@ -54,7 +54,7 @@ public class testYourBlocksHERE implements KeyListener {
                 }
                 frame.repaint();
                 testAudioTime = testAudio.getTime();
-                beat = testAudioTime/1000;
+                if (testAudioTime%1000 == 0) beat++;
                 milliElapsed++; // NOT ACTUALLY COUNTING IN MILLISECONDS? Something weird is going on...
             }
 
