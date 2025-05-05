@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import javax.swing.*;
 
 import java.util.Random; // To change colors of blocks
+import java.util.Random; // To change colors of blocks
 
 public class testYourBlocksHERE implements KeyListener {
 
@@ -33,7 +34,7 @@ public class testYourBlocksHERE implements KeyListener {
         panel = new DrawPanel();
 
         // Store receive times
-        receiveTimes = ReceiveTimeReader.find("A", "res\\testReceiveTimes.txt");
+        receiveTimes = receiveTimeReader.find("A", "res\\testReceiveTimes.txt");
         System.out.println("Receive times: " + receiveTimes[0].length);
         // Create an array for the blocks
         testBlocks = new Block[receiveTimes[0].length];
@@ -55,7 +56,6 @@ public class testYourBlocksHERE implements KeyListener {
                 frame.repaint();
                 bpm60Time = bpm60.getTime();
                 if (bpm60Time%1000 == 0) beat += 1;
-                milliElapsed++; // NOT ACTUALLY COUNTING IN MILLISECONDS?
                 milliElapsed++; // NOT ACTUALLY COUNTING IN MILLISECONDS? Something weird is going on...
             }
 
@@ -109,6 +109,32 @@ public class testYourBlocksHERE implements KeyListener {
 
             g2.drawString("bpm60.getTime(): " + Integer.toString(bpm60Time), 10, 500);
             g2.drawString("bpm60Time: " + Integer.toString(beat), 10, 600);
+            g2.setPaint(Color.BLUE);
+            g2.fillRect(testReceiver.x, testReceiver.y, testReceiver.width, testReceiver.height);
+
+            // Figure out what blocks to draw
+            for (int i = 0; i < testBlocks.length; i++) {
+                g2.setPaint(new Color(rand.nextInt(10), 252, rand.nextInt(150)));
+                // If the block has not been received and has reached its enter time
+                if (milliElapsed > testBlocks[i].enterTime && !  testBlocks[i].received) {
+                    g2.fillRect(testBlocks[i].x, testBlocks[i].y, testBlocks[i].length, testBlocks[i].width);
+                } if (i == testBlocks.length - 1 && testBlocks[i].received) { // If the last block has been received
+                    startOver = true;
+                }
+            }
+            
+            // Do the beginning process again
+            if (startOver) {
+                milliElapsed = 0; // Reset time
+                for (int i = 0; i < receiveTimes[0].length; i++) {
+                    testBlocks[i] = new TapBlock("easy", "A", 0, (int) receiveTimes[0][i] * 1000);
+                    testBlocks[i].received = false;
+                    testBlocks[i].calculateVelocity(testReceiver);
+                    testBlocks[i].calculateEnterTime(testBlocks[i].speed, testBlocks[i].receiveTime, testBlocks[i].x, testBlocks[i].y, testReceiver.x, testReceiver.y);
+                    System.out.println("Block reloaded.");
+                }
+                startOver = false;
+            }
         }
     }
 
