@@ -6,7 +6,6 @@ import java.awt.event.KeyListener;
 import javax.swing.*;
 
 import java.util.Random; // To change colors of blocks
-import java.util.Random; // To change colors of blocks
 
 public class testYourBlocksHERE implements KeyListener {
 
