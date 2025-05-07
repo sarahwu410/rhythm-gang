@@ -45,7 +45,7 @@ public class Audio {
 
     public int getTime() {
         double test;
-        long mircoseconds = clip.getMicrosecondPosition()/1000;
+        long mircoseconds = clip.getMicrosecondPosition()/10000;
         test = (double)mircoseconds;
         int miliseconds = (int) test;
         return miliseconds;

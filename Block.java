@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 public abstract class Block implements KeyListener {
     int x, y, length, width;
     double x2,y2;
+    double enterX, enterY;
     int speed;
     String button; // which button corrosponds to a particular block
     int enterTime;
@@ -23,7 +24,7 @@ public abstract class Block implements KeyListener {
         if (this.level.equalsIgnoreCase("easy")) {
             this.length = 100;
             this.width = 100;
-            this.speed = 500;
+            this.speed = 2000;
             if (this.button.equalsIgnoreCase("A")) {
                 this.x = 300;
                 this.y = 0;
@@ -103,6 +104,8 @@ public abstract class Block implements KeyListener {
         }
         this.x2 = x;
         this.y2 = y;
+        this.enterX = x;
+        this.enterY = y;
     }
 
     abstract boolean receive(int timeReceived);
@@ -142,11 +145,12 @@ public abstract class Block implements KeyListener {
         this.velocityY = (r.y - this.y2) / this.speed;
     }
 
-    public void move() {
-        this.x2 += this.velocityX;
-        this.y2 += this.velocityY;
-        x = (int)x2;
-        y = (int)y2;
+    public void move(int audioTime) {
+        int myTime = audioTime - enterTime;
+        //this.x2 += this.velocityX;
+        //this.y2 += this.velocityY;
+        x = (int) (enterX + this.velocityX * myTime);
+        y = (int) (enterY + this.velocityY * myTime);
     }
 
     
