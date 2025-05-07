@@ -13,9 +13,8 @@ public abstract class Block implements KeyListener {
     String level; // each level has it's own preset coordinates, dimensions, etc.
     Boolean received;
 
-    Block (String level, String button, int enterTime, int receiveTime) {
+    Block (String level, String button, int enterTime, long receiveTime) {
         this.enterTime = enterTime;
-        this.receiveTime = receiveTime;
         this.level = level;
         this.button = button;
         this.received = false;

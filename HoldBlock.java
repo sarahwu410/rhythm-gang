@@ -1,28 +1,40 @@
 import java.awt.event.KeyEvent;
 
 public class HoldBlock extends Block {
-    int holdLen;
-    int headX;
-    int headY;
-    int tailX;
-    int tailY;
+    int holdDurationMs;         // Time the key must be held (e.g., 1000 ms)
+    long pressStartTime;        // When the key was pressed
+    boolean isPressed = false;  // Is the key currently being held
+    boolean completed = false;  // Has this hold block been successfully completed
 
-    public HoldBlock(String level, String button, int enterTime, int receiveTime, int holdLen) {
+    // Block visual positions (e.g., for diagonal movement)
+    int headX, headY;
+    int tailX, tailY;
+
+    // Diagonal speed
+    int velocityX = 1;
+    int velocityY = 1;
+
+    private Receiver receiver;
+
+    public HoldBlock(String level, String button, int enterTime, long receiveTime, int holdDurationMs, Receiver receiver) {
         super(level, button, enterTime, receiveTime);
-        this.holdLen = holdLen;
-        this.headX = enterposition;
-        this.headY = ;
-        this.tailX = psoition - speed*holdlength;
-        this.tailY = -10;
+        this.holdDurationMs = holdDurationMs;
+        this.receiver = receiver;
+
+        this.headX = 0;
+        this.headY = 0;
+        this.tailX = -30;
+        this.tailY = -30;
+
+        // Set velocity towards receiver
+        int dx = receiver.x - headX;
+        int dy = receiver.y - headY;
+        double length = Math.sqrt(dx * dx + dy * dy);
+        velocityX = (int) (dx / length * 2);
+        velocityY = (int) (dy / length * 2);
     }
 
-    boolean receive(int timeReceived) {
-        this.timeReceived = timeReceived;
-        int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
-    	if (accuracy < 1000 && holdLen == 0) return true;
-    	else return false;
-    }
-
+    // Move both head and tail diagonally
     public void move() {
         headX += velocityX;
         headY += velocityY;
@@ -30,46 +42,58 @@ public class HoldBlock extends Block {
         tailY += velocityY;
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {}
-
+    // Handle key press (start timing)
     @Override
     public void keyPressed(KeyEvent e) {
-        if (button.equalsIgnoreCase("A")) {
-            if (e.getKeyCode()==KeyEvent.VK_A) {
-                if (holdLen>0) holdLen-=1;
-            }
-        } else if (button.equalsIgnoreCase("B")) {
-            if (e.getKeyCode()==KeyEvent.VK_B) {
-                if (holdLen>0) holdLen-=1;
-            }
-        } else if (button.equalsIgnoreCase("C")) {
-            if (e.getKeyCode()==KeyEvent.VK_C) {
-                if (holdLen>0) holdLen-=1;
-            }
-        } else if (button.equalsIgnoreCase("X")) {
-            if (e.getKeyCode()==KeyEvent.VK_X) {
-                if (holdLen>0) holdLen-=1;
-            }
-        } else if (button.equalsIgnoreCase("Y")) {
-            if (e.getKeyCode()==KeyEvent.VK_Y) {
-                if (holdLen>0) holdLen-=1;
+        if (!isPressed && matchesKey(e)) {
+            isPressed = true;
+            pressStartTime = System.currentTimeMillis();
+        }
+    }
+
+    // Handle key release (check success)
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (isPressed && matchesKey(e)) {
+            isPressed = false;
+            long heldTime = System.currentTimeMillis() - pressStartTime;
+
+            // You can replace System.currentTimeMillis with your game time if needed
+            long accuracy = Math.abs(System.currentTimeMillis() - receiveTime);
+
+            if (heldTime >= holdDurationMs && accuracy <= 1000) {
+                completed = true;
+                System.out.println("✅ Hold success!");
+            } else {
+                System.out.println("❌ Hold failed: heldTime = " + heldTime + ", accuracy = " + accuracy);
             }
         }
     }
 
+    // Unused, but must be implemented
     @Override
-    public void keyReleased(KeyEvent e) {
-        if (button.equalsIgnoreCase("A")) {
-            if (e.getKeyCode()==KeyEvent.VK_A) receive(this.timeReceived);
-        } else if (button.equalsIgnoreCase("B")) {
-            if (e.getKeyCode()==KeyEvent.VK_B) receive(this.timeReceived);
-        } else if (button.equalsIgnoreCase("C")) {
-            if (e.getKeyCode()==KeyEvent.VK_C) receive(this.timeReceived);
-        } else if (button.equalsIgnoreCase("X")) {
-            if (e.getKeyCode()==KeyEvent.VK_X) receive(this.timeReceived);
-        } else if (button.equalsIgnoreCase("Y")) {
-            if (e.getKeyCode()==KeyEvent.VK_Y) receive(this.timeReceived);
+    public void keyTyped(KeyEvent e) {}
+
+    // Helper: check if the correct key is pressed
+    public boolean matchesKey(KeyEvent e) {
+        switch (button.toUpperCase()) {
+            case "A": return e.getKeyCode() == KeyEvent.VK_A;
+            case "B": return e.getKeyCode() == KeyEvent.VK_B;
+            case "C": return e.getKeyCode() == KeyEvent.VK_C;
+            case "X": return e.getKeyCode() == KeyEvent.VK_X;
+            case "Y": return e.getKeyCode() == KeyEvent.VK_Y;
+            default: return false;
         }
+    }
+
+    // Optional: check externally if the player succeeded
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    @Override
+    boolean receive(int timeReceived) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'receive'");
     }
 }
