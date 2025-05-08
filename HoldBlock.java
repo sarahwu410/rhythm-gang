@@ -1,10 +1,10 @@
 import java.awt.event.KeyEvent;
 
 public class HoldBlock extends Block {
-    int holdDurationMs;         // Time the key must be held (e.g., 1000 ms)
-    long pressStartTime;        // When the key was pressed
-    boolean isPressed = false;  // Is the key currently being held
-    boolean completed = false;  // Has this hold block been successfully completed
+    int holdDurationMs;
+    long pressStartTime;
+    boolean isPressed = false;
+    boolean completed = false;
 
     // Block visual positions (e.g., for diagonal movement)
     int headX, headY;
@@ -36,8 +36,22 @@ public class HoldBlock extends Block {
 
     // Move both head and tail diagonally
     public void move() {
+        // Calculate direction vector toward the receiver
+        int dx = receiver.x - headX;
+        int dy = receiver.y - headY;
+        double length = Math.sqrt(dx * dx + dy * dy);
+
+        // Normalize the direction vector and scale by velocity
+        if (length != 0) { // Avoid division by zero
+            velocityX = (int) (dx / length * 2); // Adjust speed as needed
+            velocityY = (int) (dy / length * 2);
+        }
+
+        // Move head toward the receiver
         headX += velocityX;
         headY += velocityY;
+
+        // Move tail to follow the head
         tailX += velocityX;
         tailY += velocityY;
     }
@@ -75,7 +89,7 @@ public class HoldBlock extends Block {
     public void keyTyped(KeyEvent e) {}
 
     // Helper: check if the correct key is pressed
-    public boolean matchesKey(KeyEvent e) {
+    private boolean matchesKey(KeyEvent e) {
         switch (button.toUpperCase()) {
             case "A": return e.getKeyCode() == KeyEvent.VK_A;
             case "B": return e.getKeyCode() == KeyEvent.VK_B;
