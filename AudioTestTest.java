@@ -57,7 +57,7 @@ public class AudioTestTest extends JFrame implements KeyListener {
         }
 
         if (e.getKeyCode()==KeyEvent.VK_P) {
-            if (isPlaying) audio.stopAudio();
+            if (isPlaying) audio.pauseAudio();
             // if (!isPlaying) audio.playAudio(listener);
         }
     }

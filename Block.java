@@ -152,8 +152,6 @@ public abstract class Block implements KeyListener {
         y = (int) (enterY + this.velocityY * myTime);
     }
 
-    
-
     @Override
     public abstract void keyTyped(KeyEvent e);
 

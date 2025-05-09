@@ -13,7 +13,6 @@ public class testYourBlocksHERE implements KeyListener {
     Timer timer;
     int milliElapsed;
 
-    HoldBlock testHold;
     Block[] testBlocks;
     double[][] receiveTimes;
     Random rand = new Random();
@@ -46,7 +45,6 @@ public class testYourBlocksHERE implements KeyListener {
             testBlocks[i].calculateEnterTime(testBlocks[i].speed, testBlocks[i].receiveTime, testBlocks[i].x, testBlocks[i].y, testReceiver.x, testReceiver.y);
             System.out.println("Block loaded. Enter time: " + testBlocks[i].enterTime);
         }
-        testHold = new HoldBlock("easy", "A", 0, milliElapsed, 20);
 
         timer = new Timer(1,new ActionListener() {
             @Override
@@ -54,7 +52,6 @@ public class testYourBlocksHERE implements KeyListener {
                 for (Block b: testBlocks) {
                     if (milliElapsed > b.enterTime) b.move((testAudio.getTime()) * 10); // Only move them if they are meant to appear
                 }
-                if (milliElapsed > testHold.enterTime) testHold.move();
                 frame.repaint();
                 testAudioTime = testAudio.getTime();
                 if (testAudioTime%1000 == 0) beat++;
@@ -94,10 +91,6 @@ public class testYourBlocksHERE implements KeyListener {
                 } if (i == testBlocks.length - 1 && testBlocks[i].received) { // If the last block has been received
                     startOver = true;
                 }
-            } if (milliElapsed >= testHold.enterTime && ! testHold.received) {
-                g2.setPaint(new Color(rand.nextInt(10), 252, rand.nextInt(150)));
-                g2.fillRect(testHold.headX, testHold.headY, testHold.length, testHold.width);
-                g2.fillRect(testHold.tailX, testHold.tailY, testHold.length, testHold.width);
             }
             
             // Do the beginning process again
@@ -150,8 +143,6 @@ public class testYourBlocksHERE implements KeyListener {
             System.exit(0);
         }
     }
-
-
 
     @Override
     public void keyReleased(KeyEvent e) {}

@@ -10,6 +10,7 @@ public class AudioTest {
     private int bytesRead;
     private File file;
     private boolean playing = false;
+    // private volatile boolean pauseRequested;
     private long pausedPos = 0; // to save where the audio was before in case it was paused
     private Thread playbackThread;
 
@@ -96,14 +97,14 @@ public class AudioTest {
         }
     }
     
-    public void stopAudio() {
+    public void pauseAudio() {
         playing = false;
         if (playbackThread != null) {
             playbackThread.interrupt();
         }
     }
 
-    public int getTime() {
-        return (int)pausedPos;
+    public int getTimeInMilliseconds() {
+        return (int)((pausedPos/(format.getFrameSize()*format.getFrameRate()))*1000);
     }
 }
