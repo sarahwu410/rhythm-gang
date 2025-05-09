@@ -3,7 +3,6 @@ import java.awt.event.KeyEvent;
 
 public abstract class Block implements KeyListener {
     int x, y, length, width;
-    double x2,y2;
     double enterX, enterY;
     int speed;
     String button; // which button corrosponds to a particular block
@@ -14,8 +13,7 @@ public abstract class Block implements KeyListener {
     String level; // each level has it's own preset coordinates, dimensions, etc.
     Boolean received;
 
-    Block (String level, String button, int enterTime, int receiveTime) {
-        this.enterTime = enterTime;
+    Block (String level, String button, int receiveTime, Receiver someReceiver) {
         this.receiveTime = receiveTime;
         this.level = level;
         this.button = button;
@@ -24,7 +22,7 @@ public abstract class Block implements KeyListener {
         if (this.level.equalsIgnoreCase("easy")) {
             this.length = 100;
             this.width = 100;
-            this.speed = 2000;
+            this.speed = 100; // Speed is in pixels/second
             if (this.button.equalsIgnoreCase("A")) {
                 this.x = 300;
                 this.y = 0;
@@ -101,11 +99,14 @@ public abstract class Block implements KeyListener {
                 this.x = 0;
                 this.y = 0;
             }
+        } else {
+            this.speed = 0;
+            this.x = 0;
+            this.y = 0;
         }
-        this.x2 = x;
-        this.y2 = y;
         this.enterX = x;
         this.enterY = y;
+        calculateEnterTime((double) (speed / 1000), this.receiveTime, this.enterX, this.enterY, someReceiver);
     }
 
     abstract boolean receive(int timeReceived);
@@ -113,18 +114,21 @@ public abstract class Block implements KeyListener {
     /**
 	 * Calculates the time that the block should enter, all double parameters
 	 */
-	public void calculateEnterTime(double speed, int finalTime, double enterX, double enterY, double receiveX, double receiveY) {
+	public void calculateEnterTime(double speed, int finalTime, double enterX, double enterY, Receiver myReceiver) {
 		double distanceX, distanceY, distance;
 		
 		// Calculate the distance in X and Y components
-		distanceX = Math.abs(receiveX - enterX);
-		distanceY = Math.abs(receiveY - enterY);
+		distanceX = Math.abs(myReceiver.x - enterX);
+		distanceY = Math.abs(myReceiver.y - enterY);
 		
 		// Find the total distance
 		distance = Math.sqrt((Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
 		
 		// Find the enter time
 		this.enterTime = (int) (finalTime - (distance/speed));
+
+        // Calculate velocity
+        calculateVelocity(myReceiver);
 	}
 
     // /**
@@ -141,14 +145,14 @@ public abstract class Block implements KeyListener {
     // }
 
     public void calculateVelocity(Receiver r) {
-        this.velocityX = (r.x - this.x2) / this.speed;
-        this.velocityY = (r.y - this.y2) / this.speed;
+        this.velocityX = (r.x - this.enterX) / (this.receiveTime - this.enterTime);
+        this.velocityY = (r.y - this.enterY) / (this.receiveTime - this.enterTime);
     }
 
     public void move(int audioTime) {
+        // Find the duration of the block's "existence"
         int myTime = audioTime - enterTime;
-        //this.x2 += this.velocityX;
-        //this.y2 += this.velocityY;
+        // Find position based on time
         x = (int) (enterX + this.velocityX * myTime);
         y = (int) (enterY + this.velocityY * myTime);
     }
