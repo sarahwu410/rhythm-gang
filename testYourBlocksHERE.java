@@ -14,7 +14,6 @@ public class testYourBlocksHERE implements KeyListener {
     Timer timer;
     int milliElapsed;
 
-    //HoldBlock testHold;
     Block[] testBlocks;
     double[][] receiveTimes;
     Random rand = new Random();
@@ -143,8 +142,6 @@ public class testYourBlocksHERE implements KeyListener {
             System.exit(0);
         }
     }
-
-
 
     @Override
     public void keyReleased(KeyEvent e) {}
