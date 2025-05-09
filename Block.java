@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 public abstract class Block implements KeyListener {
     int x, y, length, width;
     double enterX, enterY;
-    int speed;
+    double speed;
     String button; // which button corrosponds to a particular block
     int enterTime;
     int receiveTime;
@@ -22,12 +22,12 @@ public abstract class Block implements KeyListener {
         if (this.level.equalsIgnoreCase("easy")) {
             this.length = 100;
             this.width = 100;
-            this.speed = 100; // Speed is in pixels/second
+            this.speed = 0.5; // Speed is in pixels/millisecond
             if (this.button.equalsIgnoreCase("A")) {
                 this.x = 300;
                 this.y = 0;
             } else if (this.button.equalsIgnoreCase("B")) {
-                this.x = 0;
+                this.x = 600;
                 this.y = 0;
             } else if (this.button.equalsIgnoreCase("C")) {
                 this.x = 0;
@@ -99,14 +99,10 @@ public abstract class Block implements KeyListener {
                 this.x = 0;
                 this.y = 0;
             }
-        } else {
-            this.speed = 0;
-            this.x = 0;
-            this.y = 0;
         }
         this.enterX = x;
         this.enterY = y;
-        calculateEnterTime((double) (speed / 1000), this.receiveTime, this.enterX, this.enterY, someReceiver);
+        calculateEnterTime(this.speed, this.receiveTime, this.enterX, this.enterY, someReceiver);
     }
 
     abstract boolean receive(int timeReceived);
@@ -123,6 +119,8 @@ public abstract class Block implements KeyListener {
 		
 		// Find the total distance
 		distance = Math.sqrt((Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
+        System.out.println("Distance: " + distance + " pixels");
+        System.out.println("Ms to cover: " + distance/speed + " milliseconds");
 		
 		// Find the enter time
 		this.enterTime = (int) (finalTime - (distance/speed));
@@ -130,6 +128,10 @@ public abstract class Block implements KeyListener {
         // Calculate velocity
         calculateVelocity(myReceiver);
 	}
+
+    public void redoCalculations() {
+
+    }
 
     // /**
 	//  * Block Movemeent

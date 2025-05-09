@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import javax.swing.*;
 
 import java.util.Random; // To change colors of blocks
+import java.util.HashMap;
 
 public class testYourBlocksHERE implements KeyListener {
 
@@ -13,12 +14,13 @@ public class testYourBlocksHERE implements KeyListener {
     Timer timer;
     int milliElapsed;
 
-    HoldBlock testHold;
+    //HoldBlock testHold;
     Block[] testBlocks;
     double[][] receiveTimes;
     Random rand = new Random();
 
-    //Block testBlock = new TapBlock("easy", "A", 0, 500);
+    HashMap<String, Receiver> theseReceivers = new HashMap<>();
+
     Boolean startOver = false;
     Audio testAudio = new Audio("res/Audio/15-minutes-of-silence.wav");
     int beat = 0;
@@ -33,20 +35,13 @@ public class testYourBlocksHERE implements KeyListener {
         frame.addKeyListener(this);
         panel = new DrawPanel();
 
-        // Store receive timess
-        receiveTimes = ReceiveTimeReader.find("A", "res/testReceiveTimes.txt");
-        System.out.println("Receive times: " + receiveTimes[0].length);
-        // Create an array for the blocks
-        testBlocks = new Block[receiveTimes[0].length];
-        System.out.println("There are " + testBlocks.length + " blocks.");
+        // Add receivers to the hashmap
+        theseReceivers.put("A", testReceiver);
+        theseReceivers.put("B", testReceiver);
+
         // Load up the blocks
-        for (int i = 0; i < receiveTimes[0].length; i++) {
-            testBlocks[i] = new TapBlock("easy", "A", 0, (int) (receiveTimes[0][i] * 1000));
-            testBlocks[i].calculateVelocity(testReceiver);
-            testBlocks[i].calculateEnterTime(testBlocks[i].speed, testBlocks[i].receiveTime, testBlocks[i].x, testBlocks[i].y, testReceiver.x, testReceiver.y);
-            System.out.println("Block loaded. Enter time: " + testBlocks[i].enterTime);
-        }
-        testHold = new HoldBlock("easy", "A", 0, milliElapsed, 20);
+        testBlocks = ReceiveTimeReader.loadTapBlocks("res/testReceiveTimes.txt", "easy", theseReceivers);
+        System.out.println("There are " + testBlocks.length + " blocks.");
 
         timer = new Timer(1,new ActionListener() {
             @Override
@@ -54,11 +49,13 @@ public class testYourBlocksHERE implements KeyListener {
                 for (Block b: testBlocks) {
                     if (milliElapsed > b.enterTime) b.move((testAudio.getTime()) * 10); // Only move them if they are meant to appear
                 }
-                if (milliElapsed > testHold.enterTime) testHold.move();
+                // See if all the blocks are off screen
+                if (testBlocks[testBlocks.length - 1].x > frame.getWidth()) startOver = true;
+                //if (milliElapsed > testHold.enterTime) testHold.move();
                 frame.repaint();
                 testAudioTime = testAudio.getTime();
                 if (testAudioTime%1000 == 0) beat++;
-                milliElapsed = testAudioTime;
+                milliElapsed = testAudioTime * 10;
             }
 
         });
@@ -89,27 +86,23 @@ public class testYourBlocksHERE implements KeyListener {
             for (int i = 0; i < testBlocks.length; i++) {
                 g2.setPaint(new Color(rand.nextInt(10), 252, rand.nextInt(150)));
                 // If the block has not been received and has reached its enter time
-                if (milliElapsed > testBlocks[i].enterTime && !  testBlocks[i].received) {
+                if (milliElapsed > testBlocks[i].enterTime && ! testBlocks[i].received) {
                     g2.fillRect(testBlocks[i].x, testBlocks[i].y, testBlocks[i].length, testBlocks[i].width);
                 } if (i == testBlocks.length - 1 && testBlocks[i].received) { // If the last block has been received
                     startOver = true;
                 }
-            } if (milliElapsed >= testHold.enterTime && ! testHold.received) {
-                g2.setPaint(new Color(rand.nextInt(10), 252, rand.nextInt(150)));
-                g2.fillRect(testHold.headX, testHold.headY, testHold.length, testHold.width);
-                g2.fillRect(testHold.tailX, testHold.tailY, testHold.length, testHold.width);
-            }
+            } 
             
-            // Do the beginning process again
+            //if (milliElapsed >= testHold.enterTime && ! testHold.received) {
+                //g2.setPaint(new Color(rand.nextInt(10), 252, rand.nextInt(150)));
+                //g2.fillRect(testHold.headX, testHold.headY, testHold.length, testHold.width);
+                //g2.fillRect(testHold.tailX, testHold.tailY, testHold.length, testHold.width);
+            //}
+            
+            // Just stop instead
             if (startOver) {
-                milliElapsed = 0; // Reset time
-                for (int i = 0; i < receiveTimes[0].length; i++) {
-                    testBlocks[i] = new TapBlock("easy", "A", 0, (int) (receiveTimes[0][i] * 1000));
-                    testBlocks[i].calculateVelocity(testReceiver);
-                    testBlocks[i].calculateEnterTime(testBlocks[i].speed, testBlocks[i].receiveTime, testBlocks[i].x, testBlocks[i].y, testReceiver.x, testReceiver.y);
-                    System.out.println("Block loaded. Enter time: " + testBlocks[i].enterTime);
-                }
-                startOver = false;
+                System.out.println("Have a nice day. Now go.");
+                System.exit(0);
             }
 
             g2.drawString("testAudio.getTime(): " + Integer.toString(testAudioTime), 10, 500);
@@ -132,7 +125,7 @@ public class testYourBlocksHERE implements KeyListener {
         // If the key event text matches the block button, tell the user the result
         for (Block b: testBlocks) {
             if (KeyEvent.getKeyText(e.getKeyCode()).equalsIgnoreCase(b.button) && ! b.received) { 
-                if (b.received) {
+                if (b.receive(milliElapsed)) {
                     System.out.println("Woohoo!");
                 } else {
                     System.out.println("Boo! *Throws tomato");
