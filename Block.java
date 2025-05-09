@@ -11,7 +11,7 @@ public abstract class Block implements KeyListener {
     int timeReceived;
     double velocityX, velocityY;
     String level; // each level has it's own preset coordinates, dimensions, etc.
-    Boolean received;
+    boolean received;
 
     Block (String level, String button, int receiveTime, Receiver someReceiver) {
         this.receiveTime = receiveTime;

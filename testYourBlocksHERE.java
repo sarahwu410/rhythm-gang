@@ -132,7 +132,7 @@ public class testYourBlocksHERE implements KeyListener {
         // If the key event text matches the block button, tell the user the result
         for (Block b: testBlocks) {
             if (KeyEvent.getKeyText(e.getKeyCode()).equalsIgnoreCase(b.button) && ! b.received) { 
-                if (b.receive(milliElapsed)) {
+                if (b.received) {
                     System.out.println("Woohoo!");
                 } else {
                     System.out.println("Boo! *Throws tomato");
