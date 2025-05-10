@@ -32,14 +32,14 @@ public class TapBlock extends Block{
     }
 
     @Override
-    boolean receive(int timeReceived) {
+    void receive(int timeReceived) {
         int accuracy = (int) (Math.abs(receiveTime - timeReceived));
     	if (accuracy < 500) {
             System.out.println("✅ Woohoo! You hit!");
-            return this.received = true;
+            this.received = true;
         } else {
             System.out.println("❌ Boo! *Throws tomato* You missed.");
-            return this.missed = true;
+            this.missed = true;
         }
     	
     }

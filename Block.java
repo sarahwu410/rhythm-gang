@@ -129,7 +129,7 @@ public abstract class Block implements KeyListener {
      * @param timeReceived the time that the block is received at
      * @return whether it was a hit (this.received = true) or miss (this.missed = true)
      */
-    abstract boolean receive(int timeReceived);
+    abstract void receive(int timeReceived);
 
     /**
      * figure out whether the block passed the receiver completely

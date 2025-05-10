@@ -68,7 +68,7 @@ public class HoldBlock extends Block {
     }
 
     @Override
-    boolean receive(int timeReceived) {
+    void receive(int timeReceived) {
         throw new UnsupportedOperationException("Unimplemented method 'receive'");
     }
 

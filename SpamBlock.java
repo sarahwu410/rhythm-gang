@@ -56,26 +56,8 @@ public class SpamBlock extends Block {
         }
     }
 
-    // /**
-    //  * checks whether the current audio time is within the set time bounds of the spam block
-    //  * @param milliElapsed the current time of the audio in milliseconds
-    //  * @return returns true if within bounds, false if out of bounds
-    //  */
-    // boolean checkTime(int milliElapsed) {
-    //     if () return true;
-    //     else return false;
-    // }
-
-    // /**
-    //  * updates the number of times still left to be spammed
-    //  */
-    // void updateSpamNum() {
-        
-        
-    // }
-
     @Override
-    boolean receive(int timeReceived) {
+    void receive(int timeReceived) {
         if (this.receiveTime <= timeReceived && this.endTime >= timeReceived) {
             if (this.numSpam > 0) this.numSpam -= 1;
             if (this.numSpam < 0) this.numSpam = 0;
@@ -83,11 +65,7 @@ public class SpamBlock extends Block {
 
         if (numSpam == 0) {
             System.out.println("✅ Spam complete!");
-            return this.received = true;
-        } else {
-            System.out.println("❌ Spam fail :(");
-            // return this.missed = true;
-            return whatever = true;
+            this.received = true;
         }
     }
 
