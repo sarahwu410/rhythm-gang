@@ -18,7 +18,7 @@ public abstract class Block implements KeyListener {
     int timeReceived;
     double velocityX, velocityY;
     String level; // each level has it's own preset coordinates, dimensions, etc.
-    boolean received, missed;
+    boolean received, missed, missPassed;
     boolean canReceive = true;
 
     Block (String level, String button, int receiveTime, Receiver someReceiver) {
@@ -28,6 +28,7 @@ public abstract class Block implements KeyListener {
         this.someReceiver = someReceiver;
         this.received = false;
         this.missed = false;
+        this.missPassed = false;
 
         // each level will have unique block coordinates for each receiver
         // assigns those coordinates here
@@ -129,6 +130,12 @@ public abstract class Block implements KeyListener {
      * @return whether it was a hit (this.received = true) or miss (this.missed = true)
      */
     abstract boolean receive(int timeReceived);
+
+    /**
+     * figure out whether the block passed the receiver completely
+     * @param receiver the receiver the block is supposed to go to
+     */
+    protected abstract void passedReceiver(Receiver receiver);
     
     /**
      * Calculates the time that the block should enter
@@ -174,13 +181,7 @@ public abstract class Block implements KeyListener {
      * moves the block based on the audio time so it syncs with the audio
      * @param audioTime the current time the audio is at
      */
-    public void move(int audioTime) {
-        // Find the duration of the block's "existence"
-        int myTime = audioTime - enterTime;
-        // Find position based on time
-        x = (int) (enterX + this.velocityX * myTime);
-        y = (int) (enterY + this.velocityY * myTime);
-    }
+    public abstract void move(int audioTime);
 
     /**
      * helper method that checks whether the correct key is pressed for the corrosponding button

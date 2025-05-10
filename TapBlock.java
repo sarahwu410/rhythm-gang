@@ -12,6 +12,26 @@ public class TapBlock extends Block{
     }
 
     @Override
+    public void move(int audioTime) {
+        // Find the duration of the block's "existence"
+        int myTime = audioTime - enterTime;
+
+        // Find position based on time
+        x = (int) (enterX + this.velocityX * myTime);
+        y = (int) (enterY + this.velocityY * myTime);
+
+        this.passedReceiver(someReceiver);
+    }
+
+    @Override
+    protected void passedReceiver(Receiver receiver) {
+        if (this.x > (receiver.x+receiver.width) && this.y > (receiver.y+receiver.height)) {
+            this.canReceive = false;
+            this.missPassed = true;
+        }
+    }
+
+    @Override
     boolean receive(int timeReceived) {
         int accuracy = (int) (Math.abs(receiveTime - timeReceived));
     	if (accuracy < 500) {
@@ -39,4 +59,6 @@ public class TapBlock extends Block{
 
     @Override
     public void keyReleased(KeyEvent e) {}
+
+    
 }

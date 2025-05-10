@@ -1,7 +1,7 @@
 /*
  * Eleora Jacob, Teresa Mach, Wilson Wei, Sarah Wu
  * April 15, 2025 - May 11, 2025
- * To test a combination of blocks, will most likely be the prototype
+ * To test a combination of blocks
  */
 
 import java.awt.*;
@@ -30,6 +30,8 @@ public class testYourBlocksHERE implements KeyListener {
     int testAudioTime;
     Receiver testReceiver = new Receiver(1000, 500, 100, 100);
 
+    Block[] testSpamBlocks = {new SpamBlock("easy", "A", 9000, testReceiver, 5, 12000)};
+
     testYourBlocksHERE() {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,15 +54,17 @@ public class testYourBlocksHERE implements KeyListener {
                 for (Block b: testBlocks) {
                     if (milliElapsed > b.enterTime) {
                         b.move(testAudio.getTime()*10); // Only move them if they are meant to appear
-                        b.canReceive = true;
-                    }
-                    
-
-                    if (b.x > (testReceiver.x+testReceiver.width) && b.y > (testReceiver.y+testReceiver.height)) {
-                        b.canReceive = false;
-                        b.missed = true;
                     }
                 }
+
+                // spam block test
+                for (Block sb: testSpamBlocks) {
+                    if (milliElapsed > sb.enterTime) {
+                        sb.move(testAudio.getTime()*10); // Only move them if they are meant to appear
+                        sb.canReceive = true;
+                    }
+                }
+
                 // See if all the blocks are off screen
                 if (testBlocks[testBlocks.length - 1].x > frame.getWidth()) startOver = true;
                 frame.repaint();
@@ -86,6 +90,7 @@ public class testYourBlocksHERE implements KeyListener {
 
             Graphics2D g2 = (Graphics2D)g;
 
+            // paint receiver
             g2.setPaint(Color.BLUE);
             g2.fillRect(testReceiver.x, testReceiver.y, testReceiver.width, testReceiver.height);
 
@@ -99,28 +104,35 @@ public class testYourBlocksHERE implements KeyListener {
                 } if (i == testBlocks.length - 1 && (testBlocks[i].received || testBlocks[i].missed)) { // If the last block has been received
                     startOver = true;
                 }
-            } 
+            }
+            
+            // spam block test
+            for (int i = 0; i < testSpamBlocks.length; i++) {
+                g2.setPaint(Color.MAGENTA);
+
+                // If the block has not been received and has reached its enter time
+                if (milliElapsed > testSpamBlocks[i].enterTime && !testSpamBlocks[i].received && !testSpamBlocks[i].missed) {
+                    g2.fillRect(testSpamBlocks[i].x, testSpamBlocks[i].y, testSpamBlocks[i].length, testSpamBlocks[i].width);
+                    g2.setPaint(Color.WHITE);
+                    g2.drawString(String.valueOf(((SpamBlock)testSpamBlocks[i]).numSpam) , (testSpamBlocks[i].x)+20, testSpamBlocks[i].y+20);
+                }
+            }
             
             // Just stop instead
             if (startOver) {
-                System.out.println("Have a nice day. Now go.");
+                // System.out.println("Have a nice day. Now go.");
 
                 // make the program wait 1 sec before closing to not make it surprising
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                // try {
+                //     Thread.sleep(1000);
+                // } catch (InterruptedException e) {
+                //     e.printStackTrace();
+                // }
 
-                System.exit(0);
+                // System.exit(0);
             }
 
             g2.drawString("testAudio.getTime(): " + Integer.toString(testAudioTime), 10, 500);
-
-            // paint receiver
-            g2.setPaint(Color.BLUE);
-            g2.fillRect(testReceiver.x, testReceiver.y, testReceiver.width, testReceiver.height);
-            
         }
     }
 
@@ -130,7 +142,7 @@ public class testYourBlocksHERE implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         for (Block b: testBlocks) {
-            if (b.canReceive && !b.received && !b.missed) {
+            if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
                 // required to set the timeReceived attribute within the Block object itself before calling keyPressed
                 b.setTimeReceived(milliElapsed);
                 b.keyPressed(e);
@@ -138,6 +150,7 @@ public class testYourBlocksHERE implements KeyListener {
                 break;
             }
         }
+
         if (e.getKeyCode() == KeyEvent.VK_Q) {
             System.out.println("Quitter.");
             System.exit(0);
@@ -145,7 +158,18 @@ public class testYourBlocksHERE implements KeyListener {
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+        // spam block test
+        for (Block b: testSpamBlocks) {
+            if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                b.setTimeReceived(milliElapsed);
+                b.keyReleased(e);
+                
+                break;
+            }
+        }
+    }
 
     public static void main(String[] args) {new testYourBlocksHERE();}
 }

@@ -39,7 +39,8 @@ public class HoldBlock extends Block {
     }
 
     // Move both head and tail diagonally
-    public void move() {
+    @Override
+    public void move(int audioTime) {
         // Calculate direction vector toward the receiver
         int dx = someReceiver.x - headX;
         int dy = someReceiver.y - headY;
@@ -58,6 +59,12 @@ public class HoldBlock extends Block {
         // Move tail to follow the head
         tailX += velocityX;
         tailY += velocityY;
+    }
+
+    @Override
+    protected void passedReceiver(Receiver receiver) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'passedReceiver'");
     }
 
     @Override
@@ -101,6 +108,4 @@ public class HoldBlock extends Block {
     public boolean isCompleted() {
         return completed;
     }
-
-    
 }
