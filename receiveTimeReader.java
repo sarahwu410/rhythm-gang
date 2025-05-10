@@ -257,7 +257,7 @@ public class ReceiveTimeReader {
 	}
 
 	/**
-	 * Reads in the receive times from a .txt file. Format is strict-->receiveTime endTime numSpam keyName
+	 * Reads in the note information from a .txt file. Format is strict-->receiveTime endTime numSpam keyName
 	 * @param fileWithTimes	The .txt file with spam note information
 	 * @param myLevel	The level of the notes
 	 * @param myReceivers	A hashmap containing the note letter and corresponding receiver
@@ -270,7 +270,7 @@ public class ReceiveTimeReader {
 		// The readers
 		FileReader in;
 		BufferedReader readFile;
-		// Create an array of TapBlocks
+		// Create an array of SpamBlocks
 		SpamBlock[] spammers;
 		String line;
 
@@ -317,7 +317,7 @@ public class ReceiveTimeReader {
 				try {
 					current = (line.trim()).split(" "); // receiveTime endTime numSpam keyName
 					// Create a block
-					spammers[totalNotes] = new SpamBlock(myLevel, current[3], (int) Double.parseDouble((current[0]))*1000, myReceivers.get(current[1]), Integer.valueOf(current[2]), (int) Double.parseDouble((current[1]))*1000);
+					spammers[totalNotes] = new SpamBlock(myLevel, current[3], (int) Double.parseDouble((current[0]))*1000, myReceivers.get(current[3]), Integer.valueOf(current[2]), (int) Double.parseDouble((current[1]))*1000);
 					System.out.println("Enter Time: " + spammers[totalNotes].enterTime + " " + spammers[totalNotes].button);
 					totalNotes++;
 				} catch (Exception e) {
@@ -336,5 +336,87 @@ public class ReceiveTimeReader {
 		// Return all the receive times
 		System.out.println("I am returning an array of spam blocks with " + spammers.length + " notes.");
 		return spammers;
+	}
+
+	/**
+	 * Reads in note information from a .txt file. Format is strict-->receiveTime holdDuration keyName
+	 * @param fileWithTimes	The .txt file with hold note information
+	 * @param myLevel	The level of the notes
+	 * @param myReceivers	A hashmap containing the note letter and corresponding receiver
+	 * @return	An array of hold blocks
+	 */
+	public static HoldBlock[] loadHoldBlocks(String fileWithTimes, String myLevel, HashMap<String, Receiver> myReceivers) {
+		// Stuff
+		File textFile = new File(fileWithTimes);
+		int totalNotes=0;
+		// The readers
+		FileReader in;
+		BufferedReader readFile;
+		// Create an array of HoldBlocks
+		HoldBlock[] holdies;
+		String line;
+
+		// Check if the file exists or quit
+		if (textFile.exists()) {
+			System.out.println("I already exist.");
+		} else {
+			System.out.println("Bruh.");
+			System.out.println("It ain't even there.");
+			System.exit(0);
+		}
+		
+		// Read the file
+		try {
+			in = new FileReader(textFile); // I am a reader of a file, you created a file object, use that
+			readFile = new BufferedReader(in);
+			
+			// first read in the total number of notes
+			while ((line = readFile.readLine()) != null) {
+				System.out.println(line);
+				try {
+					totalNotes++;
+				} catch (Exception e) {
+					System.out.println("Bleh.");
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("Cool idk.");
+		}
+			
+		// Let the user know how many notes they are so they can assure they match
+		System.out.println("Total Notes: " + totalNotes);
+		// Set size of tap block array
+		holdies = new HoldBlock[totalNotes];
+			
+		try {	
+			// Store the info
+			in = new FileReader(textFile);
+			readFile = new BufferedReader(in);
+			String[] current = new String[3]; // stores info per line
+			// Reuse totalNotes as a counter
+			totalNotes = 0;
+			while ((line = readFile.readLine()) != null) {
+				try {
+					current = (line.trim()).split(" "); // receiveTime holdDuration keyName
+					// Create a block
+					holdies[totalNotes] = new HoldBlock(myLevel, current[2], (int) Double.parseDouble((current[0]))*1000, myReceivers.get(current[2]), (int) Double.parseDouble((current[1]))*1000);
+					System.out.println("Enter Time: " + holdies[totalNotes].enterTime + " " + holdies[totalNotes].button);
+					totalNotes++;
+				} catch (Exception e) {
+					System.out.println("Could not load block.");
+					System.out.println("IOException e: " + e.getMessage());
+				}
+			}
+			
+			readFile.close();
+			in.close();
+		} catch (IOException k) {
+			System.out.println("Something went wrong with loading the blocks.");
+			System.out.println("IOException e: " + k.getMessage());
+		}
+		
+		// Return all the receive times
+		System.out.println("I am returning an array of spam blocks with " + holdies.length + " notes.");
+		return holdies;
 	}
 }
