@@ -62,8 +62,6 @@ public class testYourBlocksHERE implements KeyListener {
         frame.setVisible(true);
         timer.start();
         testAudio.playAudio();
-
-       
     }
 
     public class DrawPanel extends JPanel{
@@ -117,28 +115,15 @@ public class testYourBlocksHERE implements KeyListener {
         //throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
     }
 
-
-
     @Override
     public void keyPressed(KeyEvent e) {
         // If the key event text matches the block button, tell the user the result
         for (Block b: testBlocks) {
-            if (KeyEvent.getKeyText(e.getKeyCode()).equalsIgnoreCase(b.button) && ! b.received) { 
-                if (b.receive(milliElapsed)) {
-                    System.out.println("Woohoo!");
-                } else {
-                    System.out.println("Boo! *Throws tomato");
-                }
-                System.out.println("Received: " + milliElapsed);
-                break;
-            }
+            b.setTimeReceived(milliElapsed);
+            b.keyPressed(e);
         }
         if (e.getKeyCode() == KeyEvent.VK_Q) {
             System.out.println("Quitter.");
-            System.exit(0);
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_Q) {
             System.exit(0);
         }
     }
@@ -146,6 +131,5 @@ public class testYourBlocksHERE implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {}
 
-    
     public static void main(String[] args) {new testYourBlocksHERE();}
 }

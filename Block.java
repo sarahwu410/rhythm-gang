@@ -107,6 +107,8 @@ public abstract class Block implements KeyListener {
         calculateEnterTime(this.speed, this.receiveTime, this.enterX, this.enterY, someReceiver);
     }
 
+    public void setTimeReceived(int timeReceived) {this.timeReceived = timeReceived;}
+
     abstract boolean receive(int timeReceived);
     
     /**
