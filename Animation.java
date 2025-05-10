@@ -52,32 +52,27 @@ public class Animation {
 	/**
 	 * Draws the image by taking the graphics object, this method specifically will
 	 * loop through the given frames
-	 * @param g Graphics object for drawing
 	 */
 	public void draw(Graphics2D g) {
 		if (frame == spriteFrames) frame = 0;
-		g.drawImage(img, drawX, drawY, widthDesired, heightDesired, anchorX,
+		g.drawImage(img, drawX, drawY, drawX + widthDesired, drawY + heightDesired, anchorX,
 				anchorY + (spriteHeight * frame), anchorX + spriteWidth,
 				anchorY + (spriteHeight * frame) + spriteHeight, null);
 		frame++;
 	}
-
+	
 	/**
-	 * Draws a specific fram
-	 * loop through the given frames
-	 * @param g Graphics object for drawing
-	 * @param frame 
+	 * Draws a specific frame
 	 */
 	public void drawFrame(Graphics2D g, int frame) {
-		if (frame == spriteFrames) frame = 0;
+		if (frame > spriteFrames || frame < 1) frame = 1; // To avoid invalid frame number
 		g.drawImage(img, drawX, drawY, widthDesired, heightDesired, anchorX,
-				anchorY + (spriteHeight * frame), anchorX + spriteWidth,
-				anchorY + (spriteHeight * frame) + spriteHeight, null);
+				anchorY + (spriteHeight * (frame - 1)), anchorX + spriteWidth,
+				anchorY + (spriteHeight * (frame - 1)) + spriteHeight, null);
 	}
 	
 	/**
 	 * Draws the first frame
-	 * @param g Graphics object for drawing
 	 */
 	public void drawFirstFrame(Graphics2D g) {
 		g.drawImage(img, drawX, drawY, widthDesired, heightDesired, anchorX, anchorY, anchorX + spriteWidth,
@@ -86,7 +81,6 @@ public class Animation {
 	
 	/**
 	 * gets frame number
-	 * @return the frame number
 	 */
 	public int getFrame() {
 		return frame;
@@ -94,7 +88,6 @@ public class Animation {
 
 	/**
 	 * gets width
-	 * @return the width
 	 */
 	public int getWidth() {
 		return widthDesired;
@@ -102,7 +95,6 @@ public class Animation {
 
 	 /**
 	 * gets height
-	 * @return the height
 	 */
 	public int getHeight() {
 		return heightDesired;
@@ -110,7 +102,6 @@ public class Animation {
 
 	/**
 	 * gets x-coordinate
-	 * @return the x coordinate
 	 */
 	public int getX() {
 		return drawX;
@@ -118,9 +109,24 @@ public class Animation {
 
 	/**
 	 * gets y-coordinate
-	 * @return the y coordinate
 	 */
 	public int getY() {
 		return drawY;
+	}
+
+	/**
+	 * gets x-coordinate
+	 */
+	public void setX(int newX) {
+		this.drawX = newX;
+		System.out.println("Set X");
+	}
+
+	/**
+	 * gets y-coordinate
+	 */
+	public void setY(int newY) {
+		this.drawY = newY;
+		System.out.println("Set Y");
 	}
 }
