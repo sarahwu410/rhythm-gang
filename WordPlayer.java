@@ -19,10 +19,10 @@ public class WordPlayer {
      * Constructor
      * @param words Spritesheet with the word ratings
      */
-    WordPlayer(Image words) {
-        perfect = new AnimationHorizontal(words, 0, 0, 5, 228, 96);
-        good = new AnimationHorizontal(words, 0, 96, 5, 228, 96);
-        missed = new AnimationHorizontal(words, 0, 192, 5, 228, 96);
+    WordPlayer(Image words, int drawX, int drawY) {
+        perfect = new AnimationHorizontal(words, 20, 20, 0, 0, 5, 228, 96);
+        good = new AnimationHorizontal(words, 20, 20, 0, 96, 5, 228, 96);
+        missed = new AnimationHorizontal(words, 20, 20, 0, 192, 5, 228, 96);
 
         // Initialize attributes
         play = false;
