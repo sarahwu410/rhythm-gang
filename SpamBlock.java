@@ -3,8 +3,8 @@ import java.awt.event.KeyEvent;
 public class SpamBlock extends Block {
     int numSpam, endTime;
 
-    public SpamBlock(String level, String button, int enterTime, int receiveTime, int numSpam, int endTime) {
-        super(level, button, enterTime, receiveTime);
+    public SpamBlock(String level, String button, int receiveTime, Receiver someReceiver, int numSpam, int endTime) {
+        super(level, button, receiveTime, someReceiver);
         this.numSpam = numSpam;
         this.endTime = endTime;
     }

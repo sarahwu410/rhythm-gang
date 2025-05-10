@@ -40,7 +40,7 @@ public class testYourBlocksHERE implements KeyListener {
         System.out.println("There are " + testBlocks.length + " blocks.");
         // Load up the blocks
         for (int i = 0; i < receiveTimes[0].length; i++) {
-            testBlocks[i] = new TapBlock("easy", "A", 0, (int) (receiveTimes[0][i] * 1000));
+            testBlocks[i] = new TapBlock("easy", "A", (int) (receiveTimes[0][i] * 1000), testReceiver);
             testBlocks[i].calculateVelocity(testReceiver);
             testBlocks[i].calculateEnterTime(testBlocks[i].speed, testBlocks[i].receiveTime, testBlocks[i].x, testBlocks[i].y, testReceiver.x, testReceiver.y);
             System.out.println("Block loaded. Enter time: " + testBlocks[i].enterTime);
@@ -97,7 +97,7 @@ public class testYourBlocksHERE implements KeyListener {
             if (startOver) {
                 milliElapsed = 0; // Reset time
                 for (int i = 0; i < receiveTimes[0].length; i++) {
-                    testBlocks[i] = new TapBlock("easy", "A", 0, (int) (receiveTimes[0][i] * 1000));
+                    testBlocks[i] = new TapBlock("easy", "A", (int) (receiveTimes[0][i] * 1000), testReceiver);
                     testBlocks[i].calculateVelocity(testReceiver);
                     testBlocks[i].calculateEnterTime(testBlocks[i].speed, testBlocks[i].receiveTime, testBlocks[i].x, testBlocks[i].y, testReceiver.x, testReceiver.y);
                     System.out.println("Block loaded. Enter time: " + testBlocks[i].enterTime);

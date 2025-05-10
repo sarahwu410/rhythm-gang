@@ -14,12 +14,9 @@ public class HoldBlock extends Block {
     int velocityX = 1;
     int velocityY = 1;
 
-    private Receiver receiver;
-
-    public HoldBlock(String level, String button, int enterTime, long receiveTime, int holdDurationMs, Receiver receiver) {
-        super(level, button, enterTime, receiveTime);
+    public HoldBlock(String level, String button, int receiveTime, Receiver someReceiver, int holdDurationMs) {
+        super(level, button, receiveTime, someReceiver);
         this.holdDurationMs = holdDurationMs;
-        this.receiver = receiver;
 
         this.headX = 0;
         this.headY = 0;
@@ -27,8 +24,8 @@ public class HoldBlock extends Block {
         this.tailY = -30;
 
         // Set velocity towards receiver
-        int dx = receiver.x - headX;
-        int dy = receiver.y - headY;
+        int dx = someReceiver.x - headX;
+        int dy = someReceiver.y - headY;
         double length = Math.sqrt(dx * dx + dy * dy);
         velocityX = (int) (dx / length * 2);
         velocityY = (int) (dy / length * 2);
@@ -37,8 +34,8 @@ public class HoldBlock extends Block {
     // Move both head and tail diagonally
     public void move() {
         // Calculate direction vector toward the receiver
-        int dx = receiver.x - headX;
-        int dy = receiver.y - headY;
+        int dx = someReceiver.x - headX;
+        int dy = someReceiver.y - headY;
         double length = Math.sqrt(dx * dx + dy * dy);
 
         // Normalize the direction vector and scale by velocity

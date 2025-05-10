@@ -6,6 +6,7 @@ public abstract class Block implements KeyListener {
     double enterX, enterY;
     int speed;
     String button; // which button corrosponds to a particular block
+    Receiver someReceiver;
     int enterTime;
     int receiveTime;
     int timeReceived;
@@ -17,6 +18,7 @@ public abstract class Block implements KeyListener {
         this.receiveTime = receiveTime;
         this.level = level;
         this.button = button;
+        this.someReceiver = someReceiver;
         this.received = false;
 
         if (this.level.equalsIgnoreCase("easy")) {

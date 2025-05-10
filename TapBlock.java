@@ -1,8 +1,8 @@
 import java.awt.event.KeyEvent;
 
 public class TapBlock extends Block{
-    public TapBlock(String level, String button, int enterTime, int receiveTime) {
-        super(level, button, enterTime, receiveTime);
+    public TapBlock(String level, String button, int receiveTime, Receiver someReceiver) {
+        super(level, button, receiveTime,someReceiver);
     }
 
     @Override
