@@ -36,26 +36,8 @@ public class SpamBlock extends Block {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (button.equalsIgnoreCase("A")) {
-            if (e.getKeyCode()==KeyEvent.VK_A) {
-                if (numSpam>0) numSpam-=1;
-            }
-        } else if (button.equalsIgnoreCase("B")) {
-            if (e.getKeyCode()==KeyEvent.VK_B) {
-                if (numSpam>0) numSpam-=1;
-            }
-        } else if (button.equalsIgnoreCase("C")) {
-            if (e.getKeyCode()==KeyEvent.VK_C) {
-                if (numSpam>0) numSpam-=1;
-            }
-        } else if (button.equalsIgnoreCase("X")) {
-            if (e.getKeyCode()==KeyEvent.VK_X) {
-                if (numSpam>0) numSpam-=1;
-            }
-        } else if (button.equalsIgnoreCase("Y")) {
-            if (e.getKeyCode()==KeyEvent.VK_Y) {
-                if (numSpam>0) numSpam-=1;
-            }
+        if (this.matchesKey(e)) {
+            if (numSpam>0) numSpam-=1;
         }
     }
 }

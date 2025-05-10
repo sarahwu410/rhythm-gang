@@ -9,8 +9,8 @@ public class TapBlock extends Block{
     boolean receive(int timeReceived) {
         int accuracy = (int) (Math.abs(receiveTime - timeReceived));
         this.received = true;
-    	if (accuracy < 1000) return this.received = true;
-    	else return this.received = false;
+    	if (accuracy < 500) return this.received = true;
+    	else return this.missed = true;
     }
 
     @Override
@@ -18,14 +18,14 @@ public class TapBlock extends Block{
 
     @Override
     public void keyPressed(KeyEvent e) {
+        // If the key event text matches the block button, tell the user the result
         if (KeyEvent.getKeyText(e.getKeyCode()).equalsIgnoreCase(this.button) && ! this.received) { 
-                if (this.receive(this.timeReceived)) {
-                    System.out.println("Woohoo!");
-                } else {
-                    System.out.println("Boo! *Throws tomato");
-                }
-                System.out.println("Received: " + timeReceived);
-                return;
+            this.receive(this.timeReceived);
+            if (this.received) System.out.println("Woohoo! You hit!");
+            else if (this.missed) System.out.println("Boo! *Throws tomato* You missed.");
+            else System.out.println("There's been an error.");
+            System.out.println("Received: " + this.timeReceived);
+            return;
             }
     }
 

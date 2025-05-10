@@ -56,7 +56,7 @@ public class HoldBlock extends Block {
     // Handle key press (start timing)
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!isPressed && matchesKey(e)) {
+        if (!isPressed && this.matchesKey(e)) {
             isPressed = true;
             pressStartTime = System.currentTimeMillis();
         }
@@ -65,7 +65,7 @@ public class HoldBlock extends Block {
     // Handle key release (check success)
     @Override
     public void keyReleased(KeyEvent e) {
-        if (isPressed && matchesKey(e)) {
+        if (isPressed && this.matchesKey(e)) {
             isPressed = false;
             long heldTime = System.currentTimeMillis() - pressStartTime;
 
@@ -84,18 +84,6 @@ public class HoldBlock extends Block {
     // Unused, but must be implemented
     @Override
     public void keyTyped(KeyEvent e) {}
-
-    // Helper: check if the correct key is pressed
-    private boolean matchesKey(KeyEvent e) {
-        switch (button.toUpperCase()) {
-            case "A": return e.getKeyCode() == KeyEvent.VK_A;
-            case "B": return e.getKeyCode() == KeyEvent.VK_B;
-            case "C": return e.getKeyCode() == KeyEvent.VK_C;
-            case "X": return e.getKeyCode() == KeyEvent.VK_X;
-            case "Y": return e.getKeyCode() == KeyEvent.VK_Y;
-            default: return false;
-        }
-    }
 
     // Optional: check externally if the player succeeded
     public boolean isCompleted() {

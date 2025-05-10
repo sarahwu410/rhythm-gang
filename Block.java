@@ -12,7 +12,8 @@ public abstract class Block implements KeyListener {
     int timeReceived;
     double velocityX, velocityY;
     String level; // each level has it's own preset coordinates, dimensions, etc.
-    boolean received;
+    boolean received, missed;
+    boolean canReceive = true;
 
     Block (String level, String button, int receiveTime, Receiver someReceiver) {
         this.receiveTime = receiveTime;
@@ -20,6 +21,7 @@ public abstract class Block implements KeyListener {
         this.button = button;
         this.someReceiver = someReceiver;
         this.received = false;
+        this.missed = false;
 
         if (this.level.equalsIgnoreCase("easy")) {
             this.length = 100;
@@ -104,7 +106,7 @@ public abstract class Block implements KeyListener {
         }
         this.enterX = x;
         this.enterY = y;
-        calculateEnterTime(this.speed, this.receiveTime, this.enterX, this.enterY, someReceiver);
+        calculateEnterTime(this.speed, this.receiveTime, this.enterX, this.enterY, this.someReceiver);
     }
 
     public void setTimeReceived(int timeReceived) {this.timeReceived = timeReceived;}
@@ -114,7 +116,7 @@ public abstract class Block implements KeyListener {
     /**
 	 * Calculates the time that the block should enter, all double parameters
 	 */
-	public void calculateEnterTime(double speed, int finalTime, double enterX, double enterY, Receiver myReceiver) {
+	private void calculateEnterTime(double speed, int finalTime, double enterX, double enterY, Receiver myReceiver) {
 		double distanceX, distanceY, distance;
 		
 		// Calculate the distance in X and Y components
@@ -161,6 +163,18 @@ public abstract class Block implements KeyListener {
         // Find position based on time
         x = (int) (enterX + this.velocityX * myTime);
         y = (int) (enterY + this.velocityY * myTime);
+    }
+
+    // Helper: check if the correct key is pressed
+    protected boolean matchesKey(KeyEvent e) {
+        switch (button.toUpperCase()) {
+            case "A": return e.getKeyCode() == KeyEvent.VK_A;
+            case "B": return e.getKeyCode() == KeyEvent.VK_B;
+            case "C": return e.getKeyCode() == KeyEvent.VK_C;
+            case "X": return e.getKeyCode() == KeyEvent.VK_X;
+            case "Y": return e.getKeyCode() == KeyEvent.VK_Y;
+            default: return false;
+        }
     }
 
     @Override
