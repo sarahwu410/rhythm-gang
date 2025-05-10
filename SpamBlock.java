@@ -52,7 +52,12 @@ public class SpamBlock extends Block {
     protected void passedReceiver(Receiver receiver) {
         if (this.x > (receiver.x+receiver.width) && this.y > (receiver.y+receiver.height)) {
             this.canReceive = false;
-            this.missPassed = true;
+            if (numSpam>0) {
+                this.missPassed = true;
+
+                // this prints everytime timer updates
+                // System.out.println("❌ Spam fail :(");
+            }
         }
     }
 
