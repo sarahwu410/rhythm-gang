@@ -11,7 +11,7 @@ public class HoldBlockTest extends JPanel implements ActionListener, KeyListener
         // Initialize receiver near bottom right
         receiver = new Receiver(600, 400, 30, 30);
         // Example: Hold the "A" key for 1500ms within 1s of receiveTime
-        holdBlock = new HoldBlock("test", "A", 0, System.currentTimeMillis() + 3000, 1500, receiver);
+        holdBlock = new HoldBlock("test", "A", (int)(System.currentTimeMillis() + 3000), receiver, 1500);
 
         setFocusable(true);
         addKeyListener(this);
@@ -49,7 +49,8 @@ public class HoldBlockTest extends JPanel implements ActionListener, KeyListener
     public void actionPerformed(ActionEvent e) {
         holdBlock.move();
         if (holdBlock.isCompleted()) {
-            holdBlock = new HoldBlock("test", "A", 0, System.currentTimeMillis() + 3000, 1500, receiver);
+            holdBlock = new HoldBlock("test", "A", (int)(System.currentTimeMillis() + 3000), receiver, 1500);
+
         }
         repaint();
     }
