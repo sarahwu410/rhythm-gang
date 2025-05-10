@@ -17,8 +17,8 @@ public class TapBlock extends Block{
         int myTime = audioTime - enterTime;
 
         // Find position based on time
-        x = (int) (enterX + this.velocityX * myTime);
-        y = (int) (enterY + this.velocityY * myTime);
+        this.x = (int) (enterX + this.velocityX * myTime);
+        this.y = (int) (enterY + this.velocityY * myTime);
 
         this.passedReceiver(someReceiver);
     }

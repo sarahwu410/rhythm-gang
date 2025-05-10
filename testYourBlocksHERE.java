@@ -31,6 +31,7 @@ public class testYourBlocksHERE implements KeyListener {
     Receiver testReceiver = new Receiver(1000, 500, 100, 100);
 
     Block[] testSpamBlocks = {new SpamBlock("easy", "A", 9000, testReceiver, 5, 12000)};
+    Block[] testHoldBlocks = {new HoldBlock("easy", "A", 13000, testReceiver, 1000)};
 
     testYourBlocksHERE() {
         JFrame frame = new JFrame();
@@ -61,7 +62,13 @@ public class testYourBlocksHERE implements KeyListener {
                 for (Block sb: testSpamBlocks) {
                     if (milliElapsed > sb.enterTime) {
                         sb.move(testAudio.getTime()*10); // Only move them if they are meant to appear
-                        sb.canReceive = true;
+                    }
+                }
+
+                // hold block test
+                for (Block hb: testHoldBlocks) {
+                    if (milliElapsed > hb.enterTime) {
+                        hb.move(testAudio.getTime()*10); // Only move them if they are meant to appear
                     }
                 }
 
@@ -117,6 +124,20 @@ public class testYourBlocksHERE implements KeyListener {
                     g2.drawString(String.valueOf(((SpamBlock)testSpamBlocks[i]).numSpam) , (testSpamBlocks[i].x)+20, testSpamBlocks[i].y+20);
                 }
             }
+
+            // hold block test
+            for (int i = 0; i < testHoldBlocks.length; i++) {
+                g2.setPaint(Color.RED);
+
+                // If the block has not been received and has reached its enter time
+                if (milliElapsed > testHoldBlocks[i].enterTime && !testHoldBlocks[i].received && !testHoldBlocks[i].missed) {
+                    g2.fillRect(testHoldBlocks[i].x, testHoldBlocks[i].y, testHoldBlocks[i].length, testHoldBlocks[i].width);
+                    g2.fillRect(((HoldBlock)testHoldBlocks[i]).tailX, ((HoldBlock)testHoldBlocks[i]).tailY, testHoldBlocks[i].length, testHoldBlocks[i].width);
+
+                    g2.setPaint(Color.WHITE);
+                    g2.drawLine(testHoldBlocks[i].x, testHoldBlocks[i].y, ((HoldBlock)testHoldBlocks[i]).tailX, ((HoldBlock)testHoldBlocks[i]).tailY);
+                }
+            }
             
             // Just stop instead
             if (startOver) {
@@ -132,6 +153,7 @@ public class testYourBlocksHERE implements KeyListener {
                 // System.exit(0);
             }
 
+            g2.setPaint(Color.WHITE);
             g2.drawString("testAudio.getTime(): " + Integer.toString(testAudioTime), 10, 500);
         }
     }
@@ -151,6 +173,17 @@ public class testYourBlocksHERE implements KeyListener {
             }
         }
 
+        // hold block test
+        for (Block b: testHoldBlocks) {
+            if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                b.setTimeReceived(milliElapsed);
+                b.keyPressed(e);
+                
+                break;
+            }
+        }
+
         if (e.getKeyCode() == KeyEvent.VK_Q) {
             System.out.println("Quitter.");
             System.exit(0);
@@ -161,6 +194,17 @@ public class testYourBlocksHERE implements KeyListener {
     public void keyReleased(KeyEvent e) {
         // spam block test
         for (Block b: testSpamBlocks) {
+            if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                b.setTimeReceived(milliElapsed);
+                b.keyReleased(e);
+                
+                break;
+            }
+        }
+
+        // hold block test
+        for (Block b: testHoldBlocks) {
             if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
                 // required to set the timeReceived attribute within the Block object itself before calling keyPressed
                 b.setTimeReceived(milliElapsed);

@@ -42,8 +42,8 @@ public class SpamBlock extends Block {
         this.distanceTravelledY = (this.timeBeforeSpam + (this.slowedFactor*this.timeDuringSpam) + this.timeAfterSpam) * this.velocityY;
 
         // Find position based on time
-        x = (int) (enterX + this.distanceTravelledX);
-        y = (int) (enterY + this.distanceTravelledY);
+        this.x = (int) (enterX + this.distanceTravelledX);
+        this.y = (int) (enterY + this.distanceTravelledY);
 
         this.passedReceiver(someReceiver);
     }
