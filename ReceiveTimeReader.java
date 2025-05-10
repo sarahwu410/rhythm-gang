@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class ReceiveTimeReader {
 	
@@ -418,5 +419,56 @@ public class ReceiveTimeReader {
 		// Return all the receive times
 		System.out.println("I am returning an array of spam blocks with " + holdies.length + " notes.");
 		return holdies;
+	}
+
+	/*
+	 * Sorts 3 kinds of notes into one array list. Returns an array organized by enterTime (lowest to highest)
+	 * @param tappies	Tapblocks to be sorted
+	 * @param spammies	SpamBlocks to be sorted
+	 * @param holdies	HoldBlocks to be sorted
+	 * @return an array list of all the blocks sorted by enter time
+	 */
+	public static ArrayList<Block> sortBlocks(Block[] tappies, Block[] spammies, Block[] holdies) {
+
+		ArrayList<Block> myNotes = new ArrayList<>();
+
+		// Add tapblocks to array list of notes
+		for (Block b: tappies) {
+			myNotes.add(b);
+		}
+		System.out.println("Tap blocks added.");
+
+		// Sort SpamBlocks by insertion sorting
+		for (Block b: spammies) {
+			for (int i = 0; i < myNotes.size(); i++) {
+				if (b.enterTime < myNotes.get(i).enterTime) {
+					if (i == 0) myNotes.add(0, b);
+					else myNotes.add(i, b);
+					break;
+				} else if (i == myNotes.size() - 1) {
+					myNotes.add(b);
+					break;
+				}
+			}
+		}
+		System.out.println("Spam blocks sorted.");
+		
+
+		// Sort HoldBlocks by insertion sorting
+		for (Block b: holdies) {
+			for (int i = 0; i < myNotes.size(); i++) {
+				if (b.enterTime < myNotes.get(i).enterTime) {
+					if (i == 0) myNotes.add(0, b);
+					else myNotes.add(i, b);
+					break;
+				} else if (i == myNotes.size() - 1) {
+					myNotes.add(b);
+					break;
+				}
+			}
+		}
+		System.out.println("Hold blocks sorted.");
+
+		return myNotes;
 	}
 }

@@ -13,6 +13,7 @@ import javax.swing.*;
 
 import java.util.Random; // To change colors of blocks
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class testYourBlocksHERE implements KeyListener {
     DrawPanel panel;
@@ -32,6 +33,7 @@ public class testYourBlocksHERE implements KeyListener {
 
     Block[] testSpamBlocks = {new SpamBlock("easy", "A", 9000, testReceiver, 5, 12000)};
     Block[] testHoldBlocks = {new HoldBlock("easy", "A", 13000, testReceiver, 1000)};
+    ArrayList<Block> allBlocks;
 
     testYourBlocksHERE() {
         JFrame frame = new JFrame();
@@ -48,6 +50,9 @@ public class testYourBlocksHERE implements KeyListener {
         // Load up the blocks
         testBlocks = ReceiveTimeReader.loadTapBlocks("res/testReceiveTimes.txt", "easy", theseReceivers);
         System.out.println("There are " + testBlocks.length + " blocks.");
+
+        // How to use ReceiveTimeReader to sort blocks
+        allBlocks = ReceiveTimeReader.sortBlocks(testBlocks, testSpamBlocks, testHoldBlocks);
 
         timer = new Timer(1,new ActionListener() {
             @Override
