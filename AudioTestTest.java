@@ -8,6 +8,10 @@ public class AudioTestTest extends JFrame implements KeyListener {
     AudioTest audio = new AudioTest("res/Audio/Chess Type Beat Slowed.wav");
     int rectx;
     boolean isPlaying;
+    AudioTest.AudioFrameListener listener = (buffer, len) -> {
+            rectx=(int)(audio.getTimeInMilliseconds() * 1); // move 1 px per millisecond
+            panel.repaint();
+        };
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -22,11 +26,6 @@ public class AudioTestTest extends JFrame implements KeyListener {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.addKeyListener(this);
         panel = new DrawingPanel();
-
-        AudioTest.AudioFrameListener listener = (buffer, len) -> {
-            rectx+=1;
-            panel.repaint();
-        };
 
         this.add(panel);
         this.pack();
@@ -57,8 +56,13 @@ public class AudioTestTest extends JFrame implements KeyListener {
         }
 
         if (e.getKeyCode()==KeyEvent.VK_P) {
-            if (isPlaying) audio.pauseAudio();
-            // if (!isPlaying) audio.playAudio(listener);
+            if (isPlaying) {
+                audio.pauseAudio();
+                isPlaying = false;
+            } else if (!isPlaying) {
+                audio.playAudio(listener);
+                isPlaying = true;
+            }
         }
     }
 

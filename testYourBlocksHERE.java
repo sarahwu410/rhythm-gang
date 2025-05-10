@@ -45,7 +45,7 @@ public class testYourBlocksHERE implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 for (Block b: testBlocks) {
                     if (milliElapsed > b.enterTime) {
-                        b.move((testAudio.getTime()) * 10); // Only move them if they are meant to appear
+                        b.move(testAudio.getTime()*10); // Only move them if they are meant to appear
                         b.canReceive = true;
                     }
                     
@@ -88,9 +88,9 @@ public class testYourBlocksHERE implements KeyListener {
                 g2.setPaint(new Color(rand.nextInt(10), 252, rand.nextInt(150)));
 
                 // If the block has not been received and has reached its enter time
-                if (milliElapsed > testBlocks[i].enterTime && ! testBlocks[i].received) {
+                if (milliElapsed > testBlocks[i].enterTime && !testBlocks[i].received && !testBlocks[i].missed) {
                     g2.fillRect(testBlocks[i].x, testBlocks[i].y, testBlocks[i].length, testBlocks[i].width);
-                } if (i == testBlocks.length - 1 && testBlocks[i].received) { // If the last block has been received
+                } if (i == testBlocks.length - 1 && (testBlocks[i].received || testBlocks[i].missed)) { // If the last block has been received
                     startOver = true;
                 }
             } 

@@ -10,7 +10,7 @@ public class AudioTest {
     private int bytesRead;
     private File file;
     private boolean playing = false;
-    // private volatile boolean pauseRequested;
+    private volatile boolean pauseRequested;
     private long pausedPos = 0; // to save where the audio was before in case it was paused
     private Thread playbackThread;
 
@@ -36,6 +36,8 @@ public class AudioTest {
     }
 
     public void start(AudioFrameListener listener) throws Exception {
+        pauseRequested = false;
+
         new Thread(() -> {
             // opens a SourceDataLine for playback and inside a try block to automatically close the SourceDataLine after
             try (SourceDataLine audioLine = (SourceDataLine)AudioSystem.getLine(info)) {
@@ -48,7 +50,7 @@ public class AudioTest {
                 buffer = new byte[1024]; // read audio in 1024 byte chunks
 
                 // reads from the audio input stream until the end (-1) and each iteration adds the next chunck of audio data to buffer
-                while ((bytesRead = audioInput.read(buffer, 0, buffer.length)) != -1) {
+                while (!pauseRequested && (bytesRead = audioInput.read(buffer, 0, buffer.length)) != -1) {
                     // sends audio data into speaker (via SourceDataLine)
                     audioLine.write(buffer, 0, bytesRead); // play chunk
                     pausedPos+= bytesRead;
@@ -56,11 +58,6 @@ public class AudioTest {
                     // calls performAction() with current audio frame data
                     if (listener != null) {
                         listener.performAction(buffer, bytesRead); // call code in the listener
-                    }
-
-                    if (Thread.currentThread().isInterrupted()) {
-                        audioLine.stop();
-                        return;
                     }
                 }
 
@@ -98,9 +95,14 @@ public class AudioTest {
     }
     
     public void pauseAudio() {
+        pauseRequested = true;
         playing = false;
-        if (playbackThread != null) {
-            playbackThread.interrupt();
+        if (playbackThread != null && playbackThread.isAlive()) {
+            try {
+                playbackThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
