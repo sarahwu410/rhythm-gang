@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 public class TapBlock extends Block{
     public TapBlock(String level, String button, int receiveTime, Receiver someReceiver) {
         super(level, button, receiveTime, someReceiver);
+        this.Blocktype = "TapBlock"; //used in easylevel
     }
 
     @Override

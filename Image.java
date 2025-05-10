@@ -1,12 +1,7 @@
-/*
- * Wilson Wei
- * April 15, 2025 - May 11, 2025
- * Takes an image file and loads it
- */
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,30 +10,55 @@ import javax.swing.*;
 public class Image {
     private BufferedImage img;
     private String filepath;
-	private int counter;
+	private int limit;
+	ArrayList<BufferedImage> images;
+	int counter;
+	private boolean loopable;
+
 
     Image(String filepath) {
+		images = new ArrayList<BufferedImage>();
         this.filepath = filepath;
         img = loadImage(filepath);
+
     }
 
-	Image(String filepath, int counter) {
+	Image(String filepath, int limit) {
+		images = new ArrayList<BufferedImage>();
 		this.filepath = filepath;
-		img = loadImage(filepath);
-		this.counter = counter;
+		for (int i = 1; i <= limit; i++) {
+			images.add(loadImage(filepath + " (" + i + ").png" ));
+		}
+		this.filepath = filepath;
+		this.limit = limit;
+		this.counter = 0;
 	}
 
-	/**
-	 * gets the image
-	 * @return the image
-	 */
-    public BufferedImage getImage(){return img;}
+	Image(String filepath, int limit, boolean loop) {
+		images = new ArrayList<BufferedImage>();
+		for (int i = 1; i <= limit; i++) {
+			images.add(loadImage(filepath + " (" + i+ ").png" ));
+		}
+		this.filepath = filepath;
+		this.limit = limit;
+		this.loopable = loop;
+		this.counter = 0;
+	}
+	
+
+    public BufferedImage getImage() { 
+		if (images.isEmpty())return img;
+		else return images.get(counter);
+	}
     
-	/**
-	 * loads the image without having to re-type this code everytime an image is loaded
-	 * @param filename the file path for the image
-	 * @return the loaded image
-	 */
+	public void updateCount() {
+		System.out.println(counter);
+		if (counter < limit-1) counter++;
+		else if (loopable) counter = 0;
+	}
+
+
+
     static BufferedImage loadImage(String filename) {
 		BufferedImage img = null;
 		try{
@@ -52,4 +72,8 @@ public class Image {
 		//else System.out.printf("w=%d, h=%d%n",img.getWidth(), img.getHeight());
 		return img;
 	}
+
+
+
+
 }

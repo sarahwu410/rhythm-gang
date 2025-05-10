@@ -46,7 +46,7 @@ public class testYourBlocksHERE implements KeyListener {
         theseReceivers.put("B", testReceiver);
 
         // Load up the blocks
-        testBlocks = ReceiveTimeReader.loadTapBlocks("res/testReceiveTimes.txt", "easy", theseReceivers);
+        testBlocks = receiveTimeReader.loadTapBlocks("res/testReceiveTimes.txt", "easy", theseReceivers);
         System.out.println("There are " + testBlocks.length + " blocks.");
 
         timer = new Timer(1,new ActionListener() {

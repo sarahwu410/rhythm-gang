@@ -17,6 +17,7 @@ public class SpamBlock extends Block {
         super(level, button, receiveTime, someReceiver);
         this.numSpam = numSpam;
         this.endTime = endTime;
+        this.Blocktype = "SpamBlock"; //used in easy level
     }
 
     @Override

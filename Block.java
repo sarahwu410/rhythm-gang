@@ -18,6 +18,8 @@ public abstract class Block implements KeyListener {
     int timeReceived;
     double velocityX, velocityY;
     String level; // each level has it's own preset coordinates, dimensions, etc.
+    String Blocktype; //used in easylevel
+    boolean hit; //used in easylevel
     boolean received, missed, missPassed;
     boolean canReceive = true;
 
