@@ -1,5 +1,5 @@
 /*
- * No idea
+ * Teresa Mach
  * April 15, 2025 - May 11, 2025
  * A class for the recaiver to set specific coordinates and dimensions
  */

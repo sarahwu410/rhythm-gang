@@ -11,7 +11,6 @@ public class SpamBlock extends Block {
     double slowedFactor = 0.07;
     double distanceTravelledX = 0, distanceTravelledY = 0;
     double timeBeforeSpam, timeDuringSpam, timeAfterSpam;
-    boolean whatever;
 
     public SpamBlock(String level, String button, int receiveTime, Receiver someReceiver, int numSpam, int endTime) {
         super(level, button, receiveTime, someReceiver);
