@@ -16,42 +16,65 @@ public class Animation {
 	/**
 	 * constructor, the object needs to have its image, where it should start, and
 	 * how far it can go
+	 * @param img	spritesheet for the animation
+	 * @param drawX	The x-coordinate where the image should be drawn
+	 * @param drawY	The y-coordinate where the image should be drawn
+	 * @param anchorX	The starting x-coordinate on the sprite sheet
+	 * @param anchorY	The starting y-coordinate on the sprite sheet
+	 * @param spriteFrames	The amount of frames in the animation
+	 * @param spriteWidth	The width of the sprite
+	 * @param spriteHeight	The height of the sprite
 	 */
-	Animation(Image img, int anchorX, int anchorY, int spriteFrames, int spriteWidth, int spriteHeight) {
+	Animation(Image img, int drawX, int drawY, int anchorX, int anchorY, int spriteFrames, int spriteWidth, int spriteHeight) {
 		this.img = img;
+		// coordinates
 		this.anchorX = anchorX;
 		this.anchorY = anchorY;
+		// frame info
 		this.spriteFrames = spriteFrames;
 		this.spriteWidth = spriteWidth;
-		this.widthDesired = spriteWidth;
 		this.spriteHeight = spriteHeight;
+		// Drawing info
+		this.drawX = drawX;
+		this.drawY = drawY;
+		this.widthDesired = spriteWidth;
 		this.heightDesired = spriteHeight;
-		drawX = 0;
-		drawY = 0;
 		frame = 0;
 	}
 
 	/**
 	 * Another constructor, this one takes the height or width desired in addition
+	 * @param img	spritesheet for the animation
+	 * @param drawX	The x-coordinate where the image should be drawn
+	 * @param drawY	The y-coordinate where the image should be drawn
+	 * @param anchorX	The starting x-coordinate on the sprite sheet
+	 * @param anchorY	The starting y-coordinate on the sprite sheet
+	 * @param spriteFrames	The amount of frames in the animation
+	 * @param spriteWidth	The width of the sprite
+	 * @param spriteHeight	The height of the sprite
 	 */
-	Animation(Image img, int anchorX, int anchorY, int spriteFrames, int spriteWidth, int spriteHeight,
+	Animation(Image img, int drawX, int drawY, int anchorX, int anchorY, int spriteFrames, int spriteWidth, int spriteHeight,
 			int widthDesired, int heightDesired) {
 		this.img = img;
+		// coordinates
 		this.anchorX = anchorX;
 		this.anchorY = anchorY;
+		// frame info
 		this.spriteFrames = spriteFrames;
 		this.spriteWidth = spriteWidth;
 		this.spriteHeight = spriteHeight;
+		// Drawing info
+		this.drawX = drawX;
+		this.drawY = drawY;
 		this.widthDesired = widthDesired;
 		this.heightDesired = heightDesired;
-		drawX = 0;
-		drawY = 0;
 		frame = 0;
 	}
 
 	/**
 	 * Draws the image by taking the graphics object, this method specifically will
 	 * loop through the given frames
+	 * @param g	The Graphics2D object that should be used to draw
 	 */
 	public void draw(Graphics2D g) {
 		if (frame == spriteFrames) frame = 0;
@@ -63,6 +86,8 @@ public class Animation {
 	
 	/**
 	 * Draws a specific frame
+	 * @param g	The Graphics2D object that should be used to draw
+	 * @param frame	The number of the frame to be drawn (adjusted, counting from 1)
 	 */
 	public void drawFrame(Graphics2D g, int frame) {
 		if (frame > spriteFrames || frame < 1) frame = 1; // To avoid invalid frame number
@@ -73,6 +98,7 @@ public class Animation {
 	
 	/**
 	 * Draws the first frame
+	 * @param g	The Graphics2D object that should be used to draw
 	 */
 	public void drawFirstFrame(Graphics2D g) {
 		g.drawImage(img, drawX, drawY, widthDesired, heightDesired, anchorX, anchorY, anchorX + spriteWidth,
@@ -81,6 +107,7 @@ public class Animation {
 	
 	/**
 	 * gets frame number
+	 * @return	The number of the current frame, not adjusted (counting from zero)
 	 */
 	public int getFrame() {
 		return frame;
@@ -88,6 +115,7 @@ public class Animation {
 
 	/**
 	 * gets width
+	 * @return	The width of the image being drawn (not spritesheet width)
 	 */
 	public int getWidth() {
 		return widthDesired;
@@ -95,6 +123,7 @@ public class Animation {
 
 	 /**
 	 * gets height
+	 * @return	The height of the image being drawn (not spritesheet height)
 	 */
 	public int getHeight() {
 		return heightDesired;
@@ -102,6 +131,7 @@ public class Animation {
 
 	/**
 	 * gets x-coordinate
+	 * @return	The x-coordinate of the image being drawn (not spritesheet coordinate)
 	 */
 	public int getX() {
 		return drawX;
@@ -109,13 +139,15 @@ public class Animation {
 
 	/**
 	 * gets y-coordinate
+	 * @return	The x-coordinate of the image being drawn (not spritesheet coordinate)
 	 */
 	public int getY() {
 		return drawY;
 	}
 
 	/**
-	 * gets x-coordinate
+	 * sets x-coordinate
+	 * @param newX	The new x-coordinate for the image to be drawn
 	 */
 	public void setX(int newX) {
 		this.drawX = newX;
@@ -124,6 +156,7 @@ public class Animation {
 
 	/**
 	 * gets y-coordinate
+	 * @param newY	The new y-coordinate for the image to be drawn
 	 */
 	public void setY(int newY) {
 		this.drawY = newY;
