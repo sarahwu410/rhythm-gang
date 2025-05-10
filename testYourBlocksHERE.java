@@ -1,3 +1,9 @@
+/*
+ * Eleora Jacob, Teresa Mach, Wilson Wei, Sarah Wu
+ * April 15, 2025 - May 11, 2025
+ * To test a combination of blocks, will most likely be the prototype
+ */
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

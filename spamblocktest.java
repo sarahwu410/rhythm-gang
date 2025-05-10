@@ -1,3 +1,9 @@
+/*
+ * Wilson Wei
+ * April 15, 2025 - May 11, 2025
+ * To test whether SpamBlock.java works or not
+ */
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

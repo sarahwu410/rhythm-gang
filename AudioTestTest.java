@@ -1,3 +1,9 @@
+/*
+ * Sarah Wu
+ * April 15, 2025 - May 11, 2025
+ * To test if AudioTest.java works
+ */
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

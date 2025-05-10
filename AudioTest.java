@@ -1,3 +1,9 @@
+/*
+ * Sarah Wu
+ * April 15, 2025 - May 11, 2025
+ * An attempt to change animation frames accoridng to audio instead of timer. Will most likely scrap
+ */
+
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
