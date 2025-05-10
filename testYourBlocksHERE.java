@@ -20,7 +20,7 @@ public class testYourBlocksHERE implements KeyListener {
     HashMap<String, Receiver> theseReceivers = new HashMap<>();
 
     Boolean startOver = false;
-    Audio testAudio = new Audio("res/Audio/15-minutes-of-silence.wav");
+    Audio testAudio = new Audio("res/Audio/Counting Up to 60 Seconds.wav");
     int testAudioTime;
     Receiver testReceiver = new Receiver(1000, 500, 100, 100);
 

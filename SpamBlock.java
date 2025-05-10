@@ -1,3 +1,9 @@
+/*
+ * Eleora Jacob, Teresa Mach, Wilson Wei, Sarah Wu
+ * April 15, 2025 - May 11, 2025
+ * Class that extends Block.java for a type of block that only has to be spammed a certain amount of times
+ */
+
 import java.awt.event.KeyEvent;
 
 public class SpamBlock extends Block {
@@ -9,23 +15,34 @@ public class SpamBlock extends Block {
         this.endTime = endTime;
     }
 
+    /**
+     * checks whether the current audio time is within the set time bounds of the spam block
+     * @param milliElapsed the current time of the audio in milliseconds
+     * @return returns true if within bounds, false if out of bounds
+     */
     boolean checkTime(int milliElapsed) {
         if (this.receiveTime <= milliElapsed && this.endTime >= milliElapsed) return true;
         else return false;
     }
 
-    void updateSPAM(int milliElapsed) {
-        if (this.receiveTime <= milliElapsed && this.endTime >= milliElapsed) {
-            if (this.numSpam > 0) this.numSpam -= 1;
-            if (this.numSpam < 0) this.numSpam = 0;
-        }
+    /**
+     * updates the number of times still left to be spammed
+     */
+    void updateSpamNum() {
+        if (this.numSpam > 0) this.numSpam -= 1;
+        if (this.numSpam < 0) this.numSpam = 0;
     }
 
+    @Override
     boolean receive(int timeReceived) {
-        this.timeReceived = timeReceived;
         int accuracy = (int) (Math.abs(receiveTime) - timeReceived);
-    	if (accuracy < 1000 && numSpam == 0) return true;
-    	else return false;
+    	if (accuracy < 500 && numSpam == 0) {
+            System.out.println("✅ Spam complete!");
+            return this.received = true;
+        } else {
+            System.out.println("❌ Spam fail :(");
+            return this.missed = false;
+        }
     }
 
     @Override
@@ -37,7 +54,7 @@ public class SpamBlock extends Block {
     @Override
     public void keyReleased(KeyEvent e) {
         if (this.matchesKey(e)) {
-            if (numSpam>0) numSpam-=1;
+            this.updateSpamNum();
         }
     }
 }

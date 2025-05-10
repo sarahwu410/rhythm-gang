@@ -17,8 +17,10 @@ public class AnimationHorizontal extends Animation {
     }
 
     /**
-	 * Draws a specific frame
+	 * Draws a specific fram
 	 * loop through the given frames
+	 * @param g Graphics object for drawing
+	 * @param frame 
 	 */
 	public void drawFrame(Graphics2D g, int frame) {
 		if (frame == spriteFrames) frame = 0;

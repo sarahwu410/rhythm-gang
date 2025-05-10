@@ -1,3 +1,10 @@
+/*
+ * Eleora Jacob, Teresa Mach, Wilson Wei, Sarah Wu
+ * April 15, 2025 - May 11, 2025
+ * Class that extends Block.java for a type of block that only has to be held for a certain duration
+ */
+
+
 import java.awt.event.KeyEvent;
 
 public class HoldBlock extends Block {
@@ -53,6 +60,11 @@ public class HoldBlock extends Block {
         tailY += velocityY;
     }
 
+    @Override
+    boolean receive(int timeReceived) {
+        throw new UnsupportedOperationException("Unimplemented method 'receive'");
+    }
+
     // Handle key press (start timing)
     @Override
     public void keyPressed(KeyEvent e) {
@@ -90,9 +102,5 @@ public class HoldBlock extends Block {
         return completed;
     }
 
-    @Override
-    boolean receive(int timeReceived) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'receive'");
-    }
+    
 }

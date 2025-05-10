@@ -1,3 +1,9 @@
+/*
+ * No idea
+ * April 15, 2025 - May 11, 2025
+ * A class for the recaiver to set specific coordinates and dimensions
+ */
+
 public class Receiver {
     int x, y, width, height;
 

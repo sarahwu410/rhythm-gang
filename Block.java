@@ -1,3 +1,9 @@
+/*
+ * Eleora Jacob, Teresa Mach, Wilson Wei, Sarah Wu
+ * April 15, 2025 - May 11, 2025
+ * An abstract class for the unique block types: TapBlock, HoldBlock, SpamBlock
+ */
+
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
@@ -23,6 +29,8 @@ public abstract class Block implements KeyListener {
         this.received = false;
         this.missed = false;
 
+        // each level will have unique block coordinates for each receiver
+        // assigns those coordinates here
         if (this.level.equalsIgnoreCase("easy")) {
             this.length = 100;
             this.width = 100;
@@ -109,13 +117,27 @@ public abstract class Block implements KeyListener {
         calculateEnterTime(this.speed, this.receiveTime, this.enterX, this.enterY, this.someReceiver);
     }
 
+    /**
+     * sets the variable this.timeReceived into the time that the block was received at
+     * @param timeReceived time that the block was received at
+     */
     public void setTimeReceived(int timeReceived) {this.timeReceived = timeReceived;}
 
+    /**
+     * sets different requirements for what counts as a hit or a miss when a block is received
+     * @param timeReceived the time that the block is received at
+     * @return whether it was a hit (this.received = true) or miss (this.missed = true)
+     */
     abstract boolean receive(int timeReceived);
     
     /**
-	 * Calculates the time that the block should enter, all double parameters
-	 */
+     * Calculates the time that the block should enter
+     * @param speed speed that the block is supposed to travel at
+     * @param finalTime the time that the block is meant to be received
+     * @param enterX the initial x coordiante of the block
+     * @param enterY the initial y coordinate of the block
+     * @param myReceiver the receiver that the block is supposed to go to
+     */
 	private void calculateEnterTime(double speed, int finalTime, double enterX, double enterY, Receiver myReceiver) {
 		double distanceX, distanceY, distance;
 		
@@ -135,28 +157,23 @@ public abstract class Block implements KeyListener {
         calculateVelocity(myReceiver);
 	}
 
-    public void redoCalculations() {
+    // public void redoCalculations() {
 
-    }
-
-    // /**
-	//  * Block Movemeent
-	//  */
-    // public void setReceiver(Receiver aReceiver, Receiver bReceiver, Receiver cReceiver, Receiver xReceiver, Receiver yReceiver) {
-    //     switch (button.toUpperCase()) {
-    //         case "A" -> this.receiver = aReceiver;
-    //         case "B" -> this.receiver = bReceiver;
-    //         case "C" -> this.receiver = cReceiver;
-    //         case "X" -> this.receiver = xReceiver;
-    //         case "Y" -> this.receiver = yReceiver;
-    //     }
     // }
 
-    public void calculateVelocity(Receiver r) {
+    /**
+     * calculates the valocity of the block
+     * @param r the receiver the block is supposed to arrive at
+     */
+    private void calculateVelocity(Receiver r) {
         this.velocityX = (r.x - this.enterX) / (this.receiveTime - this.enterTime);
         this.velocityY = (r.y - this.enterY) / (this.receiveTime - this.enterTime);
     }
 
+    /**
+     * moves the block based on the audio time so it syncs with the audio
+     * @param audioTime the current time the audio is at
+     */
     public void move(int audioTime) {
         // Find the duration of the block's "existence"
         int myTime = audioTime - enterTime;
@@ -165,7 +182,12 @@ public abstract class Block implements KeyListener {
         y = (int) (enterY + this.velocityY * myTime);
     }
 
-    // Helper: check if the correct key is pressed
+    /**
+     * helper method that checks whether the correct key is pressed for the corrosponding button
+     * saves code
+     * @param e the key event
+     * @return the appropriate key code with the corrosponding button
+     */
     protected boolean matchesKey(KeyEvent e) {
         switch (button.toUpperCase()) {
             case "A": return e.getKeyCode() == KeyEvent.VK_A;

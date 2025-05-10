@@ -52,6 +52,7 @@ public class Animation {
 	/**
 	 * Draws the image by taking the graphics object, this method specifically will
 	 * loop through the given frames
+	 * @param g Graphics object for drawing
 	 */
 	public void draw(Graphics2D g) {
 		if (frame == spriteFrames) frame = 0;
@@ -60,10 +61,12 @@ public class Animation {
 				anchorY + (spriteHeight * frame) + spriteHeight, null);
 		frame++;
 	}
-	
+
 	/**
-	 * Draws a specific frame
+	 * Draws a specific fram
 	 * loop through the given frames
+	 * @param g Graphics object for drawing
+	 * @param frame 
 	 */
 	public void drawFrame(Graphics2D g, int frame) {
 		if (frame == spriteFrames) frame = 0;
@@ -74,6 +77,7 @@ public class Animation {
 	
 	/**
 	 * Draws the first frame
+	 * @param g Graphics object for drawing
 	 */
 	public void drawFirstFrame(Graphics2D g) {
 		g.drawImage(img, drawX, drawY, widthDesired, heightDesired, anchorX, anchorY, anchorX + spriteWidth,
@@ -82,6 +86,7 @@ public class Animation {
 	
 	/**
 	 * gets frame number
+	 * @return the frame number
 	 */
 	public int getFrame() {
 		return frame;
@@ -89,6 +94,7 @@ public class Animation {
 
 	/**
 	 * gets width
+	 * @return the width
 	 */
 	public int getWidth() {
 		return widthDesired;
@@ -96,6 +102,7 @@ public class Animation {
 
 	 /**
 	 * gets height
+	 * @return the height
 	 */
 	public int getHeight() {
 		return heightDesired;
@@ -103,6 +110,7 @@ public class Animation {
 
 	/**
 	 * gets x-coordinate
+	 * @return the x coordinate
 	 */
 	public int getX() {
 		return drawX;
@@ -110,6 +118,7 @@ public class Animation {
 
 	/**
 	 * gets y-coordinate
+	 * @return the y coordinate
 	 */
 	public int getY() {
 		return drawY;
