@@ -177,6 +177,11 @@ public abstract class Block implements KeyListener {
         this.velocityY = (r.y - this.enterY) / (this.receiveTime - this.enterTime);
     }
 
+    //
+    // volatile void calculateThroughReceiverTime(double speed, Receiver r) {
+
+    // }
+
     /**
      * moves the block based on the audio time so it syncs with the audio
      * @param audioTime the current time the audio is at
