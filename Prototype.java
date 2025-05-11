@@ -80,6 +80,11 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     public void actionPerformed(ActionEvent e) {
         for (Block b: allBlocks){
                     if (milliElapsed > b.enterTime) {
+                        if (milliElapsed>=b.enterTime && !b.received && !b.missed) {
+                            // Make sure the user can receive the block
+                            b.canReceive = true;
+                        }
+
                         b.move(audio.getTime()*10); // Only move them if they are meant to appear
                     }
                 }
@@ -124,9 +129,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             for (int i = 0; i<allBlocks.size(); i++) {
                 // if block has reached its enter time and not been received
                 if (milliElapsed>=allBlocks.get(i).enterTime && !allBlocks.get(i).received && !allBlocks.get(i).missed) {
-                    // Make sure the user can receive the block
-                    if (!allBlocks.get(i).canReceive) allBlocks.get(i).canReceive = true;
-
                     // draw the block
                     allBlocks.get(i).draw(g2);
                 }
@@ -190,7 +192,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         }
 
         if (e.getKeyCode() == KeyEvent.VK_T) {
-            System.out.println("HOPEFULLY TAPBLOCK; " + "RECEIVED: " + allBlocks.get(0).received + "; MISSED: " + allBlocks.get(0).missed + "; MISSPASSED: "+allBlocks.get(0).missPassed);
+            System.out.println("HOPEFULLY TAPBLOCK; " + "CANRECEIVE: " + allBlocks.get(0).canReceive);
         }
     }
 

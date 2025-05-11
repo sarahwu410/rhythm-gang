@@ -75,9 +75,11 @@ public class TapBlock extends Block{
             this.receive(this.timeReceived);
             System.out.println("Receive time: " + this.receiveTime + "; Time received: " + this.timeReceived);
             return;
-            }
+        }
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+        
+    }
 }

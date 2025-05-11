@@ -107,7 +107,7 @@ public class testYourBlocksHERE implements KeyListener {
                 // If the block has not been received and has reached its enter time
                 if (milliElapsed >= allBlocks.get(i).enterTime && !allBlocks.get(i).received && !allBlocks.get(i).missed) {
                     // Make sure the user can receive the block
-                    if (!allBlocks.get(i).canReceive) allBlocks.get(i).canReceive = true;
+                    allBlocks.get(i).canReceive = true;
                     //// g2.fillRect(allBlocks.get(i).x, allBlocks.get(i).y, allBlocks.get(i).length, allBlocks.get(i).width);
 
                     allBlocks.get(i).draw(g2);
