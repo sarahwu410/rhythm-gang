@@ -22,6 +22,7 @@ public abstract class Block implements KeyListener {
     boolean hit; //used in easylevel
     boolean received, missed, missPassed;
     boolean canReceive = false; // false so that the block can't be received if it's not on screen
+    boolean reachedReceiver = false;
 
     Block (String level, String button, int receiveTime, Receiver someReceiver) {
         this.receiveTime = receiveTime;
@@ -132,6 +133,16 @@ public abstract class Block implements KeyListener {
      * @return whether it was a hit (this.received = true) or miss (this.missed = true)
      */
     abstract void receive(int timeReceived);
+
+    /**
+     * checks if the block has intersected a receiver
+     * @param receiver the receiver to be intersected with
+     */
+    protected void intersectsReceiver(Receiver receiver) {
+        if ((this.x < (receiver.x + receiver.width)) && (this.y < (receiver.y + receiver.height)) && ((this.x + this.width)>receiver.x) && ((this.y + this.length)>receiver.y)) {
+            this.reachedReceiver = true;
+        }
+    }
 
     /**
      * figure out whether the block passed the receiver completely

@@ -26,9 +26,13 @@ public class TapBlock extends Block{
 
     @Override
     protected void passedReceiver(Receiver receiver) {
-        if (this.x > (receiver.x+receiver.width) && this.y > (receiver.y+receiver.height)) {
-            this.canReceive = false;
-            this.missPassed = true;
+        this.intersectsReceiver(receiver);
+        
+        if (this.reachedReceiver) {
+            if ((this.x > (receiver.x+receiver.width)) || (this.y > (receiver.y+receiver.height)) || ((this.x+this.length)<receiver.x) || ((this.y+this.width)<receiver.y)) {
+                this.canReceive = false;
+                this.missPassed = true;
+            }
         }
     }
 

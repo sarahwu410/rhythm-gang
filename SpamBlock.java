@@ -50,13 +50,12 @@ public class SpamBlock extends Block {
 
     @Override
     protected void passedReceiver(Receiver receiver) {
-        if (this.x > (receiver.x+receiver.width) && this.y > (receiver.y+receiver.height)) {
-            this.canReceive = false;
-            if (numSpam>0) {
-                this.missPassed = true;
-
-                // this prints everytime timer updates
-                // System.out.println("❌ Spam fail :(");
+        this.intersectsReceiver(receiver);
+        
+        if (this.reachedReceiver) {
+            if ((this.x > (receiver.x+receiver.width)) || (this.y > (receiver.y+receiver.height)) || ((this.x+this.length)<receiver.x) || ((this.y+this.width)<receiver.y)) {
+                this.canReceive = false;
+                if (numSpam>0) this.missPassed = true;
             }
         }
     }

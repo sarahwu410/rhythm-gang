@@ -36,33 +36,21 @@ public class HoldBlock extends Block {
         this.tailX = (int) (enterX + this.velocityX * tailTime);
         this.tailY = (int) (enterY + this.velocityY * tailTime);
 
-        // // Calculate direction vector toward the receiver
-        // int dx = someReceiver.x - this.x;
-        // int dy = someReceiver.y - this.y;
-        // double length = Math.sqrt(dx * dx + dy * dy);
-
-        // // Normalize the direction vector and scale by velocity
-        // if (length != 0) { // Avoid division by zero
-        //     velocityX = (int) (dx / length * 2); // Adjust speed as needed
-        //     velocityY = (int) (dy / length * 2);
-        // }
-
-        // // Move head toward the receiver
-        // this.x += velocityX;
-        // this.y += velocityY;
-
-        // // Move tail to follow the head
-        // tailX += velocityX;
-        // tailY += velocityY;
-
         this.passedReceiver(someReceiver);
+        if (!this.canReceive) System.out.println("cant receive at: " + audioTime);
     }
 
     @Override
     protected void passedReceiver(Receiver receiver) {
-        if (this.tailX > (receiver.x+receiver.width) && this.tailY > (receiver.y+receiver.height)) {
-            this.canReceive = false;
-            this.missPassed = true;
+        if ((this.tailX < (receiver.x + receiver.width)) && (this.tailY < (receiver.y + receiver.height)) && ((this.tailX + this.width)>receiver.x) && ((this.tailY + this.length)>receiver.y)) {
+            this.reachedReceiver = true;
+        }
+        
+        if (this.reachedReceiver) {
+            if ((this.tailX > (receiver.x+receiver.width)) || (this.tailY > (receiver.y+receiver.height)) || ((this.tailX+this.length)<receiver.x) || ((this.tailY+this.width)<receiver.y)) {
+                this.canReceive = false;
+                this.missPassed = true;
+            }
         }
     }
 
@@ -105,6 +93,7 @@ public class HoldBlock extends Block {
         if (!isPressed && this.matchesKey(e)) {
             isPressed = true;
             this.pressStartTime = this.timeReceived;
+            System.out.println("HOLD BLOCK PRESSED");
         }
     }
 
@@ -115,16 +104,6 @@ public class HoldBlock extends Block {
             isPressed = false;
             heldTime = this.timeReceived - this.pressStartTime;
             this.receive(this.timeReceived);
-
-            // // You can replace System.currentTimeMillis with your game time if needed
-            // long accuracy = Math.abs(System.currentTimeMillis() - receiveTime);
-
-            // if (heldTime >= holdDurationMs && accuracy <= 1000) {
-            //     completed = true;
-            //     System.out.println("✅ Hold success!");
-            // } else {
-            //     System.out.println("❌ Hold failed: heldTime = " + heldTime + ", accuracy = " + accuracy);
-            // }
         }
     }
 
