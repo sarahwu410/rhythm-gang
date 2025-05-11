@@ -78,7 +78,6 @@ public class TapBlock extends Block{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // If the key event text matches the block button, tell the user the result
         if (this.matchesKey(e) && ! this.received) { 
             this.receive(this.timeReceived);
             System.out.println("Receive time: " + this.receiveTime + "; Time received: " + this.timeReceived);
