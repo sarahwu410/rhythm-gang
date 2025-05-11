@@ -46,12 +46,16 @@ public class AnimationHorizontal extends Animation {
 	 * @param g	The Graphics2D object that should be used to draw
 	 */
 	@Override
-	public void draw(Graphics2D g) {
+	public void draw(Graphics2D g, int audioTime) {
+		newTime = audioTime;
 		if (frame == spriteFrames) frame = 0;
 		g.drawImage(img, drawX, drawY, drawX + widthDesired, drawY + heightDesired, anchorX + (spriteWidth * frame),
 				anchorY, anchorX + (spriteWidth * frame) + spriteWidth,
 				anchorY + spriteHeight, null);
-		frame++;
+		if (newTime - lastTime >= 83) {
+			lastTime = newTime;
+			frame++;
+		} else return;
 	}
 
 /**

@@ -98,7 +98,7 @@ public class testYourBlocksHERE implements KeyListener {
             g2.setPaint(Color.BLUE);
             g2.fillRect(testReceiver.x, testReceiver.y, testReceiver.width, testReceiver.height);
 
-            rater.play(g2);
+            rater.play(g2, milliElapsed);
 
             // Figure out what blocks to draw
             for (int i = 0; i < allBlocks.size(); i++) {

@@ -10,7 +10,8 @@ import java.awt.Graphics2D;
 public class Animation {
 
 	int anchorX, anchorY, widthDesired, heightDesired, spriteWidth, spriteHeight, spriteFrames, drawX, drawY,
-			frame;
+			frame, interval;
+	int newTime, lastTime; // assuming 12fps
 	Image img;
 
 	/**
@@ -39,6 +40,9 @@ public class Animation {
 		this.drawY = drawY;
 		this.widthDesired = spriteWidth;
 		this.heightDesired = spriteHeight;
+		// animation stuff
+		this.lastTime = 0;
+		this.newTime = 0;
 		frame = 0;
 	}
 
@@ -68,6 +72,9 @@ public class Animation {
 		this.drawY = drawY;
 		this.widthDesired = widthDesired;
 		this.heightDesired = heightDesired;
+		// animation stuff
+		this.lastTime = 0;
+		this.newTime = 0;
 		frame = 0;
 	}
 
@@ -76,12 +83,17 @@ public class Animation {
 	 * loop through the given frames
 	 * @param g	The Graphics2D object that should be used to draw
 	 */
-	public void draw(Graphics2D g) {
+	public void draw(Graphics2D g, int audioTime) {
+		newTime = audioTime;
 		if (frame == spriteFrames) frame = 0;
 		g.drawImage(img, drawX, drawY, drawX + widthDesired, drawY + heightDesired, anchorX,
 				anchorY + (spriteHeight * frame), anchorX + spriteWidth,
 				anchorY + (spriteHeight * frame) + spriteHeight, null);
-		frame++;
+		if (newTime - lastTime >= 83) {
+			lastTime = newTime;
+			frame++;
+		} else return;
+
 	}
 	
 	/**
@@ -161,5 +173,14 @@ public class Animation {
 	public void setY(int newY) {
 		this.drawY = newY;
 		System.out.println("Set Y");
+	}
+
+	/**
+	 * resets the animation
+	 */
+	public void reset() {
+		frame = 0;
+		lastTime = 0;
+		newTime = 0;
 	}
 }

@@ -126,7 +126,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             g2.drawString("Press SPACE to pause/unpause", 10, 550);
 
             // paint rating
-            rater.play(g2);
+            rater.play(g2, milliElapsed);
 
             // loop through all the blocks in the ArrayList
             for (int i = 0; i<allBlocks.size(); i++) {

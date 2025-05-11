@@ -20,9 +20,9 @@ public class WordPlayer {
      * @param words Spritesheet with the word ratings
      */
     WordPlayer(Image wordSpriteSheet, int drawX, int drawY) {
-        perfect = new AnimationHorizontal(wordSpriteSheet, drawX, drawY, 0, 0, 15, 228, 96);
-        good = new AnimationHorizontal(wordSpriteSheet, drawX, drawY, 0, 96, 15, 228, 96);
-        missed = new AnimationHorizontal(wordSpriteSheet, drawX, drawY, 0, 192, 15, 228, 96);
+        perfect = new AnimationHorizontal(wordSpriteSheet, drawX, drawY, 0, 0, 8, 228, 96);
+        good = new AnimationHorizontal(wordSpriteSheet, drawX, drawY, 0, 96, 8, 228, 96);
+        missed = new AnimationHorizontal(wordSpriteSheet, drawX, drawY, 0, 192, 8, 228, 96);
 
         // Initialize attributes
         play = false;
@@ -33,17 +33,17 @@ public class WordPlayer {
      * Draws whatever animation is necessary
      * @param The Graphics object that will draw the image
      */
-    public void play(Graphics2D g) {
+    public void play(Graphics2D g, int myAudioTime) {
         if (!play) return;
         else {
             if (rating == 1) {
-                perfect.draw(g);
+                perfect.draw(g, myAudioTime);
                 if (perfect.frame == perfect.spriteFrames) play = false;
             } else if (rating == 2) {
-                good.draw(g);
+                good.draw(g, myAudioTime);
                 if (good.frame == good.spriteFrames) play = false;
             } else if (rating == 3) {
-                missed.draw(g);
+                missed.draw(g, myAudioTime);
                 if (missed.frame == missed.spriteFrames) play = false;
             } else {
                 System.out.println("Invalid rating.");
@@ -58,6 +58,9 @@ public class WordPlayer {
      */
     public void setRating(int rating) {
         this.rating = rating;
+        perfect.reset();
+        good.reset();
+        missed.reset();
         play = true;
     }
 }
