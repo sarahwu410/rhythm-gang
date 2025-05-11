@@ -52,33 +52,17 @@ public class testYourBlocksHERE implements KeyListener {
         System.out.println("There are " + testBlocks.length + " blocks.");
 
         // How to use ReceiveTimeReader to sort blocks
-        allBlocks = ReceiveTimeReader.sortBlocks(testBlocks, testSpamBlocks, testHoldBlocks);
+        allBlocks = ReceiveTimeReader.sortBlocks(ReceiveTimeReader.loadTapBlocks("res/testReceiveTimes.txt", "easy", theseReceivers), ReceiveTimeReader.loadSpamBlocks("res/testSpamTimes.txt", "easy", theseReceivers), ReceiveTimeReader.loadHoldBlocks("res/testHoldTimes.txt", "easy", theseReceivers));
 
         timer = new Timer(1,new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (Block b: testBlocks) {
+                for (Block b: allBlocks){
                     if (milliElapsed > b.enterTime) {
                         b.move(testAudio.getTime()*10); // Only move them if they are meant to appear
                     }
                 }
 
-                // spam block test
-                for (Block sb: testSpamBlocks) {
-                    if (milliElapsed > sb.enterTime) {
-                        sb.move(testAudio.getTime()*10); // Only move them if they are meant to appear
-                    }
-                }
-
-                // hold block test
-                for (Block hb: testHoldBlocks) {
-                    if (milliElapsed > hb.enterTime) {
-                        hb.move(testAudio.getTime()*10); // Only move them if they are meant to appear
-                    }
-                }
-
-                // See if all the blocks are off screen
-                if (testBlocks[testBlocks.length - 1].x > frame.getWidth()) startOver = true;
                 frame.repaint();
                 testAudioTime = testAudio.getTime();
                 milliElapsed = testAudioTime * 10;
@@ -107,55 +91,24 @@ public class testYourBlocksHERE implements KeyListener {
             g2.fillRect(testReceiver.x, testReceiver.y, testReceiver.width, testReceiver.height);
 
             // Figure out what blocks to draw
-            for (int i = 0; i < testBlocks.length; i++) {
+            for (int i = 0; i < allBlocks.size(); i++) {
                 g2.setPaint(new Color(rand.nextInt(10), 252, rand.nextInt(150)));
 
                 // If the block has not been received and has reached its enter time
-                if (milliElapsed > testBlocks[i].enterTime && !testBlocks[i].received && !testBlocks[i].missed) {
-                    g2.fillRect(testBlocks[i].x, testBlocks[i].y, testBlocks[i].length, testBlocks[i].width);
-                } if (i == testBlocks.length - 1 && (testBlocks[i].received || testBlocks[i].missed)) { // If the last block has been received
-                    startOver = true;
+                if (milliElapsed > allBlocks.get(i).enterTime && !allBlocks.get(i).received && !allBlocks.get(i).missed) {
+                    // Make sure the user can receive the block
+                    if (!allBlocks.get(i).canReceive) allBlocks.get(i).canReceive = true;
+                    g2.fillRect(allBlocks.get(i).x, allBlocks.get(i).y, allBlocks.get(i).length, allBlocks.get(i).width);
+                    try {
+                        g2.fillRect(((HoldBlock)allBlocks.get(i)).tailX, ((HoldBlock)allBlocks.get(i)).tailY, allBlocks.get(i).length, allBlocks.get(i).width);
+                        g2.setPaint(Color.WHITE);
+                        g2.drawLine(allBlocks.get(i).x, allBlocks.get(i).y, ((HoldBlock)allBlocks.get(i)).tailX, ((HoldBlock)allBlocks.get(i)).tailY);
+                    } catch (Exception e) {
+                        // do nothing
+                    }
+                } if (i == allBlocks.get(i).length - 1 && (allBlocks.get(i).received || allBlocks.get(i).missed)) { // If the last block has been received
+                    // This portion would be for the end of a song? probably not necessary, songs end on their own afterall
                 }
-            }
-            
-            // spam block test
-            for (int i = 0; i < testSpamBlocks.length; i++) {
-                g2.setPaint(Color.MAGENTA);
-
-                // If the block has not been received and has reached its enter time
-                if (milliElapsed > testSpamBlocks[i].enterTime && !testSpamBlocks[i].received && !testSpamBlocks[i].missed) {
-                    g2.fillRect(testSpamBlocks[i].x, testSpamBlocks[i].y, testSpamBlocks[i].length, testSpamBlocks[i].width);
-                    g2.setPaint(Color.WHITE);
-                    g2.drawString(String.valueOf(((SpamBlock)testSpamBlocks[i]).numSpam) , (testSpamBlocks[i].x)+20, testSpamBlocks[i].y+20);
-                }
-            }
-
-            // hold block test
-            for (int i = 0; i < testHoldBlocks.length; i++) {
-                g2.setPaint(Color.RED);
-
-                // If the block has not been received and has reached its enter time
-                if (milliElapsed > testHoldBlocks[i].enterTime && !testHoldBlocks[i].received && !testHoldBlocks[i].missed) {
-                    g2.fillRect(testHoldBlocks[i].x, testHoldBlocks[i].y, testHoldBlocks[i].length, testHoldBlocks[i].width);
-                    g2.fillRect(((HoldBlock)testHoldBlocks[i]).tailX, ((HoldBlock)testHoldBlocks[i]).tailY, testHoldBlocks[i].length, testHoldBlocks[i].width);
-
-                    g2.setPaint(Color.WHITE);
-                    g2.drawLine(testHoldBlocks[i].x, testHoldBlocks[i].y, ((HoldBlock)testHoldBlocks[i]).tailX, ((HoldBlock)testHoldBlocks[i]).tailY);
-                }
-            }
-            
-            // Just stop instead
-            if (startOver) {
-                // System.out.println("Have a nice day. Now go.");
-
-                // make the program wait 1 sec before closing to not make it surprising
-                // try {
-                //     Thread.sleep(1000);
-                // } catch (InterruptedException e) {
-                //     e.printStackTrace();
-                // }
-
-                // System.exit(0);
             }
 
             g2.setPaint(Color.WHITE);
@@ -168,28 +121,20 @@ public class testYourBlocksHERE implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        for (Block b: testBlocks) {
+        for (Block b: allBlocks) {
             if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
                 // required to set the timeReceived attribute within the Block object itself before calling keyPressed
                 b.setTimeReceived(milliElapsed);
                 b.keyPressed(e);
-                
-                break;
-            }
-        }
 
-        // hold block test
-        for (Block b: testHoldBlocks) {
-            if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                b.setTimeReceived(milliElapsed);
-                b.keyPressed(e);
+                if (b.received || b.missed || b.missPassed) allBlocks.remove(b);
                 
                 break;
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_Q) {
+            System.out.println(allBlocks.size() + " blocks left.");
             System.out.println("Quitter.");
             System.exit(0);
         }
@@ -197,24 +142,14 @@ public class testYourBlocksHERE implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // spam block test
-        for (Block b: testSpamBlocks) {
+        for (Block b: allBlocks) {
             if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
                 // required to set the timeReceived attribute within the Block object itself before calling keyPressed
                 b.setTimeReceived(milliElapsed);
                 b.keyReleased(e);
                 
-                break;
-            }
-        }
+                if (b.received || b.missed || b.missPassed) allBlocks.remove(b);
 
-        // hold block test
-        for (Block b: testHoldBlocks) {
-            if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                b.setTimeReceived(milliElapsed);
-                b.keyReleased(e);
-                
                 break;
             }
         }

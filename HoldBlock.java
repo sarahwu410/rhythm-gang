@@ -78,6 +78,9 @@ public class HoldBlock extends Block {
             this.missed = true;
         }
 
+        System.out.println("Received at " + timeReceived);
+        System.out.println("Held for " + accuracy);
+
         this.canReceive = false;
     }
 

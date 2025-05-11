@@ -21,7 +21,7 @@ public abstract class Block implements KeyListener {
     String Blocktype; //used in easylevel
     boolean hit; //used in easylevel
     boolean received, missed, missPassed;
-    boolean canReceive = true;
+    boolean canReceive = false; // false so that the block can't be received if it's not on screen
 
     Block (String level, String button, int receiveTime, Receiver someReceiver) {
         this.receiveTime = receiveTime;
@@ -156,8 +156,6 @@ public abstract class Block implements KeyListener {
 		
 		// Find the total distance
 		distance = Math.sqrt((Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
-        System.out.println("Distance: " + distance + " pixels");
-        System.out.println("Ms to cover: " + distance/speed + " milliseconds");
 		
 		// Find the enter time
 		this.enterTime = (int) (finalTime - (distance/speed));
