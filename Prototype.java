@@ -87,6 +87,20 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
                         b.move(audio.getTime()*10); // Only move them if they are meant to appear
                     }
+
+                    // if the block missed the receiver, display "miss"
+                    if (b.missPassed) {
+                        rater.setRating(3, b);
+
+                        //For hold blocks only
+                        try {
+                            if (!((HoldBlock)b).beenRated) {
+                                b.beenRated = true;
+                            }
+                        } catch (Exception z) {
+                            // do nothing
+                        }
+                    }
                 }
 
                 this.repaint();
@@ -134,20 +148,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 if (milliElapsed>=allBlocks.get(i).enterTime && !allBlocks.get(i).received && !allBlocks.get(i).missed) {
                     // draw the block
                     allBlocks.get(i).draw(g2);
-                }
-
-                // if the block missed the receiver, display "miss"
-                if (allBlocks.get(i).missPassed) {
-                    rater.setRating(3, allBlocks.get(i));
-
-                    //For hold blocks only
-                    try {
-                        if (!((HoldBlock)allBlocks.get(i)).beenRated) {
-                            allBlocks.get(i).beenRated = true;
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
                 }
 
                 if (i == allBlocks.get(i).length - 1 && (allBlocks.get(i).received || allBlocks.get(i).missed)) { // If the last block has been received

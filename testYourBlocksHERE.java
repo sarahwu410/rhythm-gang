@@ -69,6 +69,20 @@ public class testYourBlocksHERE implements KeyListener {
                     if (milliElapsed > b.enterTime) {
                         b.move(testAudio.getTime()*10); // Only move them if they are meant to appear
                     }
+
+                    // if the block missed the receiver, display "miss"
+                    if (b.missPassed) {
+                        rater.setRating(3, b);
+
+                        //For hold blocks only
+                        try {
+                            if (!((HoldBlock)b).beenRated) {
+                                b.beenRated = true;
+                            }
+                        } catch (Exception z) {
+                            // do nothing
+                        }
+                    }
                 }
 
                 frame.repaint();
@@ -109,22 +123,9 @@ public class testYourBlocksHERE implements KeyListener {
                     //// g2.fillRect(allBlocks.get(i).x, allBlocks.get(i).y, allBlocks.get(i).length, allBlocks.get(i).width);
 
                     allBlocks.get(i).draw(g2);
-
-                    // if the block missed the receiver, display "miss"
-                    if (allBlocks.get(i).missPassed) {
-                    rater.setRating(3, allBlocks.get(i));
-
-                    //For hold blocks only
-                    try {
-                        if (!((HoldBlock)allBlocks.get(i)).beenRated) {
-                            allBlocks.get(i).beenRated = true;
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                }
-
-                } if (i == allBlocks.get(i).length - 1 && (allBlocks.get(i).received || allBlocks.get(i).missed)) { // If the last block has been received
+                } 
+                
+                if (i == allBlocks.get(i).length - 1 && (allBlocks.get(i).received || allBlocks.get(i).missed)) { // If the last block has been received
                     // This portion would be for the end of a song? probably not necessary, songs end on their own afterall
                 }
             }
