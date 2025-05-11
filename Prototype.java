@@ -136,6 +136,12 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     allBlocks.get(i).draw(g2);
                 }
 
+                // Check if the block has been missed (couldn't go in timer because it's a for-each loop)
+                if (allBlocks.get(i).missPassed) {
+                    rater.setRating(3);
+                    allBlocks.remove(i);
+                }
+
                 if (i == allBlocks.get(i).length - 1 && (allBlocks.get(i).received || allBlocks.get(i).missed)) { // If the last block has been received
                     // This portion would be for the end of a song? probably not necessary, songs end on their own afterall
                 }

@@ -102,8 +102,6 @@ public class testYourBlocksHERE implements KeyListener {
 
             // Figure out what blocks to draw
             for (int i = 0; i < allBlocks.size(); i++) {
-                //// g2.setPaint(new Color(rand.nextInt(10), 252, rand.nextInt(150)));
-
                 // If the block has not been received and has reached its enter time
                 if (milliElapsed >= allBlocks.get(i).enterTime && !allBlocks.get(i).received && !allBlocks.get(i).missed) {
                     // Make sure the user can receive the block
@@ -112,23 +110,12 @@ public class testYourBlocksHERE implements KeyListener {
 
                     allBlocks.get(i).draw(g2);
 
-                    // // if the note is a spam block
-                    // try {
-                    //     g2.setPaint(Color.BLACK);
-                    //     g2.drawString(String.valueOf(((SpamBlock)allBlocks.get(i)).numSpam), ((SpamBlock)allBlocks.get(i)).x + 20, ((SpamBlock)allBlocks.get(i)).y + 20);
-                    // } catch (Exception e) {
-                    //     // do nothing
-                    // }
+                    // Check if the block has been missed (couldn't go in timer because it's a for-each loop)
+                    if (allBlocks.get(i).missPassed) {
+                        rater.setRating(3);
+                        allBlocks.remove(i);
+                    }
 
-                    // // If the note happens to be a hold block
-                    // try {
-                    //     g2.setPaint(Color.GREEN);
-                    //     g2.fillRect(((HoldBlock)allBlocks.get(i)).tailX, ((HoldBlock)allBlocks.get(i)).tailY, allBlocks.get(i).length, allBlocks.get(i).width);
-                    //     g2.setPaint(Color.WHITE);
-                    //     g2.drawLine(allBlocks.get(i).x, allBlocks.get(i).y, ((HoldBlock)allBlocks.get(i)).tailX, ((HoldBlock)allBlocks.get(i)).tailY);
-                    // } catch (Exception e) {
-                    //     // do nothing
-                    // }
                 } if (i == allBlocks.get(i).length - 1 && (allBlocks.get(i).received || allBlocks.get(i).missed)) { // If the last block has been received
                     // This portion would be for the end of a song? probably not necessary, songs end on their own afterall
                 }
@@ -166,7 +153,7 @@ public class testYourBlocksHERE implements KeyListener {
                 b.setTimeReceived(milliElapsed);
                 b.keyPressed(e);
                 
-                if (b.received || b.missed || b.missPassed) {
+                if (b.received || b.missed) {
                     rater.setRating(b.rate());
                     allBlocks.remove(b);
                 }
@@ -180,7 +167,7 @@ public class testYourBlocksHERE implements KeyListener {
                     // do nothing
                 }
 
-                if (b.received || b.missed || b.missPassed) allBlocks.remove(b);
+                if (b.received || b.missed) allBlocks.remove(b);
                 
                 break;
             }
@@ -201,7 +188,7 @@ public class testYourBlocksHERE implements KeyListener {
                 b.setTimeReceived(milliElapsed);
                 b.keyReleased(e);
                 
-                if (b.received || b.missed || b.missPassed) {
+                if (b.received || b.missed) {
                     rater.setRating(b.rate());
                     allBlocks.remove(b);
                 }
