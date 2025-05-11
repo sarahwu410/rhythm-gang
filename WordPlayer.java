@@ -31,7 +31,7 @@ public class WordPlayer {
 
     /**
      * Draws whatever animation is necessary
-     * @param The Graphics object that will draw the image
+     * @param g The Graphics object that will draw the image
      */
     public void play(Graphics2D g, int myAudioTime) {
         if (!play) return;
@@ -57,11 +57,31 @@ public class WordPlayer {
      * Sets the rating that this object should play and it will play when play(Graphics2D g) is next called in the program
      * @param rating    The rating the user acheived (0 = perfect, 1 = good, 2 = missed)
      */
-    public void setRating(int rating) {
-        this.rating = rating;
-        perfect.reset();
-        good.reset();
-        missed.reset();
-        play = true;
+    public void setRating(int rating, Block block) {
+        if (!block.beenRated) {
+            this.rating = rating;
+            perfect.reset();
+            good.reset();
+            missed.reset();
+            play = true;
+        }
+
+        try {
+            if (!((TapBlock)block).beenRated) {
+                block.beenRated = true;
+            }
+        } catch (Exception z) {
+            // do nothing
+        }
+
+        try {
+            if (!((SpamBlock)block).beenRated) {
+                block.beenRated = true;
+            }
+        } catch (Exception z) {
+            // do nothing
+        }
+
+       
     }
 }

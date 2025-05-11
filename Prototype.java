@@ -13,6 +13,8 @@ import javax.swing.*;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+// import java.util.Set;
+// import java.util.HashSet;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,6 +24,7 @@ import java.awt.Image;
 
 public class Prototype extends JFrame implements ActionListener, KeyListener{
     boolean isPaused = false;
+
 
     DrawingPanel panel;
     Timer timer;
@@ -136,10 +139,18 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     allBlocks.get(i).draw(g2);
                 }
 
-                // Check if the block has been missed (couldn't go in timer because it's a for-each loop)
+                // if the block missed the receiver, display "miss"
                 if (allBlocks.get(i).missPassed) {
-                    rater.setRating(3);
-                    allBlocks.remove(i);
+                    rater.setRating(3, allBlocks.get(i));
+
+                    //For hold blocks only
+                    try {
+                        if (!((HoldBlock)allBlocks.get(i)).beenRated) {
+                            allBlocks.get(i).beenRated = true;
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
                 }
 
                 if (i == allBlocks.get(i).length - 1 && (allBlocks.get(i).received || allBlocks.get(i).missed)) { // If the last block has been received
@@ -176,23 +187,22 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 b.setTimeReceived(milliElapsed);
                 b.keyPressed(e);
                 
-                if (b.received || b.missed) {
-                    rater.setRating(b.rate());
-
-                    System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    allBlocks.remove(b);
-                }
-
+                
                 //For hold blocks only
                 try {
-                    if (((HoldBlock) b).isPressed) {
-                        rater.setRating(((HoldBlock) b).holdRate());
+                    if (((HoldBlock)b).isPressed) {
+                        rater.setRating(((HoldBlock) b).holdRate(), b);
                     }
                 } catch (Exception z) {
                     // do nothing
                 }
 
-                if (b.received || b.missed) allBlocks.remove(b);
+                if (b.received || b.missed) {
+                    rater.setRating(b.rate(),b);
+
+                    System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                    allBlocks.remove(b);
+                }
                 
                 break;
             }
@@ -215,10 +225,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 audio.playAudio();
             }
         }
-
-        if (e.getKeyCode() == KeyEvent.VK_T) {
-            System.out.println("HOPEFULLY TAPBLOCK; " + "CANRECEIVE: " + allBlocks.get(0).canReceive);
-        }
     }
 
     @Override
@@ -229,11 +235,20 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 b.setTimeReceived(milliElapsed);
                 b.keyReleased(e);
                 
+
                 if (b.received || b.missed) {
-                    rater.setRating(b.rate());
+                    rater.setRating(b.rate(), b);
 
                     System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    allBlocks.remove(b);
+                }
+
+                //For hold blocks only
+                try {
+                    if (!((HoldBlock)b).beenRated) {
+                        b.beenRated = true;
+                    }
+                } catch (Exception z) {
+                    // do nothing
                 }
 
                 break;

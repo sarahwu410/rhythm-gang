@@ -24,6 +24,7 @@ public abstract class Block implements KeyListener {
     boolean received, missed, missPassed;
     boolean canReceive = false; // false so that the block can't be received if it's not on screen
     boolean reachedReceiver = false;
+    boolean beenRated = false;
 
     /**
      * constructor to set the unique coordinates, buttons, and receive time for evey block per level and button

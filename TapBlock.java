@@ -9,7 +9,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 public class TapBlock extends Block{
-
     /**
      * sets all the variables from the parent class
      * @param level the level this TapBlock is going in
