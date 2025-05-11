@@ -68,9 +68,9 @@ public class HoldBlock extends Block {
 
     @Override
     void receive(int timeReceived) {
-        int accuracy = (int) (Math.abs(holdDurationMs-heldTime));
+        int accuracy = (int) (holdDurationMs-heldTime);
 
-    	if (accuracy < 500) {
+    	if (accuracy <= 0) {
             System.out.println("✅ Hold success!");
             this.received = true;
         } else {
@@ -82,6 +82,21 @@ public class HoldBlock extends Block {
         System.out.println("Held for " + accuracy);
 
         this.canReceive = false;
+    }
+
+    @Override
+    int rate() {
+        int accuracy = (int) (holdDurationMs-heldTime);
+        if (received && accuracy <= 0) return 1;
+        else if (received && accuracy <= 200) return 2;
+        else return 3;
+    }
+
+    int holdRate() {
+        int accuracy = (int) (Math.abs(receiveTime - pressStartTime));
+        if (accuracy < 200) return 1;
+        else if (accuracy < 500) return 2;
+        else return 3;
     }
 
     // Handle key press (start timing)

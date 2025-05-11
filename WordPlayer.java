@@ -19,10 +19,10 @@ public class WordPlayer {
      * Constructor
      * @param words Spritesheet with the word ratings
      */
-    WordPlayer(Image words, int drawX, int drawY) {
-        perfect = new AnimationHorizontal(words, 20, 20, 0, 0, 5, 228, 96);
-        good = new AnimationHorizontal(words, 20, 20, 0, 96, 5, 228, 96);
-        missed = new AnimationHorizontal(words, 20, 20, 0, 192, 5, 228, 96);
+    WordPlayer(Image wordSpriteSheet, int drawX, int drawY) {
+        perfect = new AnimationHorizontal(wordSpriteSheet, drawX, drawY, 0, 0, 15, 228, 96);
+        good = new AnimationHorizontal(wordSpriteSheet, drawX, drawY, 0, 96, 15, 228, 96);
+        missed = new AnimationHorizontal(wordSpriteSheet, drawX, drawY, 0, 192, 15, 228, 96);
 
         // Initialize attributes
         play = false;
@@ -36,13 +36,13 @@ public class WordPlayer {
     public void play(Graphics2D g) {
         if (!play) return;
         else {
-            if (rating == 0) {
+            if (rating == 1) {
                 perfect.draw(g);
                 if (perfect.frame == perfect.spriteFrames) play = false;
-            } else if (rating == 1) {
+            } else if (rating == 2) {
                 good.draw(g);
                 if (good.frame == good.spriteFrames) play = false;
-            } else if (rating == 2) {
+            } else if (rating == 3) {
                 missed.draw(g);
                 if (missed.frame == missed.spriteFrames) play = false;
             } else {

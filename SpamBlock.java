@@ -75,6 +75,12 @@ public class SpamBlock extends Block {
     }
 
     @Override
+    int rate() {
+        if (received) return 1;
+        else return 3;
+    }
+
+    @Override
     public void keyTyped(KeyEvent e) {}
 
     @Override

@@ -15,6 +15,12 @@ import java.util.Random; // To change colors of blocks
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.Image;
+
 public class testYourBlocksHERE implements KeyListener {
     DrawPanel panel;
     Timer timer;
@@ -30,6 +36,8 @@ public class testYourBlocksHERE implements KeyListener {
     Receiver testReceiver = new Receiver(1000, 500, 100, 100);
 
     ArrayList<Block> allBlocks;
+    Image ratingSpriteSheet;
+    WordPlayer rater;
 
     testYourBlocksHERE() {
         JFrame frame = new JFrame();
@@ -45,6 +53,10 @@ public class testYourBlocksHERE implements KeyListener {
 
         // How to use ReceiveTimeReader to sort blocks
         allBlocks = ReceiveTimeReader.sortBlocks(ReceiveTimeReader.loadTapBlocks("res/testReceiveTimes.txt", "easy", theseReceivers), ReceiveTimeReader.loadSpamBlocks("res/testSpamTimes.txt", "easy", theseReceivers), ReceiveTimeReader.loadHoldBlocks("res/testHoldTimes.txt", "easy", theseReceivers));
+
+        // Get the rate animation initialized
+        ratingSpriteSheet = loadImage("res/PERFECT!GOODMISSED.png");
+        rater = new WordPlayer(ratingSpriteSheet, 20, 20);
 
         timer = new Timer(1,new ActionListener() {
             @Override
@@ -82,6 +94,8 @@ public class testYourBlocksHERE implements KeyListener {
             g2.setPaint(Color.BLUE);
             g2.fillRect(testReceiver.x, testReceiver.y, testReceiver.width, testReceiver.height);
 
+            rater.play(g2);
+
             // Figure out what blocks to draw
             for (int i = 0; i < allBlocks.size(); i++) {
                 g2.setPaint(new Color(rand.nextInt(10), 252, rand.nextInt(150)));
@@ -91,6 +105,7 @@ public class testYourBlocksHERE implements KeyListener {
                     // Make sure the user can receive the block
                     if (!allBlocks.get(i).canReceive) allBlocks.get(i).canReceive = true;
                     g2.fillRect(allBlocks.get(i).x, allBlocks.get(i).y, allBlocks.get(i).length, allBlocks.get(i).width);
+                    // If the note happens to be a hold block
                     try {
                         g2.fillRect(((HoldBlock)allBlocks.get(i)).tailX, ((HoldBlock)allBlocks.get(i)).tailY, allBlocks.get(i).length, allBlocks.get(i).width);
                         g2.setPaint(Color.WHITE);
@@ -108,6 +123,22 @@ public class testYourBlocksHERE implements KeyListener {
         }
     }
 
+    // Getting an image
+	static BufferedImage loadImage(String filename) {
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File(filename));
+		} catch (IOException e) {
+			System.out.println(e.toString());
+			JOptionPane.showMessageDialog(null, "An image failed to load: " + filename, "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		// DEBUG
+		// if (img == null) System.out.println("null");
+		// else System.out.printf("w=%d, h=%d%n",img.getWidth(), img.getHeight());
+		return img;
+	}
+
     @Override
     public void keyTyped(KeyEvent e) {}
 
@@ -118,6 +149,20 @@ public class testYourBlocksHERE implements KeyListener {
                 // required to set the timeReceived attribute within the Block object itself before calling keyPressed
                 b.setTimeReceived(milliElapsed);
                 b.keyPressed(e);
+                
+                if (b.received || b.missed || b.missPassed) {
+                    rater.setRating(b.rate());
+                    allBlocks.remove(b);
+                }
+
+                // For hold blocks only
+                try {
+                    if (((HoldBlock) b).isPressed) {
+                        rater.setRating(((HoldBlock) b).holdRate());
+                    }
+                } catch (Exception z) {
+                    // do nothing
+                }
 
                 if (b.received || b.missed || b.missPassed) allBlocks.remove(b);
                 
@@ -140,7 +185,10 @@ public class testYourBlocksHERE implements KeyListener {
                 b.setTimeReceived(milliElapsed);
                 b.keyReleased(e);
                 
-                if (b.received || b.missed || b.missPassed) allBlocks.remove(b);
+                if (b.received || b.missed || b.missPassed) {
+                    rater.setRating(b.rate());
+                    allBlocks.remove(b);
+                }
 
                 break;
             }

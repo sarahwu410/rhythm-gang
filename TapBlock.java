@@ -46,6 +46,14 @@ public class TapBlock extends Block{
     }
 
     @Override
+    int rate() {
+        int accuracy = (int) (Math.abs(receiveTime - timeReceived));
+        if (accuracy < 200) return 1;
+        if (accuracy < 500) return 2;
+        else return 3;
+    }
+
+    @Override
     public void keyTyped(KeyEvent e) {}
 
     @Override
