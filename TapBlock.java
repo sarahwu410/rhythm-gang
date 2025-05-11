@@ -77,7 +77,7 @@ public class TapBlock extends Block{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (this.matchesKey(e) && ! this.received) { 
+        if (this.matchesKey(e)) { 
             this.receive(this.timeReceived);
             System.out.println("Receive time: " + this.receiveTime + "; Time received: " + this.timeReceived);
             return;

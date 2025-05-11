@@ -13,8 +13,8 @@ import javax.swing.*;
 
 import java.util.HashMap;
 import java.util.ArrayList;
-// import java.util.Set;
-// import java.util.HashSet;
+import java.util.Set;
+import java.util.HashSet;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -24,7 +24,7 @@ import java.awt.Image;
 
 public class Prototype extends JFrame implements ActionListener, KeyListener{
     boolean isPaused = false;
-
+    Set<Integer> pressedKeys = new HashSet<>();
 
     DrawingPanel panel;
     Timer timer;
@@ -187,7 +187,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 b.setTimeReceived(milliElapsed);
                 b.keyPressed(e);
                 
-                
+
                 //For hold blocks only
                 try {
                     if (((HoldBlock)b).isPressed) {
