@@ -105,8 +105,18 @@ public class testYourBlocksHERE implements KeyListener {
                     // Make sure the user can receive the block
                     if (!allBlocks.get(i).canReceive) allBlocks.get(i).canReceive = true;
                     g2.fillRect(allBlocks.get(i).x, allBlocks.get(i).y, allBlocks.get(i).length, allBlocks.get(i).width);
+
+                    // if the note is a spam block
+                    try {
+                        g2.setPaint(Color.BLACK);
+                        g2.drawString(String.valueOf(((SpamBlock)allBlocks.get(i)).numSpam), ((SpamBlock)allBlocks.get(i)).x + 20, ((SpamBlock)allBlocks.get(i)).y + 20);
+                    } catch (Exception e) {
+                        // do nothing
+                    }
+
                     // If the note happens to be a hold block
                     try {
+                        g2.setPaint(Color.GREEN);
                         g2.fillRect(((HoldBlock)allBlocks.get(i)).tailX, ((HoldBlock)allBlocks.get(i)).tailY, allBlocks.get(i).length, allBlocks.get(i).width);
                         g2.setPaint(Color.WHITE);
                         g2.drawLine(allBlocks.get(i).x, allBlocks.get(i).y, ((HoldBlock)allBlocks.get(i)).tailX, ((HoldBlock)allBlocks.get(i)).tailY);
