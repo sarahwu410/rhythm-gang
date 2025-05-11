@@ -305,4 +305,21 @@ public class ReceiveTimeReader {
 
 		return myNotes;
 	}
+
+	/**
+	 * Gets the blocks for a specific receiver
+	 * @param allBlocks	All the blocks with unsorted note names
+	 * @param noteName	The note name to look for
+	 * @return	An array list of the with the requested blocks
+	 */
+	public static ArrayList<Block> pull(ArrayList<Block> allBlocks, String noteName) {
+		ArrayList<Block> mySpecifics = new ArrayList<>();
+
+		// Loop through all the blocks to find the right ones
+		for (Block b: allBlocks) {
+			if ((b.button).equals(noteName)) mySpecifics.add(b);
+		}
+
+		return mySpecifics;
+	}
 }
