@@ -67,7 +67,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         rater = new WordPlayer(ratingSpriteSheet, 20, 20);
 
         this.add(panel);
-		this.pack();
+		// this.pack();
 		this.setVisible(true);
 
         timer = new Timer(1, this);
