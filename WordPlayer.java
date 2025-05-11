@@ -47,6 +47,7 @@ public class WordPlayer {
                 if (missed.frame == missed.spriteFrames) play = false;
             } else {
                 System.out.println("Invalid rating.");
+                play = false;
                 return;
             }
         }
