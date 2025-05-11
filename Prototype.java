@@ -176,7 +176,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 b.setTimeReceived(milliElapsed);
                 b.keyPressed(e);
                 
-                if (b.received || b.missed || b.missPassed) {
+                if (b.received || b.missed) {
                     rater.setRating(b.rate());
 
                     System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
@@ -192,7 +192,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     // do nothing
                 }
 
-                if (b.received || b.missed || b.missPassed) allBlocks.remove(b);
+                if (b.received || b.missed) allBlocks.remove(b);
                 
                 break;
             }
@@ -229,7 +229,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 b.setTimeReceived(milliElapsed);
                 b.keyReleased(e);
                 
-                if (b.received || b.missed || b.missPassed) {
+                if (b.received || b.missed) {
                     rater.setRating(b.rate());
 
                     System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
