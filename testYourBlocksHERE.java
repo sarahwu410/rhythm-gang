@@ -20,8 +20,6 @@ public class testYourBlocksHERE implements KeyListener {
     Timer timer;
     int milliElapsed;
 
-    Block[] testBlocks;
-    double[][] receiveTimes;
     Random rand = new Random();
 
     HashMap<String, Receiver> theseReceivers = new HashMap<>();
@@ -31,8 +29,6 @@ public class testYourBlocksHERE implements KeyListener {
     int testAudioTime;
     Receiver testReceiver = new Receiver(1000, 500, 100, 100);
 
-    Block[] testSpamBlocks = {new SpamBlock("easy", "A", 9000, testReceiver, 5, 12000)};
-    Block[] testHoldBlocks = {new HoldBlock("easy", "A", 13000, testReceiver, 1000)};
     ArrayList<Block> allBlocks;
 
     testYourBlocksHERE() {
@@ -46,10 +42,6 @@ public class testYourBlocksHERE implements KeyListener {
         // Add receivers to the hashmap
         theseReceivers.put("A", testReceiver);
         theseReceivers.put("B", testReceiver);
-
-        // Load up the blocks
-        testBlocks = ReceiveTimeReader.loadTapBlocks("res/testReceiveTimes.txt", "easy", theseReceivers);
-        System.out.println("There are " + testBlocks.length + " blocks.");
 
         // How to use ReceiveTimeReader to sort blocks
         allBlocks = ReceiveTimeReader.sortBlocks(ReceiveTimeReader.loadTapBlocks("res/testReceiveTimes.txt", "easy", theseReceivers), ReceiveTimeReader.loadSpamBlocks("res/testSpamTimes.txt", "easy", theseReceivers), ReceiveTimeReader.loadHoldBlocks("res/testHoldTimes.txt", "easy", theseReceivers));

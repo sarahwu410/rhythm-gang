@@ -22,6 +22,7 @@ public abstract class Block implements KeyListener {
     boolean hit; //used in easylevel
     boolean received, missed, missPassed;
     boolean canReceive = false; // false so that the block can't be received if it's not on screen
+    int rating;
 
     Block (String level, String button, int receiveTime, Receiver someReceiver) {
         this.receiveTime = receiveTime;
@@ -187,6 +188,7 @@ public abstract class Block implements KeyListener {
      * @param audioTime the current time the audio is at
      */
     public abstract void move(int audioTime);
+    
 
     /**
      * helper method that checks whether the correct key is pressed for the corrosponding button
