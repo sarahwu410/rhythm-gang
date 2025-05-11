@@ -10,7 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 public class SpamBlock extends Block {
-    int numSpam, endTime;
+    int numSpam, spamTime, endTime;
     double slowedFactor = 0.07;
     double distanceTravelledX = 0, distanceTravelledY = 0;
     double timeBeforeSpam, timeDuringSpam, timeAfterSpam;
@@ -24,10 +24,11 @@ public class SpamBlock extends Block {
      * @param numSpam the number of times the block is meant to be spammed
      * @param endTime the time the spam block will stop accepting spams
      */
-    public SpamBlock(String level, String button, int receiveTime, Receiver someReceiver, int numSpam, int endTime) {
+    public SpamBlock(String level, String button, int receiveTime, Receiver someReceiver, int numSpam, int spamTime) {
         super(level, button, receiveTime, someReceiver);
         this.numSpam = numSpam;
-        this.endTime = endTime;
+        this.spamTime = spamTime;
+        this.endTime = this.receiveTime + this.spamTime;
         this.Blocktype = "SpamBlock"; //used in easy level
     }
 

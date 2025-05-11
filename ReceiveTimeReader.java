@@ -94,7 +94,7 @@ public class ReceiveTimeReader {
 	}
 
 	/**
-	 * Reads in the note information from a .txt file. Format is strict-->receiveTime endTime numSpam keyName
+	 * Reads in the note information from a .txt file. Format is strict-->receiveTime spamTime numSpam keyName
 	 * @param fileWithTimes	The .txt file with spam note information
 	 * @param myLevel	The level of the notes
 	 * @param myReceivers	A hashmap containing the note letter and corresponding receiver

@@ -51,16 +51,11 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         allReceivers.put("X", new Receiver(575, 450, 100,100));
         allReceivers.put("Y", new Receiver(725, 450, 100,100));
 
-        // allBlocks.add(new TapBlock("prototype", "A", 5, allReceivers.get("A")));
-        // allBlocks.add(new SpamBlock("prototype", "A", 6, allReceivers.get("B"), 5, 9));
-        // allBlocks.add(new HoldBlock("prototype", "A", 10, allReceivers.get("C"), 1));
-            
-
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
             // receiveTime button
             ReceiveTimeReader.loadTapBlocks("res/prototypeTapTimes.txt", "prototype", allReceivers), 
-            // receiveTime endTime numSpam button
+            // receiveTime spamTime numSpam button
             ReceiveTimeReader.loadSpamBlocks("res/prototypeSpamTimes.txt", "prototype", allReceivers),
             // receiveTime holdDuration button
             ReceiveTimeReader.loadHoldBlocks("res/prototypeHoldTimes.txt", "prototype", allReceivers)
