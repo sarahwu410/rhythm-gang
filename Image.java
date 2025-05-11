@@ -16,6 +16,10 @@ public class Image {
 	private boolean loopable;
 
 
+	/**
+	 * constructor for all the necessary code for loading an image file
+	 * @param filepath the filepath to the image
+	 */
     Image(String filepath) {
 		images = new ArrayList<BufferedImage>();
         this.filepath = filepath;
@@ -57,8 +61,6 @@ public class Image {
 		else if (loopable) counter = 0;
 	}
 
-
-
     static BufferedImage loadImage(String filename) {
 		BufferedImage img = null;
 		try{
@@ -72,8 +74,4 @@ public class Image {
 		//else System.out.printf("w=%d, h=%d%n",img.getWidth(), img.getHeight());
 		return img;
 	}
-
-
-
-
 }

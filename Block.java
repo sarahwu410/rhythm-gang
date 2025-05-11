@@ -25,6 +25,13 @@ public abstract class Block implements KeyListener {
     boolean canReceive = false; // false so that the block can't be received if it's not on screen
     boolean reachedReceiver = false;
 
+    /**
+     * constructor to set the unique coordinates, buttons, and receive time for evey block per level and button
+     * @param level the level this Block is going in
+     * @param button the button that will receive this Block
+     * @param receiveTime the time the Block will be received at
+     * @param someReceiver the receiver that corrosponds with the block
+     */
     Block (String level, String button, int receiveTime, Receiver someReceiver) {
         this.receiveTime = receiveTime;
         this.level = level;

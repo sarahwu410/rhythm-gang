@@ -14,11 +14,11 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-// import java.awt.image.BufferedImage;
-// import java.io.File;
-// import java.io.IOException;
-// import javax.imageio.ImageIO;
-// import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.Image;
 
 public class Prototype extends JFrame implements ActionListener, KeyListener{
     boolean isPaused = false;
@@ -31,6 +31,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
     ArrayList<Block> allBlocks;
     HashMap<String, Receiver> allReceivers = new HashMap<>();
+
+    Image ratingSpriteSheet;
+    WordPlayer rater;
 
     Prototype() {
         panel = new DrawingPanel();
@@ -63,7 +66,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             ReceiveTimeReader.loadHoldBlocks("res/prototypeHoldTimes.txt", "prototype", allReceivers)
         );
 
-        
+        // Get the rate animation initialized
+        ratingSpriteSheet = loadImage("res/PERFECT!GOODMISSED.png");
+        rater = new WordPlayer(ratingSpriteSheet, 20, 20);
 
         this.add(panel);
 		this.pack();
@@ -75,7 +80,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
         audio.playAudio();
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         for (Block b: allBlocks){
@@ -125,6 +130,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             g2.drawString("Press Q to quit", 10, 500);
             g2.drawString("Press SPACE to pause/unpause", 10, 550);
 
+            // paint rating
+            rater.play(g2);
+
             // loop through all the blocks in the ArrayList
             for (int i = 0; i<allBlocks.size(); i++) {
                 // if block has reached its enter time and not been received
@@ -140,6 +148,22 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         }
     }
 
+    // Getting an image
+	static BufferedImage loadImage(String filename) {
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File(filename));
+		} catch (IOException e) {
+			System.out.println(e.toString());
+			JOptionPane.showMessageDialog(null, "An image failed to load: " + filename, "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		// DEBUG
+		// if (img == null) System.out.println("null");
+		// else System.out.printf("w=%d, h=%d%n",img.getWidth(), img.getHeight());
+		return img;
+	}
+
     @Override
     public void keyTyped(KeyEvent e) {}
 
@@ -152,22 +176,22 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 b.keyPressed(e);
                 
                 if (b.received || b.missed || b.missPassed) {
-                    // rater.setRating(b.rate());
+                    rater.setRating(b.rate());
 
                     System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
                     allBlocks.remove(b);
                 }
 
-                // For hold blocks only
-                // try {
-                //     if (((HoldBlock) b).isPressed) {
-                //         rater.setRating(((HoldBlock) b).holdRate());
-                //     }
-                // } catch (Exception z) {
-                //     // do nothing
-                // }
+                //For hold blocks only
+                try {
+                    if (((HoldBlock) b).isPressed) {
+                        rater.setRating(((HoldBlock) b).holdRate());
+                    }
+                } catch (Exception z) {
+                    // do nothing
+                }
 
-                // if (b.received || b.missed || b.missPassed) allBlocks.remove(b);
+                if (b.received || b.missed || b.missPassed) allBlocks.remove(b);
                 
                 break;
             }
@@ -205,7 +229,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 b.keyReleased(e);
                 
                 if (b.received || b.missed || b.missPassed) {
-                    // rater.setRating(b.rate());
+                    rater.setRating(b.rate());
 
                     System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
                     allBlocks.remove(b);

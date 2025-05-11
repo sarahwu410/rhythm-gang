@@ -15,6 +15,15 @@ public class SpamBlock extends Block {
     double distanceTravelledX = 0, distanceTravelledY = 0;
     double timeBeforeSpam, timeDuringSpam, timeAfterSpam;
 
+    /**
+     * constructor for spam block with its unique extra attributes 
+     * @param level the level this SpamBlock is going in
+     * @param button the button that will receive this SpamBlock
+     * @param receiveTime the time the SpamBlock will be received at
+     * @param someReceiver the receiver that corrosponds with the block
+     * @param numSpam the number of times the block is meant to be spammed
+     * @param endTime the time the spam block will stop accepting spams
+     */
     public SpamBlock(String level, String button, int receiveTime, Receiver someReceiver, int numSpam, int endTime) {
         super(level, button, receiveTime, someReceiver);
         this.numSpam = numSpam;

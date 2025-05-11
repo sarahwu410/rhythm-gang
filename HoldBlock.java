@@ -13,12 +13,19 @@ public class HoldBlock extends Block {
     int holdDurationMs, endTime;
     int pressStartTime, heldTime;
     boolean isPressed = false;
-    // boolean completed = false;
 
     // Block visual positions (e.g., for diagonal movement)
     // headX and headY are this.x and this.y
     int tailX, tailY;
 
+    /**
+     * constructor for hold block with its unique extra attributes
+     * @param level the level this HoldBlock is going in
+     * @param button the button that will receive this HoldBlock
+     * @param receiveTime the time the HoldBlock will be received at
+     * @param someReceiver the receiver that corrosponds with the HoldBlock
+     * @param holdDurationMs the time in milliseconds the block is meant to be held at
+     */
     public HoldBlock(String level, String button, int receiveTime, Receiver someReceiver, int holdDurationMs) {
         super(level, button, receiveTime, someReceiver);
         this.holdDurationMs = holdDurationMs;
@@ -91,6 +98,10 @@ public class HoldBlock extends Block {
         else return 3;
     }
 
+    /**
+     * calculates how accurate the received HoldBlock is
+     * @return 1 - most accurate, 2 - less accurate, 3 - not accurate
+     */
     int holdRate() {
         int accuracy = (int) (Math.abs(receiveTime - pressStartTime));
         if (accuracy < 200) return 1;

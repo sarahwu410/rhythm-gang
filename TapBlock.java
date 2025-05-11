@@ -9,6 +9,14 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 public class TapBlock extends Block{
+
+    /**
+     * sets all the variables from the parent class
+     * @param level the level this TapBlock is going in
+     * @param button the button that will receive this TapBlock
+     * @param receiveTime the time the TapBlock will be received at
+     * @param someReceiver the receiver that corrosponds with the block
+     */
     public TapBlock(String level, String button, int receiveTime, Receiver someReceiver) {
         super(level, button, receiveTime, someReceiver);
         this.Blocktype = "TapBlock"; //used in easylevel

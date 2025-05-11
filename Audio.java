@@ -14,6 +14,10 @@ public class Audio {
 
     boolean paused;
 
+    /**
+     * constructor to do any necessary audio file lines
+     * @param file the filepath to the audio file
+     */
     Audio(String file) {
         this.file = new File(file);
         try {
@@ -27,23 +31,35 @@ public class Audio {
         }	
     }
 
+    /**
+     * sets the time of the audio
+     * @param mili the time in milliseconds
+     */
     public void setTime(int mili){
         clip.setMicrosecondPosition(mili*1000);
     }
     
-    
+    /**
+     * plays audio, if its already playing and this is called, it goes back to the beginning
+     */
     public void playAudio() {
         if (!paused) clip.setFramePosition(0);
         paused = false;
         clip.start();
     }
 
-    
+    /**
+     * stops playing the audio
+     */
     public void stopAudio() {
         paused = true;
         clip.stop();
     }
 
+    /**
+     * gets the time the audio currently is at
+     * @return the time in centiseconds
+     */
     public int getTime() { 
         double test;
         long microseconds = clip.getMicrosecondPosition()/10000;
