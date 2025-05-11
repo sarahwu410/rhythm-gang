@@ -11,6 +11,9 @@ public class Audio {
     Clip clip;
     AudioInputStream audioinput;
     File file;
+
+    boolean paused;
+
     Audio(String file) {
         this.file = new File(file);
         try {
@@ -30,12 +33,14 @@ public class Audio {
     
     
     public void playAudio() {
-            clip.setFramePosition(0);
-            clip.start();
+        if (!paused) clip.setFramePosition(0);
+        paused = false;
+        clip.start();
     }
 
     
     public void stopAudio() {
+        paused = true;
         clip.stop();
     }
 

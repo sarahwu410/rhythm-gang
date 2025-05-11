@@ -5,6 +5,8 @@
  */
 
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 public class HoldBlock extends Block {
@@ -23,6 +25,15 @@ public class HoldBlock extends Block {
         this.endTime = this.enterTime + this.holdDurationMs;
     }
 
+    @Override
+    public void draw(Graphics2D g2) {
+        g2.setPaint(Color.RED);
+        g2.fillRect(this.x, this.y, this.length, this.width);
+        g2.fillRect(this.tailX, this.tailY, this.length, this.width);
+        g2.setPaint(Color.WHITE);
+        g2.drawLine(this.x, this.y, this.tailX, this.tailY);
+    }
+
     // Move both head and tail diagonally
     @Override
     public void move(int audioTime) {
@@ -37,7 +48,7 @@ public class HoldBlock extends Block {
         this.tailY = (int) (enterY + this.velocityY * tailTime);
 
         this.passedReceiver(someReceiver);
-        if (!this.canReceive) System.out.println("cant receive at: " + audioTime);
+        // if (!this.canReceive) System.out.println("cant receive at: " + audioTime);
     }
 
     @Override
@@ -93,7 +104,7 @@ public class HoldBlock extends Block {
         if (!isPressed && this.matchesKey(e)) {
             isPressed = true;
             this.pressStartTime = this.timeReceived;
-            System.out.println("HOLD BLOCK PRESSED");
+            // System.out.println("HOLD BLOCK PRESSED");
         }
     }
 

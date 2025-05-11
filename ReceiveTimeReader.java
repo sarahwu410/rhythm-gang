@@ -251,7 +251,7 @@ public class ReceiveTimeReader {
 		}
 		
 		// Return all the receive times
-		System.out.println("I am returning an array of spam blocks with " + holdies.length + " notes.");
+		System.out.println("I am returning an array of hold blocks with " + holdies.length + " notes.");
 		return holdies;
 	}
 

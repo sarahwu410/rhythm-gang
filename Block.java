@@ -6,6 +6,7 @@
 
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.Graphics2D;
 
 public abstract class Block implements KeyListener {
     int x, y, length, width;
@@ -115,6 +116,26 @@ public abstract class Block implements KeyListener {
                 this.x = 0;
                 this.y = 0;
             }
+        } else if (this.level.equalsIgnoreCase("prototype")) {
+            this.length = 100;
+            this.width = 100;
+            this.speed = 0.5;
+            if (this.button.equalsIgnoreCase("A")) {
+                this.x = 0;
+                this.y = 0;
+            } else if (this.button.equalsIgnoreCase("B")) {
+                this.x = this.someReceiver.x;
+                this.y = 0;
+            } else if (this.button.equalsIgnoreCase("C")) {
+                this.x = 2000;
+                this.y = 0;
+            } else if (this.button.equalsIgnoreCase("X")) {
+                this.x = 0;
+                this.y = 1000;
+            } else if (this.button.equalsIgnoreCase("Y")) {
+                this.x = 2000;
+                this.y = 1000;
+            }
         }
         this.enterX = x;
         this.enterY = y;
@@ -185,6 +206,12 @@ public abstract class Block implements KeyListener {
     }
 
     /**
+     * how to uniquely draw each block
+     * @param g2 used to draw with different commands
+     */
+    public abstract void draw(Graphics2D g2);
+
+    /**
      * moves the block based on the audio time so it syncs with the audio
      * @param audioTime the current time the audio is at
      */
@@ -195,7 +222,6 @@ public abstract class Block implements KeyListener {
      */
     abstract int rate();
     
-
     /**
      * helper method that checks whether the correct key is pressed for the corrosponding button
      * saves code
@@ -204,11 +230,11 @@ public abstract class Block implements KeyListener {
      */
     protected boolean matchesKey(KeyEvent e) {
         switch (button.toUpperCase()) {
-            case "A": return e.getKeyCode() == KeyEvent.VK_A;
-            case "B": return e.getKeyCode() == KeyEvent.VK_B;
-            case "C": return e.getKeyCode() == KeyEvent.VK_C;
-            case "X": return e.getKeyCode() == KeyEvent.VK_X;
-            case "Y": return e.getKeyCode() == KeyEvent.VK_Y;
+            case "A": return e.getKeyCode() == KeyEvent.VK_U;
+            case "B": return e.getKeyCode() == KeyEvent.VK_I;
+            case "C": return e.getKeyCode() == KeyEvent.VK_O;
+            case "X": return e.getKeyCode() == KeyEvent.VK_J;
+            case "Y": return e.getKeyCode() == KeyEvent.VK_K;
             default: return false;
         }
     }

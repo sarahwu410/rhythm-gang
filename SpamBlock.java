@@ -4,6 +4,9 @@
  * Class that extends Block.java for a type of block that only has to be spammed a certain amount of times
  */
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 public class SpamBlock extends Block {
@@ -17,6 +20,15 @@ public class SpamBlock extends Block {
         this.numSpam = numSpam;
         this.endTime = endTime;
         this.Blocktype = "SpamBlock"; //used in easy level
+    }
+
+    @Override
+    public void draw(Graphics2D g2) {
+        g2.setPaint(Color.MAGENTA);
+        g2.fillRect(this.x, this.y, this.width, this.length);
+        g2.setPaint(Color.WHITE);
+        g2.setFont(new Font("monospaced", Font.PLAIN, 50));
+        g2.drawString(String.valueOf(this.numSpam), this.x+40, this.y+60);
     }
 
     @Override

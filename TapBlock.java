@@ -4,12 +4,20 @@
  * Class that extends Block.java for a type of block that only has to be tapped once
  */
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 public class TapBlock extends Block{
     public TapBlock(String level, String button, int receiveTime, Receiver someReceiver) {
         super(level, button, receiveTime, someReceiver);
         this.Blocktype = "TapBlock"; //used in easylevel
+    }
+
+    @Override
+    public void draw(Graphics2D g2) {
+        g2.setPaint(Color.GREEN);
+        g2.fillRect(this.x, this.y, this.width, this.length);
     }
 
     @Override
@@ -63,7 +71,7 @@ public class TapBlock extends Block{
     @Override
     public void keyPressed(KeyEvent e) {
         // If the key event text matches the block button, tell the user the result
-        if (KeyEvent.getKeyText(e.getKeyCode()).equalsIgnoreCase(this.button) && ! this.received) { 
+        if (this.matchesKey(e) && ! this.received) { 
             this.receive(this.timeReceived);
             System.out.println("Receive time: " + this.receiveTime + "; Time received: " + this.timeReceived);
             return;
@@ -72,6 +80,4 @@ public class TapBlock extends Block{
 
     @Override
     public void keyReleased(KeyEvent e) {}
-
-    
 }
