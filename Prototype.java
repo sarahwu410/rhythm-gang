@@ -36,13 +36,14 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     WordPlayer rater;
 
     Prototype() {
-        panel = new DrawingPanel();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        this.setTitle("Rhythm Game Prototype");
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
+        this.setTitle("Rhythm Game Prototype");
         this.addKeyListener(this);
+
+        panel = new DrawingPanel();
 
         // Add receivers to the HashMap
         allReceivers.put("A", new Receiver(500, 300, 100,100));
