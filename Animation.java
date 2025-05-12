@@ -163,7 +163,6 @@ public class Animation {
 	 */
 	public void setX(int newX) {
 		this.drawX = newX;
-		System.out.println("Set X");
 	}
 
 	/**
@@ -172,7 +171,6 @@ public class Animation {
 	 */
 	public void setY(int newY) {
 		this.drawY = newY;
-		System.out.println("Set Y");
 	}
 
 	/**

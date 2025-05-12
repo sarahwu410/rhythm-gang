@@ -33,7 +33,7 @@ public class HoldBlock extends Block {
     }
 
     @Override
-    public void draw(Graphics2D g2) {
+    public void draw(Graphics2D g2, int audioTime) {
         g2.setPaint(Color.RED);
         g2.fillRect(this.x, this.y, this.length, this.width);
         g2.fillRect(this.tailX, this.tailY, this.length, this.width);

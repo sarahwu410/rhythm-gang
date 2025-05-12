@@ -25,6 +25,8 @@ public abstract class Block implements KeyListener {
     boolean canReceive = false; // false so that the block can't be received if it's not on screen
     boolean reachedReceiver = false;
     boolean beenRated = false;
+    Animation movement, beenHit;
+    boolean hitPlaying;
 
     /**
      * constructor to set the unique coordinates, buttons, and receive time for evey block per level and button
@@ -41,6 +43,10 @@ public abstract class Block implements KeyListener {
         this.received = false;
         this.missed = false;
         this.missPassed = false;
+        this.movement = null;
+        this.beenHit = null;
+        this.hitPlaying = false;
+        this.timeReceived = 0;
 
         // each level will have unique block coordinates for each receiver
         // assigns those coordinates here
@@ -154,7 +160,10 @@ public abstract class Block implements KeyListener {
      * sets the variable this.timeReceived into the time that the block was received at
      * @param timeReceived time that the block was received at
      */
-    public void setTimeReceived(int timeReceived) {this.timeReceived = timeReceived;}
+    public void setTimeReceived(int timeReceived) {
+        if (hitPlaying) return;
+        this.timeReceived = timeReceived;
+    }
 
     /**
      * sets different requirements for what counts as a hit or a miss when a block is received
@@ -219,7 +228,7 @@ public abstract class Block implements KeyListener {
      * how to uniquely draw each block
      * @param g2 used to draw with different commands
      */
-    public abstract void draw(Graphics2D g2);
+    public abstract void draw(Graphics2D g2, int audioTime);
 
     /**
      * moves the block based on the audio time so it syncs with the audio

@@ -39,6 +39,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     ArrayList<Block> yBlocks;
     HashMap<String, Receiver> allReceivers = new HashMap<>();
     Set<Integer> heldKeys;
+    Image smiley;
 
     Image ratingSpriteSheet;
     WordPlayer rater;
@@ -60,6 +61,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         allReceivers.put("X", new Receiver(575, 450, 100,100));
         allReceivers.put("Y", new Receiver(725, 450, 100,100));
 
+        // animations
+        smiley = loadImage("res/smilingCube.png");
+
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
             // receiveTime button
@@ -75,6 +79,16 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         xBlocks = ReceiveTimeReader.pull(allBlocks, "X");
         yBlocks = ReceiveTimeReader.pull(allBlocks, "Y");
         heldKeys = new HashSet<>();
+        for (Block b: allBlocks) {
+            try {
+                if (b.Blocktype.equals("TapBlock")) {
+                    b.movement = new AnimationHorizontal(smiley, b.x, b.y, 0, 0, 2, 100, 100);
+                    b.beenHit = new AnimationHorizontal(smiley, b.x, b.y, 100, 0, 10, 100, 100);
+                }
+            } catch (Exception e) {
+                System.out.println("No block type.");
+            }
+        }
 
         // Get the rate animation initialized
         ratingSpriteSheet = loadImage("res/PERFECT!GOODMISSED.png");
@@ -103,7 +117,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     }
 
                     // if the block missed the receiver, display "miss"
-                    if (b.missPassed) {
+                    if (b.missPassed && !b.hitPlaying) {
                         rater.setRating(3, b);
 
                         //For hold blocks only
@@ -159,9 +173,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             // loop through all the blocks in the ArrayList
             for (int i = 0; i<allBlocks.size(); i++) {
                 // if block has reached its enter time and not been received
-                if (milliElapsed>=allBlocks.get(i).enterTime && !allBlocks.get(i).received && !allBlocks.get(i).missed) {
+                if (milliElapsed>=allBlocks.get(i).enterTime && ! (allBlocks.get(i).received && !allBlocks.get(i).hitPlaying) && !allBlocks.get(i).missed) {
                     // draw the block
-                    allBlocks.get(i).draw(g2);
+                    allBlocks.get(i).draw(g2, milliElapsed);
                 }
 
                 if (i == allBlocks.get(i).length - 1 && (allBlocks.get(i).received || allBlocks.get(i).missed)) { // If the last block has been received
@@ -239,7 +253,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     if (b.received || b.missed) {
                         rater.setRating(b.rate(),b);
                         System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                        allBlocks.remove(b);
                     }
                     break;
                 }
@@ -263,7 +276,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     if (b.received || b.missed) {
                         rater.setRating(b.rate(),b);
                         System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                        allBlocks.remove(b);
                     }
                     break;
                 }
@@ -287,7 +299,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     if (b.received || b.missed) {
                         rater.setRating(b.rate(),b);
                         System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                        allBlocks.remove(b);
                     }
                     break;
                 }
@@ -311,7 +322,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     if (b.received || b.missed) {
                         rater.setRating(b.rate(),b);
                         System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                        allBlocks.remove(b);
                     }
                     break;
                 }
@@ -335,7 +345,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     if (b.received || b.missed) {
                         rater.setRating(b.rate(),b);
                         System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                        allBlocks.remove(b);
                     }
                     break;
                 }

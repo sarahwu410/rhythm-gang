@@ -22,9 +22,24 @@ public class TapBlock extends Block{
     }
 
     @Override
-    public void draw(Graphics2D g2) {
-        g2.setPaint(Color.GREEN);
-        g2.fillRect(this.x, this.y, this.width, this.length);
+    public void draw(Graphics2D g2, int audioTime) {
+        if (movement == null || beenHit == null) {
+            g2.setPaint(Color.GREEN);
+            g2.fillRect(this.x, this.y, this.width, this.length);
+        } else {
+            if (!hitPlaying) {
+                movement.setX(this.x);
+                movement.setY(this.y);
+                movement.draw(g2, audioTime);
+            } else {
+                beenHit.setX(this.x);
+                beenHit.setY(this.y);
+                beenHit.draw(g2, audioTime);
+                if (beenHit.frame == beenHit.spriteFrames) {
+                    hitPlaying = false;
+                }
+            }
+        }
     }
 
     @Override
@@ -45,8 +60,8 @@ public class TapBlock extends Block{
         
         if (this.reachedReceiver) {
             if ((this.x > (receiver.x+receiver.width)) || (this.y > (receiver.y+receiver.height)) || ((this.x+this.length)<receiver.x) || ((this.y+this.width)<receiver.y)) {
-                this.canReceive = false;
-                this.missPassed = true;
+                if (!this.hitPlaying) this.canReceive = false;
+                if (!this.received) this.missPassed = true;
             }
         }
     }
@@ -56,10 +71,11 @@ public class TapBlock extends Block{
         int accuracy = (int) (Math.abs(receiveTime - timeReceived));
     	if (accuracy < 500) {
             System.out.println("✅ Woohoo! You hit!");
+            this.hitPlaying = true;
             this.received = true;
         } else {
             System.out.println("❌ Boo! *Throws tomato* You missed.");
-            this.missed = true;
+            if (!this.hitPlaying) this.missed = true;
         }
     	
     }
@@ -67,6 +83,7 @@ public class TapBlock extends Block{
     @Override
     int rate() {
         int accuracy = (int) (Math.abs(receiveTime - timeReceived));
+        System.out.println("Accuracy: " + accuracy);
         if (accuracy < 200) return 1;
         if (accuracy < 500) return 2;
         else return 3;

@@ -122,7 +122,7 @@ public class testYourBlocksHERE implements KeyListener {
                     allBlocks.get(i).canReceive = true;
                     //// g2.fillRect(allBlocks.get(i).x, allBlocks.get(i).y, allBlocks.get(i).length, allBlocks.get(i).width);
 
-                    allBlocks.get(i).draw(g2);
+                    allBlocks.get(i).draw(g2, milliElapsed);
                 } 
                 
                 if (i == allBlocks.get(i).length - 1 && (allBlocks.get(i).received || allBlocks.get(i).missed)) { // If the last block has been received
