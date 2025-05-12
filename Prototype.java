@@ -207,6 +207,8 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         heldKeys.add(e.getKeyCode());
+
+        
         handleHeldKeys(e);
 
         if (e.getKeyCode() == KeyEvent.VK_Q) {

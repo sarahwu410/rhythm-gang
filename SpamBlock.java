@@ -109,7 +109,7 @@ public class SpamBlock extends Block {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (this.matchesKey(e)) {
+        if (e.getKeyCode() == this.matchesKey(e)) {
             this.receive(this.timeReceived);
             System.out.println("Receive time: " + this.receiveTime + "; Time received: " + this.timeReceived + "; numSpam: "+ this.numSpam);
         }

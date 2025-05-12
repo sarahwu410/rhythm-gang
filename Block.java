@@ -247,14 +247,14 @@ public abstract class Block implements KeyListener {
      * @param e the key event
      * @return the appropriate key code with the corrosponding button
      */
-    protected boolean matchesKey(KeyEvent e) {
+    protected int matchesKey(KeyEvent e) {
         switch (button.toUpperCase()) {
-            case "A": return e.getKeyCode() == KeyEvent.VK_U;
-            case "B": return e.getKeyCode() == KeyEvent.VK_I;
-            case "C": return e.getKeyCode() == KeyEvent.VK_O;
-            case "X": return e.getKeyCode() == KeyEvent.VK_J;
-            case "Y": return e.getKeyCode() == KeyEvent.VK_K;
-            default: return false;
+            case "A": return KeyEvent.VK_U;
+            case "B": return KeyEvent.VK_I;
+            case "C": return KeyEvent.VK_O;
+            case "X": return KeyEvent.VK_J;
+            case "Y": return KeyEvent.VK_K;
+            default: return -1;
         }
     }
 

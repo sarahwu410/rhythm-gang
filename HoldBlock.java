@@ -112,7 +112,7 @@ public class HoldBlock extends Block {
     // Handle key press (start timing)
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!isPressed && this.matchesKey(e)) {
+        if (!isPressed && e.getKeyCode() == this.matchesKey(e)) {
             isPressed = true;
             this.pressStartTime = this.timeReceived;
             // System.out.println("HOLD BLOCK PRESSED");
@@ -122,7 +122,7 @@ public class HoldBlock extends Block {
     // Handle key release (check success)
     @Override
     public void keyReleased(KeyEvent e) {
-        if (isPressed && this.matchesKey(e)) {
+        if (isPressed && e.getKeyCode() == this.matchesKey(e)) {
             isPressed = false;
             heldTime = this.timeReceived - this.pressStartTime;
             this.receive(this.timeReceived);
