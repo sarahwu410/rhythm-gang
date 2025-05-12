@@ -510,6 +510,48 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         }
     }
 
+    // public void keyPressedAction(Block block, KeyEvent e) {
+    //     if (block.canReceive && !block.received && !block.missed && !block.missPassed) {
+    //         // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+    //         block.setTimeReceived(milliElapsed);
+    //         block.keyPressed(e);
+    //         //For hold blocks only
+    //         try {
+    //             if (((HoldBlock)block).isPressed) {
+    //                 rater.setRating(((HoldBlock) block).holdRate(), block);
+    //             }
+    //         } catch (Exception z) {
+    //             // do nothing
+    //         }
+    //         if (block.received || block.missed) {
+    //             rater.setRating(block.rate(),block);
+    //             System.out.println("RECEIVED: " + block.received + "; MISSED: " + block.missed + "; MISSPASSED: "+block.missPassed);
+    //         }
+    //         return;
+    //     }
+    // }
+
+    // public void keyReleasedAction(Block block, KeyEvent e) {
+    //     if (block.canReceive && !block.received && !block.missed && !block.missPassed) {
+    //         // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+    //         block.setTimeReceived(milliElapsed);
+    //         block.keyReleased(e);
+    //         if (block.received || block.missed) {
+    //             rater.setRating(block.rate(), block);
+    //             System.out.println("RECEIVED: " + block.received + "; MISSED: " + block.missed + "; MISSPASSED: "+block.missPassed);
+    //         }
+    //         //For hold blocks only
+    //         try {
+    //             if (!((HoldBlock)block).beenRated) {
+    //                 block.beenRated = true;
+    //             }
+    //         } catch (Exception z) {
+    //             // do nothing
+    //         }
+    //         return;
+    //     }
+    // }
+
     public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
