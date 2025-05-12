@@ -179,7 +179,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             // paint the instructions
             g2.setPaint(Color.WHITE);
             g2.setFont(new Font("monospaced", Font.PLAIN, 20));
-            g2.drawString("Press Q to quit", 10, screenHeight - 100);
             g2.drawString("Press L to open pause menu", 10, screenHeight - 50);
 
             // paint rating
