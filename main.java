@@ -89,7 +89,7 @@ public class main implements KeyListener {
 		play2 = loadImage("res/titlescreen/play2.png");
 		instruction2 = loadImage("res/titlescreen/instruction2.png");
 		quit2 = loadImage("res/titlescreen/quit2.png");
-		ratpanel = loadImage("res/background/jungle_temple.png");
+		ratpanel = loadImage("res/titlescreen/easyL.jpg");
 		mp = loadImage("res/titlescreen/mediumpanel.png");
 		hp = loadImage("res/titlescreen/hardpanel.png");
 		bp = loadImage("res/titlescreen/bosspanel.png");
@@ -190,7 +190,7 @@ public class main implements KeyListener {
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D)g;
 			g2.setPaint(Color.WHITE);
-			g2.drawString("test :)", 500, 500);
+			g2.drawString("prototype :)", 500, 500);
 	
 		}
 	}
@@ -312,7 +312,7 @@ public class main implements KeyListener {
 
 			if (currentpanel.equals("test")) {
 				mainpanel.setVisible(false);
-				new testYourBlocksHERE();
+				new Prototype();
 			}
 			if (tier == 3) System.exit(0);
 			if (tier == 2) scroll = true;
