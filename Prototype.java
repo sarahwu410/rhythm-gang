@@ -27,7 +27,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
     DrawingPanel panel;
     Timer timer;
-    Audio audio = new Audio("res/Audio/Counting Up to 60 Seconds.wav");
+    Audio audio = new Audio("res/Audio/Carrier (Dreamcast) - File 1.wav");
 
     int milliElapsed; // how much time has passed so far
 
