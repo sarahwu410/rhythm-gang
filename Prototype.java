@@ -44,12 +44,12 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     Image ratingSpriteSheet;
     WordPlayer rater;
 
+    FontMetrics metrics;
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     int screenWidth = screenSize.width;
     int screenHeight = screenSize.height;
 
     JPanel pausePanel;
-    private int pauseMenuSelection = 0; // 0 = Resume, 1 = Exit
 
     Prototype() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -158,6 +158,8 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 			Graphics2D g2 = (Graphics2D)g;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
+            metrics = g2.getFontMetrics(g2.getFont());
+
             // paint the receivers themselves
             allReceivers.get("A").draw(g2);
             allReceivers.get("B").draw(g2);
@@ -178,7 +180,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             g2.setPaint(Color.WHITE);
             g2.setFont(new Font("monospaced", Font.PLAIN, 20));
             g2.drawString("Press Q to quit", 10, screenHeight - 100);
-            g2.drawString("Press L to pause/unpause", 10, screenHeight - 50);
+            g2.drawString("Press L to open pause menu", 10, screenHeight - 50);
 
             // paint rating
             rater.play(g2, milliElapsed);
@@ -230,7 +232,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             return; // Prevent other actions while the pause menu is active
         }
 
-        // Handle pause menu navigation
+        // Handle pause menu input
         if (isPaused) {
             handlePauseMenuInput(e);
             return; // Prevent other game actions while paused
@@ -583,10 +585,20 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 // Draw menu options
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
                 g2.setFont(new Font("Arial", Font.BOLD, 40));
-                g2.setColor(pauseMenuSelection == 0 ? Color.YELLOW : Color.WHITE);
-                g2.drawString("Resume", getWidth() / 2 - 100, getHeight() / 2 - 50);
-                g2.setColor(pauseMenuSelection == 1 ? Color.YELLOW : Color.WHITE);
-                g2.drawString("Exit", getWidth() / 2 - 100, getHeight() / 2 + 50);
+                g2.setColor(Color.WHITE);
+
+                // display text centered
+                FontMetrics metrics = g2.getFontMetrics(g2.getFont());
+                String resumeText = "Press P to Resume";
+                String exitText = "Press L to Exit";
+
+                int resumeX = (getWidth() - metrics.stringWidth(resumeText)) / 2;
+                int resumeY = (getHeight() / 2) - 50;
+                int exitX = (getWidth() - metrics.stringWidth(exitText)) / 2;
+                int exitY = (getHeight() / 2) + 50;
+
+                g2.drawString(resumeText, resumeX, resumeY);
+                g2.drawString(exitText, exitX, exitY);
             }
         };
         pausePanel.setOpaque(false);
@@ -597,21 +609,13 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
     private void handlePauseMenuInput(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                pauseMenuSelection = (pauseMenuSelection - 1 + 2) % 2; // Wrap around
+            case KeyEvent.VK_P: // Resume the game
+                resumeGame();
                 break;
-            case KeyEvent.VK_DOWN:
-                pauseMenuSelection = (pauseMenuSelection + 1) % 2; // Wrap around
-                break;
-            case KeyEvent.VK_ENTER:
-                if (pauseMenuSelection == 0) {
-                    resumeGame(); // Resume the game
-                } else if (pauseMenuSelection == 1) {
-                    System.exit(0); // Exit the game
-                }
+            case KeyEvent.VK_L: // Exit the game
+                System.exit(0);
                 break;
         }
-        pausePanel.repaint(); // Update the pause menu display
     }
 
     private void resumeGame() {
