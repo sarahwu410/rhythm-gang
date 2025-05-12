@@ -44,9 +44,12 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     Image ratingSpriteSheet;
     WordPlayer rater;
 
+    FontMetrics metrics;
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     int screenWidth = screenSize.width;
     int screenHeight = screenSize.height;
+
+    JPanel pausePanel;
 
     Prototype() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -101,6 +104,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         ratingSpriteSheet = loadImage("res/PERFECT!GOODMISSED.png");
         rater = new WordPlayer(ratingSpriteSheet, 20, 20);
 
+        // Initialize pause menu
+        createPausePanel();
+
         this.add(panel);
 		this.setVisible(true);
 
@@ -152,6 +158,8 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 			Graphics2D g2 = (Graphics2D)g;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
+            metrics = g2.getFontMetrics(g2.getFont());
+
             // paint the receivers themselves
             allReceivers.get("A").draw(g2);
             allReceivers.get("B").draw(g2);
@@ -171,8 +179,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             // paint the instructions
             g2.setPaint(Color.WHITE);
             g2.setFont(new Font("monospaced", Font.PLAIN, 20));
-            g2.drawString("Press Q to quit", 10, screenHeight - 100);
-            g2.drawString("Press L to pause/unpause", 10, screenHeight - 50);
+            g2.drawString("Press L to open pause menu", 10, screenHeight - 50);
 
             // paint rating
             rater.play(g2, milliElapsed);
@@ -215,6 +222,21 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     public void keyPressed(KeyEvent e) {
         heldKeys.add(e.getKeyCode());
 
+        // Pause the game and show the pause menu
+        if (e.getKeyCode() == KeyEvent.VK_L && !isPaused) {
+            isPaused = true;
+            timer.stop();
+            audio.stopAudio();
+            pausePanel.setVisible(true); // Show the pause menu
+            return; // Prevent other actions while the pause menu is active
+        }
+
+        // Handle pause menu input
+        if (isPaused) {
+            handlePauseMenuInput(e);
+            return; // Prevent other game actions while paused
+        }
+
         // Activate the corresponding receiver
         switch (e.getKeyCode()) {
             case KeyEvent.VK_U:
@@ -240,18 +262,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             System.out.println(allBlocks.size() + " blocks left.");
             System.out.println("Quitter.");
             System.exit(0);
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_L) {
-            if (!isPaused) {
-                isPaused = true;
-                timer.stop();
-                audio.stopAudio();
-            } else {
-                isPaused = false;
-                timer.start();
-                audio.playAudio();
-            }
         }
     }
 
@@ -517,7 +527,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         }
     }
 
-    // public void keyPressedAction(Block block, KeyEvent e) {
+        // public void keyPressedAction(Block block, KeyEvent e) {
     //     if (block.canReceive && !block.received && !block.missed && !block.missPassed) {
     //         // required to set the timeReceived attribute within the Block object itself before calling keyPressed
     //         block.setTimeReceived(milliElapsed);
@@ -558,6 +568,61 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     //         return;
     //     }
     // }
+
+    private void createPausePanel() {
+        pausePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+
+                // Draw semi-transparent black background
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                g2.setColor(Color.BLACK);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+
+                // Draw menu options
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+                g2.setFont(new Font("Arial", Font.BOLD, 40));
+                g2.setColor(Color.WHITE);
+
+                // display text centered
+                FontMetrics metrics = g2.getFontMetrics(g2.getFont());
+                String resumeText = "Press P to Resume";
+                String exitText = "Press L to Exit";
+
+                int resumeX = (getWidth() - metrics.stringWidth(resumeText)) / 2;
+                int resumeY = (getHeight() / 2) - 50;
+                int exitX = (getWidth() - metrics.stringWidth(exitText)) / 2;
+                int exitY = (getHeight() / 2) + 50;
+
+                g2.drawString(resumeText, resumeX, resumeY);
+                g2.drawString(exitText, exitX, exitY);
+            }
+        };
+        pausePanel.setOpaque(false);
+        pausePanel.setBounds(0, 0, screenWidth, screenHeight); // Cover the entire screen
+        pausePanel.setVisible(false); // Initially hidden
+        this.add(pausePanel);
+    }
+
+    private void handlePauseMenuInput(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_P: // Resume the game
+                resumeGame();
+                break;
+            case KeyEvent.VK_L: // Exit the game
+                System.exit(0);
+                break;
+        }
+    }
+
+    private void resumeGame() {
+        isPaused = false;
+        timer.start();
+        audio.playAudio();
+        pausePanel.setVisible(false); // Hide the pause menu
+    }
 
     public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
