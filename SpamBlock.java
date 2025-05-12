@@ -11,9 +11,9 @@ import java.awt.event.KeyEvent;
 
 public class SpamBlock extends Block {
     int numSpam, spamTime, endTime;
-    double slowedFactor = 0.07;
     double distanceTravelledX = 0, distanceTravelledY = 0;
     double timeBeforeSpam, timeDuringSpam, timeAfterSpam;
+    double slowedFactor = 0;
 
     /**
      * constructor for spam block with its unique extra attributes 
@@ -72,7 +72,7 @@ public class SpamBlock extends Block {
 
     @Override
     protected void passedReceiver(Receiver receiver) {
-        this.intersectsReceiver(receiver);
+        if (this.intersectsReceiver(receiver)) this.reachedReceiver = true;
         
         if (this.reachedReceiver) {
             if ((this.x > (receiver.x+receiver.width)) || (this.y > (receiver.y+receiver.height)) || ((this.x+this.length)<receiver.x) || ((this.y+this.width)<receiver.y)) {
@@ -80,10 +80,6 @@ public class SpamBlock extends Block {
                 if (numSpam>0) this.missPassed = true;
             }
         }
-    }
-
-    private double calculateSlowedFactor() {
-        return 1.0;
     }
 
     @Override

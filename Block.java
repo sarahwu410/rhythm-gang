@@ -176,12 +176,13 @@ public abstract class Block implements KeyListener {
      * checks if the block has intersected a receiver
      * @param receiver the receiver to be intersected with
      */
-    protected void intersectsReceiver(Receiver receiver) {
+    protected boolean intersectsReceiver(Receiver receiver) {
         if ((this.x < (receiver.x + receiver.width)) && 
             (this.y < (receiver.y + receiver.height)) && 
             ((this.x + this.width)>receiver.x) && 
             ((this.y + this.length)>receiver.y)
-        ) {this.reachedReceiver = true;}
+        ) {return true;}
+        return false;
     }
 
     /**
