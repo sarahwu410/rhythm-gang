@@ -44,6 +44,10 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     Image ratingSpriteSheet;
     WordPlayer rater;
 
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    int screenWidth = screenSize.width;
+    int screenHeight = screenSize.height;
+
     Prototype() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -54,12 +58,15 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
         panel = new DrawingPanel();
 
-        // Add receivers to the HashMap
-        allReceivers.put("A", new Receiver(500, 300, 100,100));
-        allReceivers.put("B", new Receiver(650, 300, 100,100));
-        allReceivers.put("C", new Receiver(800, 300, 100,100));
-        allReceivers.put("X", new Receiver(575, 450, 100,100));
-        allReceivers.put("Y", new Receiver(725, 450, 100,100));
+        // Add the recievers to the HashMap, center the receivers dynamically based on screen size
+        int centerX = screenWidth / 2;
+        int centerY = screenHeight / 2;
+
+        allReceivers.put("A", new Receiver(centerX - 200, centerY - 100, 100, 100));
+        allReceivers.put("B", new Receiver(centerX - 50, centerY - 100, 100, 100));
+        allReceivers.put("C", new Receiver(centerX + 100, centerY - 100, 100, 100));
+        allReceivers.put("X", new Receiver(centerX - 125, centerY + 50, 100, 100));
+        allReceivers.put("Y", new Receiver(centerX + 25, centerY + 50, 100, 100));
 
         // animations
         smiley = loadImage("res/smilingCube.png");
@@ -155,17 +162,17 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             // paint the letters on the receivers
             g2.setPaint(Color.BLACK);
             g2.setFont(new Font("monospaced", Font.PLAIN, 50));
-            g2.drawString("U", allReceivers.get("A").x+35, allReceivers.get("A").y+65);
-            g2.drawString("I", allReceivers.get("B").x+35, allReceivers.get("B").y+65);
-            g2.drawString("O", allReceivers.get("C").x+35, allReceivers.get("C").y+65);
-            g2.drawString("J", allReceivers.get("X").x+35, allReceivers.get("X").y+65);
-            g2.drawString("K", allReceivers.get("Y").x+35, allReceivers.get("Y").y+65);
+            g2.drawString("U", allReceivers.get("A").x + 35, allReceivers.get("A").y + 65);
+            g2.drawString("I", allReceivers.get("B").x + 35, allReceivers.get("B").y + 65);
+            g2.drawString("O", allReceivers.get("C").x + 35, allReceivers.get("C").y + 65);
+            g2.drawString("J", allReceivers.get("X").x + 35, allReceivers.get("X").y + 65);
+            g2.drawString("K", allReceivers.get("Y").x + 35, allReceivers.get("Y").y + 65);
 
             // paint the instructions
             g2.setPaint(Color.WHITE);
             g2.setFont(new Font("monospaced", Font.PLAIN, 20));
-            g2.drawString("Press Q to quit", 10, 500);
-            g2.drawString("Press L to pause/unpause", 10, 550);
+            g2.drawString("Press Q to quit", 10, screenHeight - 100);
+            g2.drawString("Press L to pause/unpause", 10, screenHeight - 50);
 
             // paint rating
             rater.play(g2, milliElapsed);
