@@ -208,7 +208,25 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     public void keyPressed(KeyEvent e) {
         heldKeys.add(e.getKeyCode());
 
-        
+        // Activate the corresponding receiver
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_U:
+                allReceivers.get("A").isActive = true;
+                break;
+            case KeyEvent.VK_I:
+                allReceivers.get("B").isActive = true;
+                break;
+            case KeyEvent.VK_O:
+                allReceivers.get("C").isActive = true;
+                break;
+            case KeyEvent.VK_J:
+                allReceivers.get("X").isActive = true;
+                break;
+            case KeyEvent.VK_K:
+                allReceivers.get("Y").isActive = true;
+                break;
+        }
+
         handleHeldKeys(e);
 
         if (e.getKeyCode() == KeyEvent.VK_Q) {
@@ -233,6 +251,26 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     @Override
     public void keyReleased(KeyEvent e) {
         heldKeys.remove(e.getKeyCode());
+
+        // Deactivate the corresponding receiver
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_U:
+                allReceivers.get("A").isActive = false;
+                break;
+            case KeyEvent.VK_I:
+                allReceivers.get("B").isActive = false;
+                break;
+            case KeyEvent.VK_O:
+                allReceivers.get("C").isActive = false;
+                break;
+            case KeyEvent.VK_J:
+                allReceivers.get("X").isActive = false;
+                break;
+            case KeyEvent.VK_K:
+                allReceivers.get("Y").isActive = false;
+                break;
+        }
+
         handleReleasedKeys(e);
     }
 

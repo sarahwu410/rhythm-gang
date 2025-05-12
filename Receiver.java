@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 
 public class Receiver {
     int x, y, width, height;
+    boolean isActive = false; // Tracks if the receiver is active (button held)
 
     /**
      * sets the coordinates and dimensions of the receiver
@@ -29,7 +30,11 @@ public class Receiver {
      * @param g2 the graphics tool for drawing
      */
     public void draw(Graphics2D g2) {
-        g2.setPaint(Color.BLUE);
-        g2.fillRect(this.x, this.y, this.width, this.height);
+        if (isActive) {
+            g2.setPaint(Color.BLUE); // Active color
+        } else {
+            g2.setPaint(Color.LIGHT_GRAY); // Default color
+        }
+        g2.fillRect(x, y, width, height);
     }
 }
