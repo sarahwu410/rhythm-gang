@@ -34,7 +34,7 @@ public class SpamBlock extends Block {
 
     @Override
     public void draw(Graphics2D g2, int audioTime) {
-        g2.setPaint(Color.MAGENTA);
+        g2.setPaint(Color.ORANGE);
         g2.fillRect(this.x, this.y, this.width, this.length);
         g2.setPaint(Color.WHITE);
         g2.setFont(new Font("monospaced", Font.PLAIN, 50));
