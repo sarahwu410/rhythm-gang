@@ -172,7 +172,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             g2.setPaint(Color.WHITE);
             g2.setFont(new Font("monospaced", Font.PLAIN, 20));
             g2.drawString("Press Q to quit", 10, screenHeight - 100);
-            g2.drawString("Press SPACE to pause/unpause", 10, screenHeight - 50);
+            g2.drawString("Press L to pause/unpause", 10, screenHeight - 50);
 
             // paint rating
             rater.play(g2, milliElapsed);
@@ -242,7 +242,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             System.exit(0);
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (e.getKeyCode() == KeyEvent.VK_L) {
             if (!isPaused) {
                 isPaused = true;
                 timer.stop();

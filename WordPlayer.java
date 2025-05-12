@@ -56,6 +56,7 @@ public class WordPlayer {
     /**
      * Sets the rating that this object should play and it will play when play(Graphics2D g) is next called in the program
      * @param rating    The rating the user acheived (0 = perfect, 1 = good, 2 = missed)
+     * @param block the block that is to be rated
      */
     public void setRating(int rating, Block block) {
         if (!block.beenRated) {

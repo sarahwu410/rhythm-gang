@@ -82,6 +82,10 @@ public class SpamBlock extends Block {
         }
     }
 
+    private double calculateSlowedFactor() {
+        return 1.0;
+    }
+
     @Override
     void receive(int timeReceived) {
         if (this.receiveTime <= timeReceived && this.endTime >= timeReceived) {
