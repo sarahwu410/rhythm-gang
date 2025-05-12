@@ -157,7 +157,6 @@ public class easyLevel implements KeyListener {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 time = mainMusic.getTime();
                 if (jumping && time % 8 == 0) jump.updateCount();
                 if (jump.counter == 6) {
@@ -504,7 +503,6 @@ public class easyLevel implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
         
     }
 
@@ -532,7 +530,6 @@ public class easyLevel implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
         //if (e.getKeyCode == VK_A || e.getKeyCode() == VK_B) 
         
     }
