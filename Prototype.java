@@ -13,6 +13,8 @@ import javax.swing.*;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -30,7 +32,13 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     int milliElapsed; // how much time has passed so far
 
     ArrayList<Block> allBlocks;
+    ArrayList<Block> aBlocks;
+    ArrayList<Block> bBlocks;
+    ArrayList<Block> cBlocks;
+    ArrayList<Block> xBlocks;
+    ArrayList<Block> yBlocks;
     HashMap<String, Receiver> allReceivers = new HashMap<>();
+    Set<Integer> heldKeys;
 
     Image ratingSpriteSheet;
     WordPlayer rater;
@@ -61,6 +69,12 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             // receiveTime holdDuration button
             ReceiveTimeReader.loadHoldBlocks("res/prototypeHoldTimes.txt", "prototype", allReceivers)
         );
+        aBlocks = ReceiveTimeReader.pull(allBlocks, "A");
+        bBlocks = ReceiveTimeReader.pull(allBlocks, "B");
+        cBlocks = ReceiveTimeReader.pull(allBlocks, "C");
+        xBlocks = ReceiveTimeReader.pull(allBlocks, "X");
+        yBlocks = ReceiveTimeReader.pull(allBlocks, "Y");
+        heldKeys = new HashSet<>();
 
         // Get the rate animation initialized
         ratingSpriteSheet = loadImage("res/PERFECT!GOODMISSED.png");
@@ -178,32 +192,8 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        for (Block b: allBlocks) {
-            if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                b.setTimeReceived(milliElapsed);
-                b.keyPressed(e);
-                
-
-                //For hold blocks only
-                try {
-                    if (((HoldBlock)b).isPressed) {
-                        rater.setRating(((HoldBlock) b).holdRate(), b);
-                    }
-                } catch (Exception z) {
-                    // do nothing
-                }
-
-                if (b.received || b.missed) {
-                    rater.setRating(b.rate(),b);
-
-                    System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    allBlocks.remove(b);
-                }
-                
-                break;
-            }
-        }
+        heldKeys.add(e.getKeyCode());
+        handleHeldKeys(e);
 
         if (e.getKeyCode() == KeyEvent.VK_Q) {
             System.out.println(allBlocks.size() + " blocks left.");
@@ -226,29 +216,247 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
     @Override
     public void keyReleased(KeyEvent e) {
-        for (Block b: allBlocks) {
-            if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                b.setTimeReceived(milliElapsed);
-                b.keyReleased(e);
-                
+        heldKeys.remove(e.getKeyCode());
+        handleReleasedKeys(e);
+    }
 
-                if (b.received || b.missed) {
-                    rater.setRating(b.rate(), b);
-
-                    System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                }
-
-                //For hold blocks only
-                try {
-                    if (!((HoldBlock)b).beenRated) {
-                        b.beenRated = true;
+    // Takes care of events that are supposed to happen when keys are held
+    public void handleHeldKeys(KeyEvent e) {
+        if (heldKeys.contains(KeyEvent.VK_U)) {
+            for (Block b: aBlocks) {
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyPressed(e);
+                    //For hold blocks only
+                    try {
+                        if (((HoldBlock)b).isPressed) {
+                            rater.setRating(((HoldBlock) b).holdRate(), b);
+                        }
+                    } catch (Exception z) {
+                        // do nothing
                     }
-                } catch (Exception z) {
-                    // do nothing
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(),b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                        allBlocks.remove(b);
+                    }
+                    break;
                 }
+            }
+        }
 
-                break;
+        if (heldKeys.contains(KeyEvent.VK_I)) {
+            for (Block b: bBlocks) {
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyPressed(e);
+                    //For hold blocks only
+                    try {
+                        if (((HoldBlock)b).isPressed) {
+                            rater.setRating(((HoldBlock) b).holdRate(), b);
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(),b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                        allBlocks.remove(b);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (heldKeys.contains(KeyEvent.VK_O)) {
+            for (Block b: cBlocks) {
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyPressed(e);
+                    //For hold blocks only
+                    try {
+                        if (((HoldBlock)b).isPressed) {
+                            rater.setRating(((HoldBlock) b).holdRate(), b);
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(),b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                        allBlocks.remove(b);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (heldKeys.contains(KeyEvent.VK_J)) {
+            for (Block b: xBlocks) {
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyPressed(e);
+                    //For hold blocks only
+                    try {
+                        if (((HoldBlock)b).isPressed) {
+                            rater.setRating(((HoldBlock) b).holdRate(), b);
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(),b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                        allBlocks.remove(b);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (heldKeys.contains(KeyEvent.VK_K)) {
+            for (Block b: yBlocks) {
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyPressed(e);
+                    //For hold blocks only
+                    try {
+                        if (((HoldBlock)b).isPressed) {
+                            rater.setRating(((HoldBlock) b).holdRate(), b);
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(),b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                        allBlocks.remove(b);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    // Takes care of events that are supposed to happen when keys are released
+    public void handleReleasedKeys(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_U) {
+            for (Block b: aBlocks) {
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyReleased(e);
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(), b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                    }
+                    //For hold blocks only
+                    try {
+                        if (!((HoldBlock)b).beenRated) {
+                            b.beenRated = true;
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_I) {
+            for (Block b: bBlocks) {
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyReleased(e);
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(), b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                    }
+                    //For hold blocks only
+                    try {
+                        if (!((HoldBlock)b).beenRated) {
+                            b.beenRated = true;
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_O) {
+            for (Block b: cBlocks) {
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyReleased(e);
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(), b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                    }
+                    //For hold blocks only
+                    try {
+                        if (!((HoldBlock)b).beenRated) {
+                            b.beenRated = true;
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_J) {
+            for (Block b: xBlocks) {
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyReleased(e);
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(), b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                    }
+                    //For hold blocks only
+                    try {
+                        if (!((HoldBlock)b).beenRated) {
+                            b.beenRated = true;
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_K) {
+            for (Block b: yBlocks) {
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyReleased(e);
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(), b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                    }
+                    //For hold blocks only
+                    try {
+                        if (!((HoldBlock)b).beenRated) {
+                            b.beenRated = true;
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
+                    break;
+                }
             }
         }
     }
