@@ -73,7 +73,7 @@ public class ReceiveTimeReader {
 				try {
 					current = (line.trim()).split(" "); // The first half should be the receive time and the second half should be the note
 					// Create a block
-					tappies[totalNotes] = new TapBlock(myLevel, current[1], (int) Double.parseDouble((current[0]))*1000, myReceivers.get(current[1]));
+					tappies[totalNotes] = new TapBlock(myLevel, current[1], (int)(Double.parseDouble((current[0]))*1000), myReceivers.get(current[1]));
 					totalNotes++;
 				} catch (Exception e) {
 					System.out.println("Could not load block.");
@@ -154,7 +154,7 @@ public class ReceiveTimeReader {
 				try {
 					current = (line.trim()).split(" "); // receiveTime endTime numSpam keyName
 					// Create a block
-					spammers[totalNotes] = new SpamBlock(myLevel, current[3], (int) Double.parseDouble((current[0]))*1000, myReceivers.get(current[3]), Integer.valueOf(current[2]), (int) Double.parseDouble((current[1]))*1000);
+					spammers[totalNotes] = new SpamBlock(myLevel, current[3], (int)(Double.parseDouble((current[0]))*1000), myReceivers.get(current[3]), Integer.valueOf(current[2]), (int)(Double.parseDouble((current[1]))*1000));
 					totalNotes++;
 				} catch (Exception e) {
 					System.out.println("Could not load block.");
@@ -235,7 +235,7 @@ public class ReceiveTimeReader {
 				try {
 					current = (line.trim()).split(" "); // receiveTime holdDuration keyName
 					// Create a block
-					holdies[totalNotes] = new HoldBlock(myLevel, current[2], (int) Double.parseDouble((current[0]))*1000, myReceivers.get(current[2]), (int) Double.parseDouble((current[1]))*1000);
+					holdies[totalNotes] = new HoldBlock(myLevel, current[2], (int)(Double.parseDouble((current[0]))*1000), myReceivers.get(current[2]), (int)(Double.parseDouble((current[1]))*1000));
 					totalNotes++;
 				} catch (Exception e) {
 					System.out.println("Could not load block.");
