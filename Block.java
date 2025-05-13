@@ -4,11 +4,15 @@
  * An abstract class for the unique block types: TapBlock, HoldBlock, SpamBlock
  */
 
+import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-import java.awt.Graphics2D;
 
 public abstract class Block implements KeyListener {
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    int screenWidth = screenSize.width;
+    int screenHeight = screenSize.height;
+    
     int x, y, length, width;
     double enterX, enterY;
     double speed;
@@ -138,17 +142,17 @@ public abstract class Block implements KeyListener {
                 this.x = 0;
                 this.y = 0;
             } else if (this.button.equalsIgnoreCase("B")) {
-                this.x = this.someReceiver.x;
+                this.x = (int)((this.screenWidth*0.5)-(this.width*0.5));
                 this.y = 0;
             } else if (this.button.equalsIgnoreCase("C")) {
-                this.x = 2000;
+                this.x = this.screenWidth-this.width;
                 this.y = 0;
             } else if (this.button.equalsIgnoreCase("X")) {
                 this.x = 0;
-                this.y = 1000;
+                this.y = this.screenHeight-this.length;
             } else if (this.button.equalsIgnoreCase("Y")) {
-                this.x = 2000;
-                this.y = 1000;
+                this.x = this.screenWidth-this.width;
+                this.y = this.screenHeight-this.length;
             }
         }
         this.enterX = x;
