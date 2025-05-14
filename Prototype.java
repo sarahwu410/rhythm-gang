@@ -30,6 +30,11 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     Audio audio = new Audio("res/Audio/Carrier (Dreamcast) - File 1.wav");
 
     int milliElapsed; // how much time has passed so far
+    int numPerfects = 0;
+    int numGoods = 0;
+    int numOks = 0;
+    int numMisses = 0;
+    int score;
 
     ArrayList<Block> allBlocks;
     ArrayList<Block> aBlocks;
@@ -131,7 +136,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
                     // if the block missed the receiver, display "miss"
                     if (b.missPassed && !b.hitPlaying) {
-                        rater.setRating(3, b);
+                        rater.setRating(4, b);
 
                         //For hold blocks only
                         try {
@@ -182,7 +187,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             g2.drawString("Press L to open pause menu", 10, screenHeight - 50);
 
             // paint rating
-            rater.play(g2, milliElapsed);
+            rater.play(g2, milliElapsed, numPerfects, numGoods, numOks, numMisses);
 
             // loop through all the blocks in the ArrayList
             for (int i = 0; i<allBlocks.size(); i++) {
@@ -527,48 +532,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         }
     }
 
-        // public void keyPressedAction(Block block, KeyEvent e) {
-    //     if (block.canReceive && !block.received && !block.missed && !block.missPassed) {
-    //         // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-    //         block.setTimeReceived(milliElapsed);
-    //         block.keyPressed(e);
-    //         //For hold blocks only
-    //         try {
-    //             if (((HoldBlock)block).isPressed) {
-    //                 rater.setRating(((HoldBlock) block).holdRate(), block);
-    //             }
-    //         } catch (Exception z) {
-    //             // do nothing
-    //         }
-    //         if (block.received || block.missed) {
-    //             rater.setRating(block.rate(),block);
-    //             System.out.println("RECEIVED: " + block.received + "; MISSED: " + block.missed + "; MISSPASSED: "+block.missPassed);
-    //         }
-    //         return;
-    //     }
-    // }
-
-    // public void keyReleasedAction(Block block, KeyEvent e) {
-    //     if (block.canReceive && !block.received && !block.missed && !block.missPassed) {
-    //         // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-    //         block.setTimeReceived(milliElapsed);
-    //         block.keyReleased(e);
-    //         if (block.received || block.missed) {
-    //             rater.setRating(block.rate(), block);
-    //             System.out.println("RECEIVED: " + block.received + "; MISSED: " + block.missed + "; MISSPASSED: "+block.missPassed);
-    //         }
-    //         //For hold blocks only
-    //         try {
-    //             if (!((HoldBlock)block).beenRated) {
-    //                 block.beenRated = true;
-    //             }
-    //         } catch (Exception z) {
-    //             // do nothing
-    //         }
-    //         return;
-    //     }
-    // }
-
     private void createPausePanel() {
         pausePanel = new JPanel() {
             @Override
@@ -622,6 +585,19 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         timer.start();
         audio.playAudio();
         pausePanel.setVisible(false); // Hide the pause menu
+    }
+
+    private void calculateScore(int perfects, int goods, int oks, int misses) {
+        score = (int)(1000000*((perfects+(goods*0.7)+(oks*0.3))/(perfects+goods+oks+misses)));
+    }
+
+    private String calculateGrade(int score) {
+        if (score == 1000000) return "SS";
+        else if (score > 900000) return "S";
+        else if (score > 800000) return "A";
+        else if (score > 700000) return "B";
+        else if (score > 500000) return "C";
+        else return "D";
     }
 
     public static void main(String[] args) {

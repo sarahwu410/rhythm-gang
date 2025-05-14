@@ -25,6 +25,11 @@ public class testYourBlocksHERE implements KeyListener {
     DrawPanel panel;
     Timer timer;
     int milliElapsed;
+    int numPerfects = 0;
+    int numGoods = 0;
+    int numOks = 0;
+    int numMisses = 0;
+    int score;
 
     Random rand = new Random();
 
@@ -112,7 +117,7 @@ public class testYourBlocksHERE implements KeyListener {
             g2.setPaint(Color.BLUE);
             g2.fillRect(testReceiver.x, testReceiver.y, testReceiver.width, testReceiver.height);
 
-            rater.play(g2, milliElapsed);
+            rater.play(g2, milliElapsed, numPerfects, numGoods, numOks, numMisses);
 
             // Figure out what blocks to draw
             for (int i = 0; i < allBlocks.size(); i++) {

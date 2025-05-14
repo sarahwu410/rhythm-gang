@@ -98,7 +98,7 @@ public class SpamBlock extends Block {
     @Override
     int rate() {
         if (received) return 1;
-        else return 3;
+        else return 4;
     }
 
     @Override

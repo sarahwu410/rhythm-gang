@@ -84,9 +84,10 @@ public class TapBlock extends Block{
     int rate() {
         int accuracy = (int) (Math.abs(receiveTime - timeReceived));
         System.out.println("Accuracy: " + accuracy);
-        if (accuracy < 200) return 1;
-        if (accuracy < 500) return 2;
-        else return 3;
+        if (accuracy < 30) return 1;
+        else if (accuracy < 100) return 2;
+        else if (accuracy < 200) return 3;
+        else return 4;
     }
 
     @Override
