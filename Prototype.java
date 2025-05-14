@@ -106,7 +106,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         }
 
         // Get the rate animation initialized
-        ratingSpriteSheet = loadImage("res/PERFECT!GOODMISSED.png");
+        ratingSpriteSheet = loadImage("res/RATINGS.png");
         rater = new WordPlayer(ratingSpriteSheet, 20, 20);
 
         // Initialize pause menu
