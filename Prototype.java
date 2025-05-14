@@ -122,9 +122,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         // Initialize pause menu
         createPausePanel();
 
-        // Initialize end screen
-        createEndScreenPanel();
-
         this.add(panel);
 		this.setVisible(true);
 
