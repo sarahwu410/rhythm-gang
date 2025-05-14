@@ -125,6 +125,8 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         for (Block b: allBlocks){
+                    if (milliElapsed > 109000) System.exit(0);
+
                     if (milliElapsed > b.enterTime) {
                         if (milliElapsed>=b.enterTime && !b.received && !b.missed) {
                             // Make sure the user can receive the block
