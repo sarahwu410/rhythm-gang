@@ -55,6 +55,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     int screenHeight = screenSize.height;
 
     JPanel pausePanel;
+    JPanel endScreenPanel;
+
+    Image pausedTextImage;
 
     Prototype() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,7 +69,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
         panel = new DrawingPanel();
 
-        // Add the recievers to the HashMap, center the receivers dynamically based on screen size
+        // Add the receivers to the HashMap, center the receivers dynamically based on screen size
         int centerX = screenWidth / 2;
         int centerY = screenHeight / 2;
 
@@ -76,8 +79,15 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         allReceivers.put("X", new Receiver(centerX - 125, centerY + 50, 100, 100));
         allReceivers.put("Y", new Receiver(centerX + 25, centerY + 50, 100, 100));
 
-        // animations
+        // Animations
         smiley = loadImage("res/smilingCube.png");
+
+        // Load paused text image
+        try {
+            pausedTextImage = ImageIO.read(new File("res/pausedText.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
@@ -111,6 +121,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
         // Initialize pause menu
         createPausePanel();
+
+        // Initialize end screen
+        createEndScreenPanel();
 
         this.add(panel);
 		this.setVisible(true);
@@ -546,20 +559,28 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 g2.setColor(Color.BLACK);
                 g2.fillRect(0, 0, getWidth(), getHeight());
 
+                // Draw the paused text image in the center
+                if (pausedTextImage != null) {
+                    int imageWidth = pausedTextImage.getWidth(null);
+                    int imageHeight = pausedTextImage.getHeight(null);
+                    int x = (getWidth() - imageWidth) / 2;
+                    int y = (getHeight() - imageHeight) / 2;
+                    g2.drawImage(pausedTextImage, x, y, null);
+                }
+
                 // Draw menu options
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
                 g2.setFont(new Font("Arial", Font.BOLD, 40));
                 g2.setColor(Color.WHITE);
 
-                // display text centered
-                FontMetrics metrics = g2.getFontMetrics(g2.getFont());
                 String resumeText = "Press P to Resume";
                 String exitText = "Press L to Exit";
 
+                FontMetrics metrics = g2.getFontMetrics(g2.getFont());
                 int resumeX = (getWidth() - metrics.stringWidth(resumeText)) / 2;
-                int resumeY = (getHeight() / 2) - 50;
+                int resumeY = (getHeight() / 2) + 100; // Adjust below the image
                 int exitX = (getWidth() - metrics.stringWidth(exitText)) / 2;
-                int exitY = (getHeight() / 2) + 50;
+                int exitY = (getHeight() / 2) + 150;
 
                 g2.drawString(resumeText, resumeX, resumeY);
                 g2.drawString(exitText, exitX, exitY);
