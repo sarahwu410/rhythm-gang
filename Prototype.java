@@ -57,6 +57,11 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     JPanel pausePanel;
     JPanel endScreenPanel;
 
+    Image resumeSelectedImage;
+    Image quitSelectedImage;
+
+    private int pauseMenuSelection = 0; // 0 = Resume, 1 = Quit
+
     Prototype() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -79,13 +84,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
         // Animations
         smiley = loadImage("res/smilingCube.png");
-
-        // Load paused text image
-        try {
-            pausedTextImage = ImageIO.read(new File("res/pausedText.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
@@ -118,6 +116,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         rater = new WordPlayer(ratingSpriteSheet, 20, 20);
 
         // Initialize pause menu
+        loadPauseMenuImages();
         createPausePanel();
 
         this.add(panel);
@@ -554,31 +553,18 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 g2.setColor(Color.BLACK);
                 g2.fillRect(0, 0, getWidth(), getHeight());
 
-                // Draw the paused text image in the center
-                if (pausedTextImage != null) {
-                    int imageWidth = pausedTextImage.getWidth(null);
-                    int imageHeight = pausedTextImage.getHeight(null);
+                // Reset AlphaComposite to full opacity for the images
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+
+                // Draw the appropriate image based on the current selection
+                Image currentImage = (pauseMenuSelection == 0) ? resumeSelectedImage : quitSelectedImage;
+                if (currentImage != null) {
+                    int imageWidth = currentImage.getWidth(null);
+                    int imageHeight = currentImage.getHeight(null);
                     int x = (getWidth() - imageWidth) / 2;
                     int y = (getHeight() - imageHeight) / 2;
-                    g2.drawImage(pausedTextImage, x, y, null);
+                    g2.drawImage(currentImage, x, y, null);
                 }
-
-                // Draw menu options
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-                g2.setFont(new Font("Arial", Font.BOLD, 40));
-                g2.setColor(Color.WHITE);
-
-                String resumeText = "Press P to Resume";
-                String exitText = "Press L to Exit";
-
-                FontMetrics metrics = g2.getFontMetrics(g2.getFont());
-                int resumeX = (getWidth() - metrics.stringWidth(resumeText)) / 2;
-                int resumeY = (getHeight() / 2) + 100; // Adjust below the image
-                int exitX = (getWidth() - metrics.stringWidth(exitText)) / 2;
-                int exitY = (getHeight() / 2) + 150;
-
-                g2.drawString(resumeText, resumeX, resumeY);
-                g2.drawString(exitText, exitX, exitY);
             }
         };
         pausePanel.setOpaque(false);
@@ -587,13 +573,31 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         this.add(pausePanel);
     }
 
+    private void loadPauseMenuImages() {
+        try {
+            resumeSelectedImage = loadImage("res/PauseScreen/resumeSelectedImage.png");
+            quitSelectedImage = loadImage("res/PauseScreen/quitSelectedImage.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void handlePauseMenuInput(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_P: // Resume the game
-                resumeGame();
+            case KeyEvent.VK_UP: // Move selection up
+                pauseMenuSelection = (pauseMenuSelection - 1 + 2) % 2; // Wrap around
+                pausePanel.repaint();
                 break;
-            case KeyEvent.VK_L: // Exit the game
-                System.exit(0);
+            case KeyEvent.VK_DOWN: // Move selection down
+                pauseMenuSelection = (pauseMenuSelection + 1) % 2; // Wrap around
+                pausePanel.repaint();
+                break;
+            case KeyEvent.VK_J: // Select the current option
+                if (pauseMenuSelection == 0) {
+                    resumeGame(); // Resume the game
+                } else if (pauseMenuSelection == 1) {
+                    System.exit(0); // Quit the game
+                }
                 break;
         }
     }
