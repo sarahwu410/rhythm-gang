@@ -28,6 +28,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     DrawingPanel panel;
     Timer timer;
     Audio audio = new Audio("res/Audio/Carrier (Dreamcast) - File 1.wav");
+    int songLength = 10000 ;//109000; // song length in milliseconds
 
     int milliElapsed; // how much time has passed so far
     int numPerfects = 0;
@@ -121,6 +122,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         loadPauseMenuImages();
         createPausePanel();
 
+        // Initialize end screen
+        createEndScreenPanel();
+
         this.add(panel);
 		this.setVisible(true);
 
@@ -133,35 +137,43 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (Block b: allBlocks){
-                    if (milliElapsed > 109000) System.exit(0);
+        milliElapsed = audio.getTime() * 10;
 
-                    if (milliElapsed > b.enterTime) {
-                        if (milliElapsed>=b.enterTime && !b.received && !b.missed) {
-                            // Make sure the user can receive the block
-                            b.canReceive = true;
-                        }
+        // Check if the song has ended
+        if (milliElapsed >= songLength) { // Compare elapsed time with song length
+            timer.stop();
+            audio.stopAudio();
+            calculateScore(numPerfects, numGoods, numOks, numMisses); // Calculate final score
+            showEndScreen();
+            return;
+        }
 
-                        b.move(audio.getTime()*10); // Only move them if they are meant to appear
-                    }
-
-                    // if the block missed the receiver, display "miss"
-                    if (b.missPassed && !b.hitPlaying) {
-                        rater.setRating(4, b);
-
-                        //For hold blocks only
-                        try {
-                            if (!((HoldBlock)b).beenRated) {
-                                b.beenRated = true;
-                            }
-                        } catch (Exception z) {
-                            // do nothing
-                        }
-                    }
+        for (Block b : allBlocks) {
+            if (milliElapsed > b.enterTime) {
+                if (milliElapsed >= b.enterTime && !b.received && !b.missed) {
+                    // Make sure the user can receive the block
+                    b.canReceive = true;
                 }
 
-                this.repaint();
-                milliElapsed = audio.getTime() * 10;
+                b.move(audio.getTime() * 10); // Only move them if they are meant to appear
+            }
+
+            // If the block missed the receiver, display "miss"
+            if (b.missPassed && !b.hitPlaying) {
+                rater.setRating(3, b);
+
+                // For hold blocks only
+                try {
+                    if (!((HoldBlock) b).beenRated) {
+                        b.beenRated = true;
+                    }
+                } catch (Exception z) {
+                    // Do nothing
+                }
+            }
+        }
+
+        this.repaint();
     }
 
     public class DrawingPanel extends JPanel {
@@ -237,6 +249,14 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         heldKeys.add(e.getKeyCode());
+
+        // Handle end screen input
+        if (endScreenPanel.isVisible()) {
+            if (e.getKeyCode() == KeyEvent.VK_Q) {
+                System.exit(0); // Exit the game
+            }
+            return; // Prevent other actions while on the end screen
+        }
 
         // Pause the game and show the pause menu
         if (e.getKeyCode() == KeyEvent.VK_L && !isPaused) {
@@ -585,6 +605,50 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         this.add(pausePanel);
     }
 
+    private void createEndScreenPanel() {
+        endScreenPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+
+                // Draw semi-transparent black background
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+                g2.setColor(Color.BLACK);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+
+                // Draw "Good Job!" text
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+                g2.setFont(new Font("Arial", Font.BOLD, 60));
+                g2.setColor(Color.WHITE);
+
+                String message = "Good Job!";
+                String scoreText = "Score: " + score;
+                String gradeText = "Grade: " + calculateGrade(score);
+                String exitInstruction = "Press Q to Exit";
+
+                FontMetrics metrics = g2.getFontMetrics(g2.getFont());
+                int messageX = (getWidth() - metrics.stringWidth(message)) / 2;
+                int messageY = (getHeight() / 2) - 100;
+                int scoreX = (getWidth() - metrics.stringWidth(scoreText)) / 2;
+                int scoreY = (getHeight() / 2);
+                int gradeX = (getWidth() - metrics.stringWidth(gradeText)) / 2;
+                int gradeY = (getHeight() / 2) + 100;
+                int instructionX = (getWidth() - metrics.stringWidth(exitInstruction)) / 2;
+                int instructionY = (getHeight() / 2) + 200;
+
+                g2.drawString(message, messageX, messageY);
+                g2.drawString(scoreText, scoreX, scoreY);
+                g2.drawString(gradeText, gradeX, gradeY);
+                g2.drawString(exitInstruction, instructionX, instructionY);
+            }
+        };
+        endScreenPanel.setOpaque(false);
+        endScreenPanel.setBounds(0, 0, screenWidth, screenHeight); // Cover the entire screen
+        endScreenPanel.setVisible(false); // Initially hidden
+        this.add(endScreenPanel);
+    }
+
     private void loadPauseMenuImages() {
         try {
             resumeSelectedImage = loadImage("res/PauseScreen/resumeSelectedImage.png");
@@ -677,6 +741,11 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         else if (score > 700000) return "B";
         else if (score > 500000) return "C";
         else return "D";
+    }
+
+    private void showEndScreen() {
+        isPaused = true; // Prevent further game actions
+        endScreenPanel.setVisible(true); // Show the end screen
     }
 
     public static void main(String[] args) {
