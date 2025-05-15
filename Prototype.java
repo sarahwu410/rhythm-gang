@@ -57,8 +57,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     JPanel pausePanel;
     JPanel endScreenPanel;
 
-    Image pausedTextImage;
-
     Prototype() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
