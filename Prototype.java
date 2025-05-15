@@ -58,7 +58,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     JPanel endScreenPanel;
 
     Image resumeSelectedImage;
+    Image resumeSelectedImage2;
     Image quitSelectedImage;
+    Image quitSelectedImage2;
 
     private int pauseMenuSelection = 0; // 0 = Resume, 1 = Quit
 
@@ -557,7 +559,17 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 
                 // Draw the appropriate image based on the current selection
-                Image currentImage = (pauseMenuSelection == 0) ? resumeSelectedImage : quitSelectedImage;
+                Image currentImage = null;
+                if (pauseMenuSelection == 0) {
+                    currentImage = resumeSelectedImage;
+                } else if (pauseMenuSelection == 1) {
+                    currentImage = quitSelectedImage;
+                } else if (pauseMenuSelection == 2) {
+                    currentImage = quitSelectedImage2;
+                } else if (pauseMenuSelection == 3) {
+                    currentImage = resumeSelectedImage2;
+                }
+
                 if (currentImage != null) {
                     int imageWidth = currentImage.getWidth(null);
                     int imageHeight = currentImage.getHeight(null);
@@ -576,7 +588,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     private void loadPauseMenuImages() {
         try {
             resumeSelectedImage = loadImage("res/PauseScreen/resumeSelectedImage.png");
+            resumeSelectedImage2 = loadImage("res/PauseScreen/resumeSelectedImage2.png");
             quitSelectedImage = loadImage("res/PauseScreen/quitSelectedImage.png");
+            quitSelectedImage2 = loadImage("res/PauseScreen/quitSelectedImage2.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -593,10 +607,53 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 pausePanel.repaint();
                 break;
             case KeyEvent.VK_J: // Select the current option
-                if (pauseMenuSelection == 0) {
-                    resumeGame(); // Resume the game
-                } else if (pauseMenuSelection == 1) {
-                    System.exit(0); // Quit the game
+                if (pauseMenuSelection == 0) { // Resume the game
+                    // button pressed animation
+                    pauseMenuSelection = 3;
+                    pausePanel.repaint();
+
+                    Timer showResumeImage2Timer = new Timer(200, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            pauseMenuSelection = 0;
+                            pausePanel.repaint();
+
+                            Timer showResumeImageTimer = new Timer(100, new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    resumeGame(); // Resume the game
+                                }
+                            });
+                            showResumeImageTimer.setRepeats(false); // Only run once
+                            showResumeImageTimer.start();
+                        }
+                    });
+                    showResumeImage2Timer.setRepeats(false); // Only run once
+                    showResumeImage2Timer.start();
+                } 
+                else if (pauseMenuSelection == 1) { // Quit the game
+                    // button animation
+                    pauseMenuSelection = 2;
+                    pausePanel.repaint();
+
+                    Timer showQuitImageTimer = new Timer(200, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            pauseMenuSelection = 1;
+                            pausePanel.repaint();
+
+                            Timer quitTimer = new Timer(100, new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    System.exit(0); // Quit the game
+                                }
+                            });
+                            quitTimer.setRepeats(false); // Only run once
+                            quitTimer.start();
+                        }
+                    });
+                    showQuitImageTimer.setRepeats(false); // Only run once
+                    showQuitImageTimer.start();
                 }
                 break;
         }
