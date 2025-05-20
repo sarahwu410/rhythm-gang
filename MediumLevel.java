@@ -210,7 +210,7 @@ public class MediumLevel extends JFrame implements ActionListener, KeyListener{
             g2.drawString("Press L to open pause menu", 10, screenHeight - 50);
 
             // paint rating
-            rater.play(g2, milliElapsed, numPerfects, numGoods, numOks, numMisses);
+            rater.play(g2, milliElapsed);
 
             // loop through all the blocks in the ArrayList
             for (int i = 0; i<allBlocks.size(); i++) {
