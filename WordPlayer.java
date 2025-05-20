@@ -15,6 +15,12 @@ public class WordPlayer {
     Animation missed;
     Boolean play;
     int rating; // 1 = perfect, 2 = good, 3 = ok, 4 = missed
+
+    int numPerfects = 0;
+    int numGoods = 0;
+    int numOks = 0;
+    int numMisses = 0;
+    int score = 0;
     
     /**
      * Constructor
@@ -35,23 +41,23 @@ public class WordPlayer {
      * Draws whatever animation is necessary
      * @param g The Graphics object that will draw the image
      */
-    public void play(Graphics2D g, int myAudioTime, int perfects, int goods, int oks, int misses) {
+    public void play(Graphics2D g, int myAudioTime) {
         if (!play) return;
         else {
             if (rating == 1) {
-                perfects += 1;
+                this.numPerfects++;
                 perfect.draw(g, myAudioTime);
                 if (perfect.frame == perfect.spriteFrames) play = false;
             } else if (rating == 2) {
-                goods += 1;
+                this.numGoods++;
                 good.draw(g, myAudioTime);
                 if (good.frame == good.spriteFrames) play = false;
             } else if (rating == 3) {
-                oks += 1;
+                this.numOks++;
                 ok.draw(g, myAudioTime);
                 if (ok.frame == ok.spriteFrames) play = false;
             } else if (rating == 4) {
-                misses +=1 ;
+                this.numMisses++;
                 missed.draw(g, myAudioTime);
                 if (missed.frame == missed.spriteFrames) play = false;
             } else {
@@ -92,7 +98,31 @@ public class WordPlayer {
         } catch (Exception z) {
             // do nothing
         }
+    }
 
-       
+    /**
+     * calculates the number score up to 1000000 based on number of ratingd the player gets
+     * @param perfects number of perfects
+     * @param goods number of goods
+     * @param oks number of oks
+     * @param misses number of misses
+     * @return the calculated score
+     */
+    public int calculateScore() {
+        return score = (int)(1000000*((this.numPerfects+(this.numGoods*0.7)+(this.numOks*0.3))/(this.numPerfects+this.numGoods+this.numOks+this.numMisses)));
+    }
+
+    /**
+     * calculates a letter grade based on the number score gotten
+     * @param score the number score that the player got
+     * @return the letter grade
+     */
+    public String calculateGrade() {
+        if (this.score == 1000000) return "SS";
+        else if (this.score > 900000) return "S";
+        else if (this.score > 800000) return "A";
+        else if (this.score > 700000) return "B";
+        else if (this.score > 500000) return "C";
+        else return "D";
     }
 }

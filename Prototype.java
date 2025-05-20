@@ -31,11 +31,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     int songLength = 10000 ;//109000; // song length in milliseconds
 
     int milliElapsed; // how much time has passed so far
-    int numPerfects = 0;
-    int numGoods = 0;
-    int numOks = 0;
-    int numMisses = 0;
-    int score;
 
     ArrayList<Block> allBlocks;
     ArrayList<Block> aBlocks;
@@ -152,7 +147,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         if (milliElapsed >= songLength) { // Compare elapsed time with song length
             timer.stop();
             audio.stopAudio();
-            calculateScore(numPerfects, numGoods, numOks, numMisses); // Calculate final score
             showEndScreen();
             return;
         }
@@ -219,7 +213,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             g2.drawString("Press L to open pause menu", 10, screenHeight - 50);
 
             // paint rating
-            rater.play(g2, milliElapsed, numPerfects, numGoods, numOks, numMisses);
+            rater.play(g2, milliElapsed);
 
             // loop through all the blocks in the ArrayList
             for (int i = 0; i<allBlocks.size(); i++) {
@@ -632,8 +626,8 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 g2.setColor(Color.WHITE);
 
                 String message = "Good Job!";
-                String scoreText = "Score: " + score;
-                String gradeText = "Grade: " + calculateGrade(score);
+                String scoreText = "Score: " + rater.calculateScore();
+                String gradeText = "Grade: " + rater.calculateGrade();
                 String exitInstruction = "Press Q to Exit";
 
                 FontMetrics metrics = g2.getFontMetrics(g2.getFont());
@@ -737,19 +731,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         timer.start();
         audio.playAudio();
         pausePanel.setVisible(false); // Hide the pause menu
-    }
-
-    private void calculateScore(int perfects, int goods, int oks, int misses) {
-        score = (int)(1000000*((perfects+(goods*0.7)+(oks*0.3))/(perfects+goods+oks+misses)));
-    }
-
-    private String calculateGrade(int score) {
-        if (score == 1000000) return "SS";
-        else if (score > 900000) return "S";
-        else if (score > 800000) return "A";
-        else if (score > 700000) return "B";
-        else if (score > 500000) return "C";
-        else return "D";
     }
 
     private void showEndScreen() {
