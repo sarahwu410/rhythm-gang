@@ -54,7 +54,6 @@ public abstract class Block implements KeyListener {
         this.moving = null; // image
         this.amHit = null; // image
         this.hitPlaying = false;
-        this.timeReceived = 0;
 
         // each level will have unique block coordinates for each receiver
         // assigns those coordinates here

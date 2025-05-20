@@ -170,7 +170,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
             // If the block missed the receiver, display "miss"
             if (b.missPassed && !b.hitPlaying) {
-                rater.setRating(3, b);
+                rater.setRating(4, b);
 
                 // For hold blocks only
                 try {
@@ -219,9 +219,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             g2.setFont(new Font("monospaced", Font.PLAIN, 20));
             g2.drawString("Press L to open pause menu", 10, screenHeight - 50);
 
-            // paint rating
-            rater.play(g2, milliElapsed, numPerfects, numGoods, numOks, numMisses);
-
             // loop through all the blocks in the ArrayList
             for (int i = 0; i<allBlocks.size(); i++) {
                 // if block has reached its enter time and not been received
@@ -234,6 +231,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     // This portion would be for the end of a song? probably not necessary, songs end on their own afterall
                 }
             }
+
+            // paint rating
+            rater.play(g2, milliElapsed, numPerfects, numGoods, numOks, numMisses);
         }
     }
 
