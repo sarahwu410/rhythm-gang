@@ -8,11 +8,14 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.Image;
 
 public class HoldBlock extends Block {
     int holdDurationMs, endTime;
     int pressStartTime, heldTime;
     boolean isPressed = false;
+    Animation hold = null; // animation while the user holds the note
+    Image held = null; // image while user presses the note
 
     // Block visual positions (e.g., for diagonal movement)
     // headX and headY are this.x and this.y
@@ -30,15 +33,62 @@ public class HoldBlock extends Block {
         super(level, button, receiveTime, someReceiver);
         this.holdDurationMs = holdDurationMs;
         this.endTime = this.enterTime + this.holdDurationMs;
+        this.Blocktype = "HoldBlock";
     }
 
     @Override
     public void draw(Graphics2D g2, int audioTime) {
-        g2.setPaint(Color.RED);
-        g2.fillRect(this.x, this.y, this.length, this.width);
-        g2.fillRect(this.tailX, this.tailY, this.length, this.width);
-        g2.setPaint(Color.WHITE);
-        g2.drawLine(this.x, this.y, this.tailX, this.tailY);
+        // Uncomment this code if you would like to see the fit of your images/animations on the hold block
+        //g2.setPaint(Color.BLACK);
+        //g2.fillRect(this.x, this.y, this.length, this.width);
+        //g2.fillRect(this.tailX, this.tailY, this.length, this.width);
+        //g2.setPaint(Color.RED);
+        //g2.drawLine(this.x, this.y, this.tailX, this.tailY);
+
+        if (this.isPressed) {
+            if (this.hold != null) {
+                hold.setX(this.x);
+                hold.setY(this.y);
+                hold.draw(g2, audioTime);
+            }
+            else if (this.held != null) g2.drawImage(held, this.x, this.y, null);
+        }
+        else if (!this.hitPlaying) {
+            if (this.movement != null) {
+                movement.setX(this.x);
+                movement.setY(this.y);
+                movement.draw(g2, audioTime);
+            }
+            else if (this.moving != null) g2.drawImage(moving, this.x, this.y, null);
+        }
+        else {
+            if (this.beenHit != null) {
+                beenHit.setX(this.x);
+                beenHit.setY(this.y);
+                beenHit.draw(g2, audioTime);
+                if (beenHit.frame == beenHit.spriteFrames) hitPlaying = false;
+            }
+            else if (this.amHit != null) {
+                g2.drawImage(amHit, this.x, this.y, null);
+                if (this.timeReceived + 100 < audioTime) hitPlaying = false;
+            }
+        }
+    }
+
+    /**
+     * Sets hold animation for holdblock
+     * @param whenHeld  Animation for when the block is held
+     */
+    public void setHoldAnimation(Animation whenHeld) {
+        this.hold = whenHeld;
+    }
+
+    /**
+     * Sets hold image for holdblock
+     * @param whenHeld  Image for when the block is held
+     */
+    public void setHoldImage(Image whenHeld) {
+        this.held = whenHeld;
     }
 
     // Move both head and tail diagonally
@@ -66,8 +116,8 @@ public class HoldBlock extends Block {
         
         if (this.reachedReceiver) {
             if ((this.tailX > (receiver.x+receiver.width)) || (this.tailY > (receiver.y+receiver.height)) || ((this.tailX+this.length)<receiver.x) || ((this.tailY+this.width)<receiver.y)) {
-                this.canReceive = false;
-                this.missPassed = true;
+                if (!this.hitPlaying) this.canReceive = false;
+                if (!this.received) this.missPassed = true;
             }
         }
     }
@@ -79,6 +129,7 @@ public class HoldBlock extends Block {
     	if (accuracy <= 200) {
             System.out.println("✅ Hold success!");
             this.received = true;
+            this.hitPlaying = true;
         } else {
             System.out.println("❌ Hold failed");
             this.missed = true;
@@ -127,6 +178,7 @@ public class HoldBlock extends Block {
         if (isPressed && e.getKeyCode() == this.matchesKey(e)) {
             isPressed = false;
             heldTime = this.timeReceived - this.pressStartTime;
+            this.hitPlaying = true;
             this.receive(this.timeReceived);
         }
     }

@@ -322,4 +322,25 @@ public class ReceiveTimeReader {
 
 		return mySpecifics;
 	}
+
+	/**
+	 * Finds the image size for a hold block and prints it out in the terminal
+	 * @param b	The hold block to find the image size for
+	 * 
+	 */
+	public static void myHoldBlockImageSize(HoldBlock b) {
+		// Find the difference in time between the head and the tail
+		int myHeadTime = 0;
+		int myTailTime = b.endTime - b.enterTime;
+
+		// Find the distances using the time
+		double myX = (int) (b.enterX + b.velocityX * myHeadTime);
+        double myY = (int) (b.enterY + b.velocityY * myHeadTime);
+        double myTailX = (int) (b.enterX + b.velocityX * myTailTime);
+        double myTailY = (int) (b.enterY + b.velocityY * myTailTime);
+
+		// Print out what kind of image is required for the hold block
+		System.out.println("You need an image that is " + (b.width + Math.abs(myX - myTailX)) + "x" + (b.length + Math.abs(myY - myTailY)));
+		System.out.println("Draw your image from corner to corner based on what angle it's coming from.");
+	}
 }

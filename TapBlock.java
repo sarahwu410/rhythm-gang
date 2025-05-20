@@ -23,21 +23,25 @@ public class TapBlock extends Block{
 
     @Override
     public void draw(Graphics2D g2, int audioTime) {
-        if (movement == null || beenHit == null) {
-            g2.setPaint(Color.GREEN);
-            g2.fillRect(this.x, this.y, this.width, this.length);
-        } else {
-            if (!hitPlaying) {
+        // Uncomment this code if you would like to see the fit of your images/animations on the tapblock
+        //g2.setPaint(Color.GREEN);
+        //g2.fillRect(this.x, this.y, this.width, this.length);
+        
+        if (!hitPlaying) { // if the block is moving
+            if (this.movement != null) {
                 movement.setX(this.x);
                 movement.setY(this.y);
                 movement.draw(g2, audioTime);
-            } else {
+            } else if (this.moving != null) g2.drawImage(moving, this.x, this.y, null);
+        } else { // if the block is hit
+            if (beenHit != null) {
                 beenHit.setX(this.x);
                 beenHit.setY(this.y);
                 beenHit.draw(g2, audioTime);
-                if (beenHit.frame == beenHit.spriteFrames) {
-                    hitPlaying = false;
-                }
+                if (beenHit.frame == beenHit.spriteFrames) hitPlaying = false;
+            } else if (amHit != null) {
+                g2.drawImage(amHit, this.x, this.y, null);
+                if (this.timeReceived + 100 < audioTime) hitPlaying = false;
             }
         }
     }

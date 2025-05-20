@@ -45,7 +45,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     ArrayList<Block> yBlocks;
     HashMap<String, Receiver> allReceivers = new HashMap<>();
     Set<Integer> heldKeys;
-    Image smiley;
+    Image smiley, meh;
 
     Image ratingSpriteSheet;
     WordPlayer rater;
@@ -87,6 +87,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
         // Animations
         smiley = loadImage("res/smilingCube.png");
+        meh = loadImage("res/squareSpamBlock.png");
 
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
@@ -106,8 +107,16 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         for (Block b: allBlocks) {
             try {
                 if (b.Blocktype.equals("TapBlock")) {
-                    b.movement = new AnimationHorizontal(smiley, b.x, b.y, 0, 0, 2, 100, 100);
-                    b.beenHit = new AnimationHorizontal(smiley, b.x, b.y, 100, 0, 10, 100, 100);
+                    b.setMoveAnimation(new AnimationHorizontal(smiley, b.x, b.y, 0, 0, 2, 100, 100));
+                    b.setHitAnimation(new AnimationHorizontal(smiley, b.x, b.y, 100, 0, 10, 100, 100));
+                } else if (b.Blocktype.equals("SpamBlock")) {
+                    b.setMoveAnimation(new AnimationHorizontal(meh, b.x, b.y, 0, 0, 3, 100, 100));
+                    ((SpamBlock) b).setSpammingAnimation(new AnimationHorizontal(meh, b.x, b.y, 300, 0, 2, 100, 100));
+                    b.setHitAnimation(new AnimationHorizontal(meh, b.x, b.y, 500, 0, 7, 100, 100));
+                } else if (b.Blocktype.equals("HoldBlock")) {
+                    System.out.println("HoldBlock " + b.button + ": ");
+                    ReceiveTimeReader.myHoldBlockImageSize((HoldBlock) b);
+                    System.out.println();
                 }
             } catch (Exception e) {
                 System.out.println("No block type.");

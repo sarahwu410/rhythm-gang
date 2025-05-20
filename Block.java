@@ -5,6 +5,7 @@
  */
 
 import java.awt.*;
+import java.awt.Image;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
@@ -30,6 +31,8 @@ public abstract class Block implements KeyListener {
     boolean reachedReceiver = false;
     boolean beenRated = false;
     Animation movement, beenHit;
+    Image moving, amHit;
+    int imagesWidth, imagesHeight;
     boolean hitPlaying;
 
     /**
@@ -47,8 +50,12 @@ public abstract class Block implements KeyListener {
         this.received = false;
         this.missed = false;
         this.missPassed = false;
-        this.movement = null;
-        this.beenHit = null;
+        this.movement = null; // animation
+        this.beenHit = null; // animation
+        this.moving = null; // image
+        this.amHit = null; // image
+        this.imagesWidth = 0; // Must be the width for both moving and hit images
+        this.imagesHeight = 0; // Must be the height for both moving and hit images
         this.hitPlaying = false;
         this.timeReceived = 0;
 
@@ -245,6 +252,42 @@ public abstract class Block implements KeyListener {
      * Decides the rating of the block and returns an integer to represent it
      */
     abstract int rate();
+    
+    /**
+     * Sets the moving animation of a block from null to an animation
+     * @param movingAnimation
+     */
+    public void setMoveAnimation(Animation movingAnimation) {
+        this.movement = movingAnimation;
+    }
+
+    /**
+     * Sets the hit animation of a block from null to an animation
+     * @param hitAnimation
+     */
+    public void setHitAnimation(Animation hitAnimation) {
+        this.beenHit = hitAnimation;
+    }
+
+    /**
+     * Sets the moving animation of a block from null to an animation
+     * @param movingAnimation
+     */
+    public void setMoveImage(Image movingImage, int imageWidth, int imageHeight) {
+        this.moving = movingImage;
+        this.imagesWidth = imageWidth;
+        this.imagesHeight = imageHeight;
+    }
+
+    /**
+     * Sets the hit animation of a block from null to an animation
+     * @param hitAnimation
+     */
+    public void setHitImage(Image hitImage, int imageWidth, int imageHeight) {
+        this.amHit = hitImage;
+        this.imagesWidth = imageWidth;
+        this.imagesHeight = imageHeight;
+    }
     
     /**
      * helper method that checks whether the correct key is pressed for the corrosponding button
