@@ -40,7 +40,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     ArrayList<Block> yBlocks;
     HashMap<String, Receiver> allReceivers = new HashMap<>();
     Set<Integer> heldKeys;
-    Image smiley, meh;
+    Image smiley, meh, mehMove;
 
     Image ratingSpriteSheet;
     WordPlayer rater;
@@ -83,6 +83,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         // Animations
         smiley = loadImage("res/smilingCube.png");
         meh = loadImage("res/squareSpamBlock.png");
+        mehMove = loadImage("res/squareSpamBlock (1).png");
 
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
@@ -105,7 +106,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     b.setMoveAnimation(new AnimationHorizontal(smiley, b.x, b.y, 0, 0, 2, 100, 100));
                     b.setHitAnimation(new AnimationHorizontal(smiley, b.x, b.y, 100, 0, 10, 100, 100));
                 } else if (b.Blocktype.equals("SpamBlock")) {
-                    b.setMoveAnimation(new AnimationHorizontal(meh, b.x, b.y, 0, 0, 3, 100, 100));
+                    b.setMoveImage(mehMove);
                     ((SpamBlock) b).setSpammingAnimation(new AnimationHorizontal(meh, b.x, b.y, 300, 0, 2, 100, 100));
                     b.setHitAnimation(new AnimationHorizontal(meh, b.x, b.y, 500, 0, 7, 100, 100));
                 } else if (b.Blocktype.equals("HoldBlock")) {
@@ -163,7 +164,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
             // If the block missed the receiver, display "miss"
             if (b.missPassed && !b.hitPlaying) {
-                rater.setRating(3, b);
+                rater.setRating(4, b);
 
                 // For hold blocks only
                 try {
@@ -212,9 +213,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
             g2.setFont(new Font("monospaced", Font.PLAIN, 20));
             g2.drawString("Press L to open pause menu", 10, screenHeight - 50);
 
-            // paint rating
-            rater.play(g2, milliElapsed);
-
             // loop through all the blocks in the ArrayList
             for (int i = 0; i<allBlocks.size(); i++) {
                 // if block has reached its enter time and not been received
@@ -227,6 +225,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     // This portion would be for the end of a song? probably not necessary, songs end on their own afterall
                 }
             }
+
+            // paint rating
+            rater.play(g2, milliElapsed);
         }
     }
 

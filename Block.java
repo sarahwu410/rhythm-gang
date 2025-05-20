@@ -32,7 +32,6 @@ public abstract class Block implements KeyListener {
     boolean beenRated = false;
     Animation movement, beenHit;
     Image moving, amHit;
-    int imagesWidth, imagesHeight;
     boolean hitPlaying;
 
     /**
@@ -54,10 +53,7 @@ public abstract class Block implements KeyListener {
         this.beenHit = null; // animation
         this.moving = null; // image
         this.amHit = null; // image
-        this.imagesWidth = 0; // Must be the width for both moving and hit images
-        this.imagesHeight = 0; // Must be the height for both moving and hit images
         this.hitPlaying = false;
-        this.timeReceived = 0;
 
         // each level will have unique block coordinates for each receiver
         // assigns those coordinates here
@@ -273,20 +269,16 @@ public abstract class Block implements KeyListener {
      * Sets the moving animation of a block from null to an animation
      * @param movingAnimation
      */
-    public void setMoveImage(Image movingImage, int imageWidth, int imageHeight) {
+    public void setMoveImage(Image movingImage) {
         this.moving = movingImage;
-        this.imagesWidth = imageWidth;
-        this.imagesHeight = imageHeight;
     }
 
     /**
      * Sets the hit animation of a block from null to an animation
      * @param hitAnimation
      */
-    public void setHitImage(Image hitImage, int imageWidth, int imageHeight) {
+    public void setHitImage(Image hitImage) {
         this.amHit = hitImage;
-        this.imagesWidth = imageWidth;
-        this.imagesHeight = imageHeight;
     }
     
     /**
