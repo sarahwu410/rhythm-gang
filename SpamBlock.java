@@ -82,6 +82,11 @@ public class SpamBlock extends Block {
                 if (this.timeReceived + 100 < audioTime) hitPlaying = false;
             }
         }
+
+        // Draw the amount of spams left
+        g2.setPaint(Color.BLUE);
+        g2.setFont(new Font("monospaced", Font.PLAIN, 50));
+        g2.drawString(String.valueOf(this.numSpam), this.x+40, this.y+60);
     }
 
     /**

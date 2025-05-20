@@ -45,7 +45,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     ArrayList<Block> yBlocks;
     HashMap<String, Receiver> allReceivers = new HashMap<>();
     Set<Integer> heldKeys;
-    Image smiley, meh;
+    Image smiley, meh, mehMove;
 
     Image ratingSpriteSheet;
     WordPlayer rater;
@@ -88,6 +88,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         // Animations
         smiley = loadImage("res/smilingCube.png");
         meh = loadImage("res/squareSpamBlock.png");
+        mehMove = loadImage("res/squareSpamBlock (1).png");
 
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
@@ -110,7 +111,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     b.setMoveAnimation(new AnimationHorizontal(smiley, b.x, b.y, 0, 0, 2, 100, 100));
                     b.setHitAnimation(new AnimationHorizontal(smiley, b.x, b.y, 100, 0, 10, 100, 100));
                 } else if (b.Blocktype.equals("SpamBlock")) {
-                    b.setMoveAnimation(new AnimationHorizontal(meh, b.x, b.y, 0, 0, 3, 100, 100));
+                    b.setMoveImage(mehMove);
                     ((SpamBlock) b).setSpammingAnimation(new AnimationHorizontal(meh, b.x, b.y, 300, 0, 2, 100, 100));
                     b.setHitAnimation(new AnimationHorizontal(meh, b.x, b.y, 500, 0, 7, 100, 100));
                 } else if (b.Blocktype.equals("HoldBlock")) {
