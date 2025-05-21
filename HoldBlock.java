@@ -39,40 +39,43 @@ public class HoldBlock extends Block {
     @Override
     public void draw(Graphics2D g2, int audioTime) {
         // Uncomment this code if you would like to see the fit of your images/animations on the hold block
-        // g2.setPaint(Color.RED);
-        // g2.fillRect(this.x, this.y, this.length, this.width);
-        // g2.fillRect(this.tailX, this.tailY, this.length, this.width);
-        // g2.setPaint(Color.WHITE);
-        // g2.drawLine(this.x, this.y, this.tailX, this.tailY);
+        g2.setPaint(Color.RED);
+        g2.fillRect(this.x, this.y, this.length, this.width);
+        g2.fillRect(this.tailX, this.tailY, this.length, this.width);
+        g2.setPaint(Color.WHITE);
+        g2.drawLine(this.x, this.y, this.tailX, this.tailY);
 
-        // if (this.isPressed) {
-        //     if (this.hold != null) {
-        //         hold.setX(this.x);
-        //         hold.setY(this.y);
-        //         hold.draw(g2, audioTime);
-        //     }
-        //     else if (this.held != null) g2.drawImage(held, this.x, this.y, null);
-        // }
-        // else if (!this.hitPlaying) {
-        //     if (this.movement != null) {
-        //         movement.setX(this.x);
-        //         movement.setY(this.y);
-        //         movement.draw(g2, audioTime);
-        //     }
-        //     else if (this.moving != null) g2.drawImage(moving, this.x, this.y, null);
-        // }
-        // else {
-        //     if (this.beenHit != null) {
-        //         beenHit.setX(this.x);
-        //         beenHit.setY(this.y);
-        //         beenHit.draw(g2, audioTime);
-        //         if (beenHit.frame == beenHit.spriteFrames) hitPlaying = false;
-        //     }
-        //     else if (this.amHit != null) {
-        //         g2.drawImage(amHit, this.x, this.y, null);
-        //         if (this.timeReceived + 100 < audioTime) hitPlaying = false;
-        //     }
-        // }
+        if (rotate) g2.rotate(angle, this.x + (this.width/2), this.y);
+
+        if (this.isPressed) {
+            if (this.hold != null) {
+                hold.setX(this.x);
+                hold.setY(this.y);
+                hold.draw(g2, audioTime);
+            } else if (this.held != null)
+                g2.drawImage(held, this.x, this.y, null);
+        } else if (!this.hitPlaying) {
+            if (this.movement != null) {
+                movement.setX(this.x);
+                movement.setY(this.y);
+                movement.draw(g2, audioTime);
+            } else if (this.moving != null)
+                g2.drawImage(moving, this.x, this.y, null);
+        } else {
+            if (this.beenHit != null) {
+                beenHit.setX(this.x);
+                beenHit.setY(this.y);
+                beenHit.draw(g2, audioTime);
+                if (beenHit.frame == beenHit.spriteFrames)
+                    hitPlaying = false;
+            } else if (this.amHit != null) {
+                g2.drawImage(amHit, this.x, this.y, null);
+                if (this.timeReceived + 100 < audioTime)
+                    hitPlaying = false;
+            }
+        }
+
+        if (rotate) g2.rotate(-angle, this.x + this.width/2, this.y);
     }
 
     /**
