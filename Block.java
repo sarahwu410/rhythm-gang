@@ -158,8 +158,9 @@ public abstract class Block implements KeyListener {
                 this.y = this.screenHeight-this.length;
             }
         }
-        this.enterX = x;
-        this.enterY = y;
+
+        this.enterX = this.x;
+        this.enterY = this.y;
         calculateEnterTime(this.speed, this.receiveTime, this.enterX, this.enterY, this.someReceiver);
     }
 

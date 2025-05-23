@@ -23,8 +23,6 @@ import javax.imageio.ImageIO;
 import java.awt.Image;
 
 public class Prototype extends JFrame implements ActionListener, KeyListener{
-    boolean isPaused = false;
-
     DrawingPanel panel;
     Timer timer;
     Audio audio = new Audio("res/Audio/Carrier (Dreamcast) - File 1.wav");
@@ -50,15 +48,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     int screenWidth = screenSize.width;
     int screenHeight = screenSize.height;
 
-    JPanel pausePanel;
-    JPanel endScreenPanel;
-
-    Image resumeSelectedImage;
-    Image resumeSelectedImage2;
-    Image quitSelectedImage;
-    Image quitSelectedImage2;
-
-    private int pauseMenuSelection = 0; // 0 = Resume, 1 = Quit
+    // JPanel endScreenPanel;
 
     Prototype() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -124,11 +114,11 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         rater = new WordPlayer(ratingSpriteSheet, 20, 20);
 
         // Initialize pause menu
-        loadPauseMenuImages();
-        createPausePanel();
+        PausePanel.loadPauseMenuImages();
+        PausePanel.createPausePanel(this);
 
         // Initialize end screen
-        createEndScreenPanel();
+        EndPanel.createEndScreenPanel(this, rater);
 
         this.add(panel);
 		this.setVisible(true);
@@ -148,7 +138,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         if (milliElapsed >= songLength) { // Compare elapsed time with song length
             timer.stop();
             audio.stopAudio();
-            showEndScreen();
+            EndPanel.showEndScreen();
             return;
         }
 
@@ -255,7 +245,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         heldKeys.add(e.getKeyCode());
 
         // Handle end screen input
-        if (endScreenPanel.isVisible()) {
+        if (EndPanel.endScreenPanel.isVisible()) {
             if (e.getKeyCode() == KeyEvent.VK_Q) {
                 System.exit(0); // Exit the game
             }
@@ -263,17 +253,17 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         }
 
         // Pause the game and show the pause menu
-        if (e.getKeyCode() == KeyEvent.VK_L && !isPaused) {
-            isPaused = true;
+        if (e.getKeyCode() == KeyEvent.VK_L && !PausePanel.isPaused) {
+            PausePanel.isPaused = true;
             timer.stop();
             audio.stopAudio();
-            pausePanel.setVisible(true); // Show the pause menu
+            PausePanel.pausePanel.setVisible(true); // Show the pause menu
             return; // Prevent other actions while the pause menu is active
         }
 
         // Handle pause menu input
-        if (isPaused) {
-            handlePauseMenuInput(e);
+        if (PausePanel.isPaused) {
+            PausePanel.handlePauseMenuInput(e, timer, audio);
             return; // Prevent other game actions while paused
         }
 
@@ -565,178 +555,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 }
             }
         }
-    }
-
-    private void createPausePanel() {
-        pausePanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-
-                // Draw semi-transparent black background
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-                g2.setColor(Color.BLACK);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-
-                // Reset AlphaComposite to full opacity for the images
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-
-                // Draw the appropriate image based on the current selection
-                Image currentImage = null;
-                if (pauseMenuSelection == 0) {
-                    currentImage = resumeSelectedImage;
-                } else if (pauseMenuSelection == 1) {
-                    currentImage = quitSelectedImage;
-                } else if (pauseMenuSelection == 2) {
-                    currentImage = quitSelectedImage2;
-                } else if (pauseMenuSelection == 3) {
-                    currentImage = resumeSelectedImage2;
-                }
-
-                if (currentImage != null) {
-                    int imageWidth = currentImage.getWidth(null);
-                    int imageHeight = currentImage.getHeight(null);
-                    int x = (getWidth() - imageWidth) / 2;
-                    int y = (getHeight() - imageHeight) / 2;
-                    g2.drawImage(currentImage, x, y, null);
-                }
-            }
-        };
-        pausePanel.setOpaque(false);
-        pausePanel.setBounds(0, 0, screenWidth, screenHeight); // Cover the entire screen
-        pausePanel.setVisible(false); // Initially hidden
-        this.add(pausePanel);
-    }
-
-    private void createEndScreenPanel() {
-        endScreenPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-
-                // Draw semi-transparent black background
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
-                g2.setColor(Color.BLACK);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-
-                // Draw "Good Job!" text
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-                g2.setFont(new Font("Arial", Font.BOLD, 60));
-                g2.setColor(Color.WHITE);
-
-                String message = "Good Job!";
-                String scoreText = "Score: " + rater.calculateScore();
-                String gradeText = "Grade: " + rater.calculateGrade();
-                String exitInstruction = "Press Q to Exit";
-
-                FontMetrics metrics = g2.getFontMetrics(g2.getFont());
-                int messageX = (getWidth() - metrics.stringWidth(message)) / 2;
-                int messageY = (getHeight() / 2) - 100;
-                int scoreX = (getWidth() - metrics.stringWidth(scoreText)) / 2;
-                int scoreY = (getHeight() / 2);
-                int gradeX = (getWidth() - metrics.stringWidth(gradeText)) / 2;
-                int gradeY = (getHeight() / 2) + 100;
-                int instructionX = (getWidth() - metrics.stringWidth(exitInstruction)) / 2;
-                int instructionY = (getHeight() / 2) + 200;
-
-                g2.drawString(message, messageX, messageY);
-                g2.drawString(scoreText, scoreX, scoreY);
-                g2.drawString(gradeText, gradeX, gradeY);
-                g2.drawString(exitInstruction, instructionX, instructionY);
-            }
-        };
-        endScreenPanel.setOpaque(false);
-        endScreenPanel.setBounds(0, 0, screenWidth, screenHeight); // Cover the entire screen
-        endScreenPanel.setVisible(false); // Initially hidden
-        this.add(endScreenPanel);
-    }
-
-    private void loadPauseMenuImages() {
-        try {
-            resumeSelectedImage = loadImage("res/PauseScreen/resumeSelectedImage.png");
-            resumeSelectedImage2 = loadImage("res/PauseScreen/resumeSelectedImage2.png");
-            quitSelectedImage = loadImage("res/PauseScreen/quitSelectedImage.png");
-            quitSelectedImage2 = loadImage("res/PauseScreen/quitSelectedImage2.png");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void handlePauseMenuInput(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP: // Move selection up
-                pauseMenuSelection = (pauseMenuSelection - 1 + 2) % 2; // Wrap around
-                pausePanel.repaint();
-                break;
-            case KeyEvent.VK_DOWN: // Move selection down
-                pauseMenuSelection = (pauseMenuSelection + 1) % 2; // Wrap around
-                pausePanel.repaint();
-                break;
-            case KeyEvent.VK_J: // Select the current option
-                if (pauseMenuSelection == 0) { // Resume the game
-                    // button pressed animation
-                    pauseMenuSelection = 3;
-                    pausePanel.repaint();
-
-                    Timer showResumeImage2Timer = new Timer(200, new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            pauseMenuSelection = 0;
-                            pausePanel.repaint();
-
-                            Timer showResumeImageTimer = new Timer(100, new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    resumeGame(); // Resume the game
-                                }
-                            });
-                            showResumeImageTimer.setRepeats(false); // Only run once
-                            showResumeImageTimer.start();
-                        }
-                    });
-                    showResumeImage2Timer.setRepeats(false); // Only run once
-                    showResumeImage2Timer.start();
-                } 
-                else if (pauseMenuSelection == 1) { // Quit the game
-                    // button animation
-                    pauseMenuSelection = 2;
-                    pausePanel.repaint();
-
-                    Timer showQuitImageTimer = new Timer(200, new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            pauseMenuSelection = 1;
-                            pausePanel.repaint();
-
-                            Timer quitTimer = new Timer(100, new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    System.exit(0); // Quit the game
-                                }
-                            });
-                            quitTimer.setRepeats(false); // Only run once
-                            quitTimer.start();
-                        }
-                    });
-                    showQuitImageTimer.setRepeats(false); // Only run once
-                    showQuitImageTimer.start();
-                }
-                break;
-        }
-    }
-
-    private void resumeGame() {
-        isPaused = false;
-        timer.start();
-        audio.playAudio();
-        pausePanel.setVisible(false); // Hide the pause menu
-    }
-
-    private void showEndScreen() {
-        isPaused = true; // Prevent further game actions
-        endScreenPanel.setVisible(true); // Show the end screen
     }
 
     public static void main(String[] args) {
