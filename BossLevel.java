@@ -1,6 +1,6 @@
 /*
  * Sarah Wu
- * April 15, 2025 - May 11, 2025
+ * May 23, 2025
  * Boss level for our rhythm game
  */
 
@@ -23,12 +23,10 @@ import javax.imageio.ImageIO;
 import java.awt.Image;
 
 public class BossLevel extends JFrame implements ActionListener, KeyListener{
-    boolean isPaused = false;
-
     DrawingPanel panel;
     Timer timer;
     Audio audio = new Audio("res/Audio/Carrier (Dreamcast) - File 1.wav");
-    int songLength = 10000 ; //109000; // song length in milliseconds
+    int songLength = 10000 ;//109000; // song length in milliseconds
 
     int milliElapsed; // how much time has passed so far
 
@@ -40,7 +38,7 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
     ArrayList<Block> yBlocks;
     HashMap<String, Receiver> allReceivers = new HashMap<>();
     Set<Integer> heldKeys;
-    Image smiley, meh, mehMove;
+    Image smiley, meh, mehMove, shortRoll, longRoll;
 
     Image ratingSpriteSheet;
     WordPlayer rater;
@@ -50,25 +48,14 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
     int screenWidth = screenSize.width;
     int screenHeight = screenSize.height;
 
-    JPanel pausePanel;
-    JPanel endScreenPanel;
-
-    Image resumeSelectedImage;
-    Image resumeSelectedImage2;
-    Image quitSelectedImage;
-    Image quitSelectedImage2;
-
-    private int pauseMenuSelection = 0; // 0 = Resume, 1 = Quit
-
-    // level specific variables and objects
-    HealthBar healthBar = new HealthBar();
+    // JPanel endScreenPanel;
 
     BossLevel() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
-        this.setTitle("Rhythm Game Prototype");
+        this.setTitle("Boss Level");
         this.addKeyListener(this);
 
         panel = new DrawingPanel();
@@ -87,6 +74,8 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
         smiley = loadImage("res/smilingCube.png");
         meh = loadImage("res/squareSpamBlock.png");
         mehMove = loadImage("res/squareSpamBlock (1).png");
+        shortRoll = loadImage("res/shortSquareHoldBlock.png");
+        longRoll = loadImage("res/longSquareHoldBlock.png");
 
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
@@ -116,6 +105,9 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
                     System.out.println("HoldBlock " + b.button + ": ");
                     ReceiveTimeReader.myHoldBlockImageSize((HoldBlock) b);
                     System.out.println();
+                    b.setMoveAnimation(new AnimationHorizontal(shortRoll, b.x, b.y, 0, 0, 2, 100, 500));
+                    ((HoldBlock) b).setHoldAnimation(new AnimationHorizontal(shortRoll, b.x, b.y, 200, 0, 2, 100, 500));
+                    b.setHitAnimation(new AnimationHorizontal(shortRoll, b.x, b.y, 300, 0, 6, 100, 500));
                 }
             } catch (Exception e) {
                 System.out.println("No block type.");
@@ -127,11 +119,11 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
         rater = new WordPlayer(ratingSpriteSheet, 20, 20);
 
         // Initialize pause menu
-        loadPauseMenuImages();
-        createPausePanel();
+        PausePanel.loadPauseMenuImages();
+        PausePanel.createPausePanel(this);
 
         // Initialize end screen
-        createEndScreenPanel();
+        EndPanel.createEndScreenPanel(this, rater);
 
         this.add(panel);
 		this.setVisible(true);
@@ -151,7 +143,7 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
         if (milliElapsed >= songLength) { // Compare elapsed time with song length
             timer.stop();
             audio.stopAudio();
-            showEndScreen();
+            EndPanel.showEndScreen();
             return;
         }
 
@@ -178,13 +170,6 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
                     // Do nothing
                 }
             }
-
-            // if spam block reached zero, attack success
-            try {
-                healthBar.determineAttackSuccess((SpamBlock)b);
-            } catch (Exception z) {
-                // do nothing
-            }
         }
 
         this.repaint();
@@ -199,9 +184,6 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
             super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D)g;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-
-            // level specific drawings
-            healthBar.draw(g2);
 
             metrics = g2.getFontMetrics(g2.getFont());
 
@@ -241,10 +223,6 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
 
             // paint rating
             rater.play(g2, milliElapsed);
-
-            // paint the health bar
-            healthBar.draw(g2);
-
         }
     }
 
@@ -272,7 +250,7 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
         heldKeys.add(e.getKeyCode());
 
         // Handle end screen input
-        if (endScreenPanel.isVisible()) {
+        if (EndPanel.endScreenPanel.isVisible()) {
             if (e.getKeyCode() == KeyEvent.VK_Q) {
                 System.exit(0); // Exit the game
             }
@@ -280,17 +258,17 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
         }
 
         // Pause the game and show the pause menu
-        if (e.getKeyCode() == KeyEvent.VK_L && !isPaused) {
-            isPaused = true;
+        if (e.getKeyCode() == KeyEvent.VK_L && !PausePanel.isPaused) {
+            PausePanel.isPaused = true;
             timer.stop();
             audio.stopAudio();
-            pausePanel.setVisible(true); // Show the pause menu
+            PausePanel.pausePanel.setVisible(true); // Show the pause menu
             return; // Prevent other actions while the pause menu is active
         }
 
         // Handle pause menu input
-        if (isPaused) {
-            handlePauseMenuInput(e);
+        if (PausePanel.isPaused) {
+            PausePanel.handlePauseMenuInput(e, timer, audio);
             return; // Prevent other game actions while paused
         }
 
@@ -348,120 +326,77 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
         handleReleasedKeys(e);
     }
 
+    private boolean heldKeysAction(KeyEvent e, Block b) {
+        if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+            // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+            b.setTimeReceived(milliElapsed);
+            b.keyPressed(e);
+            //For hold blocks only
+            try {
+                if (((HoldBlock)b).isPressed) {
+                    rater.setRating(((HoldBlock) b).holdRate(), b);
+                }
+            } catch (Exception z) {
+                // do nothing
+            }
+            if (b.received || b.missed) {
+                rater.setRating(b.rate(),b);
+                System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+            }
+            return true;
+        } else return false;
+    }
+
+    private boolean releaseKeysAction(KeyEvent e, Block b) {
+        if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+            // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+            b.setTimeReceived(milliElapsed);
+            b.keyReleased(e);
+            if (b.received || b.missed) {
+                rater.setRating(b.rate(), b);
+                System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+            }
+            //For hold blocks only
+            try {
+                if (!((HoldBlock)b).beenRated) {
+                    b.beenRated = true;
+                }
+            } catch (Exception z) {
+                // do nothing
+            }
+            return true;
+        } else return false;
+    }
+
     // Takes care of events that are supposed to happen when keys are held
     public void handleHeldKeys(KeyEvent e) {
         if (heldKeys.contains(KeyEvent.VK_U)) {
             for (Block b: aBlocks) {
-                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                    b.setTimeReceived(milliElapsed);
-                    b.keyPressed(e);
-                    //For hold blocks only
-                    try {
-                        if (((HoldBlock)b).isPressed) {
-                            rater.setRating(((HoldBlock) b).holdRate(), b);
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                    if (b.received || b.missed) {
-                        rater.setRating(b.rate(),b);
-                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    }
-                    break;
-                }
+                if (heldKeysAction(e, b)) break;
             }
         }
 
         if (heldKeys.contains(KeyEvent.VK_I)) {
             for (Block b: bBlocks) {
-                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                    b.setTimeReceived(milliElapsed);
-                    b.keyPressed(e);
-                    //For hold blocks only
-                    try {
-                        if (((HoldBlock)b).isPressed) {
-                            rater.setRating(((HoldBlock) b).holdRate(), b);
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                    if (b.received || b.missed) {
-                        rater.setRating(b.rate(),b);
-                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    }
-                    break;
-                }
+                if (heldKeysAction(e, b)) break;
             }
         }
 
         if (heldKeys.contains(KeyEvent.VK_O)) {
             for (Block b: cBlocks) {
-                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                    b.setTimeReceived(milliElapsed);
-                    b.keyPressed(e);
-                    //For hold blocks only
-                    try {
-                        if (((HoldBlock)b).isPressed) {
-                            rater.setRating(((HoldBlock) b).holdRate(), b);
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                    if (b.received || b.missed) {
-                        rater.setRating(b.rate(),b);
-                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    }
-                    break;
-                }
+                if (heldKeysAction(e, b)) break;
             }
         }
 
         if (heldKeys.contains(KeyEvent.VK_J)) {
             for (Block b: xBlocks) {
-                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                    b.setTimeReceived(milliElapsed);
-                    b.keyPressed(e);
-                    //For hold blocks only
-                    try {
-                        if (((HoldBlock)b).isPressed) {
-                            rater.setRating(((HoldBlock) b).holdRate(), b);
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                    if (b.received || b.missed) {
-                        rater.setRating(b.rate(),b);
-                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    }
-                    break;
-                }
+                if (heldKeysAction(e, b)) break;
             }
         }
 
         if (heldKeys.contains(KeyEvent.VK_K)) {
             for (Block b: yBlocks) {
-                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                    b.setTimeReceived(milliElapsed);
-                    b.keyPressed(e);
-                    //For hold blocks only
-                    try {
-                        if (((HoldBlock)b).isPressed) {
-                            rater.setRating(((HoldBlock) b).holdRate(), b);
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                    if (b.received || b.missed) {
-                        rater.setRating(b.rate(),b);
-                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    }
-                    break;
-                }
+                if (heldKeysAction(e, b)) break;
             }
         }
     }
@@ -470,290 +405,33 @@ public class BossLevel extends JFrame implements ActionListener, KeyListener{
     public void handleReleasedKeys(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_U) {
             for (Block b: aBlocks) {
-                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                    b.setTimeReceived(milliElapsed);
-                    b.keyReleased(e);
-                    if (b.received || b.missed) {
-                        rater.setRating(b.rate(), b);
-                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    }
-                    //For hold blocks only
-                    try {
-                        if (!((HoldBlock)b).beenRated) {
-                            b.beenRated = true;
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                    break;
-                }
+                if (releaseKeysAction(e, b)) break;
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_I) {
             for (Block b: bBlocks) {
-                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                    b.setTimeReceived(milliElapsed);
-                    b.keyReleased(e);
-                    if (b.received || b.missed) {
-                        rater.setRating(b.rate(), b);
-                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    }
-                    //For hold blocks only
-                    try {
-                        if (!((HoldBlock)b).beenRated) {
-                            b.beenRated = true;
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                    break;
-                }
+                if (releaseKeysAction(e, b)) break;
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_O) {
             for (Block b: cBlocks) {
-                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                    b.setTimeReceived(milliElapsed);
-                    b.keyReleased(e);
-                    if (b.received || b.missed) {
-                        rater.setRating(b.rate(), b);
-                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    }
-                    //For hold blocks only
-                    try {
-                        if (!((HoldBlock)b).beenRated) {
-                            b.beenRated = true;
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                    break;
-                }
+                if (releaseKeysAction(e, b)) break;
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_J) {
             for (Block b: xBlocks) {
-                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                    b.setTimeReceived(milliElapsed);
-                    b.keyReleased(e);
-                    if (b.received || b.missed) {
-                        rater.setRating(b.rate(), b);
-                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    }
-                    //For hold blocks only
-                    try {
-                        if (!((HoldBlock)b).beenRated) {
-                            b.beenRated = true;
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                    break;
-                }
+                if (releaseKeysAction(e, b)) break;
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_K) {
             for (Block b: yBlocks) {
-                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
-                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
-                    b.setTimeReceived(milliElapsed);
-                    b.keyReleased(e);
-                    if (b.received || b.missed) {
-                        rater.setRating(b.rate(), b);
-                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
-                    }
-                    //For hold blocks only
-                    try {
-                        if (!((HoldBlock)b).beenRated) {
-                            b.beenRated = true;
-                        }
-                    } catch (Exception z) {
-                        // do nothing
-                    }
-                    break;
-                }
+                if (releaseKeysAction(e, b)) break;
             }
         }
-    }
-
-    private void createPausePanel() {
-        pausePanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-
-                // Draw semi-transparent black background
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-                g2.setColor(Color.BLACK);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-
-                // Reset AlphaComposite to full opacity for the images
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-
-                // Draw the appropriate image based on the current selection
-                Image currentImage = null;
-                if (pauseMenuSelection == 0) {
-                    currentImage = resumeSelectedImage;
-                } else if (pauseMenuSelection == 1) {
-                    currentImage = quitSelectedImage;
-                } else if (pauseMenuSelection == 2) {
-                    currentImage = quitSelectedImage2;
-                } else if (pauseMenuSelection == 3) {
-                    currentImage = resumeSelectedImage2;
-                }
-
-                if (currentImage != null) {
-                    int imageWidth = currentImage.getWidth(null);
-                    int imageHeight = currentImage.getHeight(null);
-                    int x = (getWidth() - imageWidth) / 2;
-                    int y = (getHeight() - imageHeight) / 2;
-                    g2.drawImage(currentImage, x, y, null);
-                }
-            }
-        };
-        pausePanel.setOpaque(false);
-        pausePanel.setBounds(0, 0, screenWidth, screenHeight); // Cover the entire screen
-        pausePanel.setVisible(false); // Initially hidden
-        this.add(pausePanel);
-    }
-
-    private void createEndScreenPanel() {
-        endScreenPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-
-                // Draw semi-transparent black background
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
-                g2.setColor(Color.BLACK);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-
-                // Draw "Good Job!" text
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-                g2.setFont(new Font("Arial", Font.BOLD, 60));
-                g2.setColor(Color.WHITE);
-
-                String message = "Good Job!";
-                String scoreText = "Score: " + rater.calculateScore();
-                String gradeText = "Grade: " + rater.calculateGrade();
-                String exitInstruction = "Press Q to Exit";
-
-                FontMetrics metrics = g2.getFontMetrics(g2.getFont());
-                int messageX = (getWidth() - metrics.stringWidth(message)) / 2;
-                int messageY = (getHeight() / 2) - 100;
-                int scoreX = (getWidth() - metrics.stringWidth(scoreText)) / 2;
-                int scoreY = (getHeight() / 2);
-                int gradeX = (getWidth() - metrics.stringWidth(gradeText)) / 2;
-                int gradeY = (getHeight() / 2) + 100;
-                int instructionX = (getWidth() - metrics.stringWidth(exitInstruction)) / 2;
-                int instructionY = (getHeight() / 2) + 200;
-
-                g2.drawString(message, messageX, messageY);
-                g2.drawString(scoreText, scoreX, scoreY);
-                g2.drawString(gradeText, gradeX, gradeY);
-                g2.drawString(exitInstruction, instructionX, instructionY);
-            }
-        };
-        endScreenPanel.setOpaque(false);
-        endScreenPanel.setBounds(0, 0, screenWidth, screenHeight); // Cover the entire screen
-        endScreenPanel.setVisible(false); // Initially hidden
-        this.add(endScreenPanel);
-    }
-
-    private void loadPauseMenuImages() {
-        try {
-            resumeSelectedImage = loadImage("res/PauseScreen/resumeSelectedImage.png");
-            resumeSelectedImage2 = loadImage("res/PauseScreen/resumeSelectedImage2.png");
-            quitSelectedImage = loadImage("res/PauseScreen/quitSelectedImage.png");
-            quitSelectedImage2 = loadImage("res/PauseScreen/quitSelectedImage2.png");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void handlePauseMenuInput(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP: // Move selection up
-                pauseMenuSelection = (pauseMenuSelection - 1 + 2) % 2; // Wrap around
-                pausePanel.repaint();
-                break;
-            case KeyEvent.VK_DOWN: // Move selection down
-                pauseMenuSelection = (pauseMenuSelection + 1) % 2; // Wrap around
-                pausePanel.repaint();
-                break;
-            case KeyEvent.VK_J: // Select the current option
-                if (pauseMenuSelection == 0) { // Resume the game
-                    // button pressed animation
-                    pauseMenuSelection = 3;
-                    pausePanel.repaint();
-
-                    Timer showResumeImage2Timer = new Timer(200, new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            pauseMenuSelection = 0;
-                            pausePanel.repaint();
-
-                            Timer showResumeImageTimer = new Timer(100, new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    resumeGame(); // Resume the game
-                                }
-                            });
-                            showResumeImageTimer.setRepeats(false); // Only run once
-                            showResumeImageTimer.start();
-                        }
-                    });
-                    showResumeImage2Timer.setRepeats(false); // Only run once
-                    showResumeImage2Timer.start();
-                } 
-                else if (pauseMenuSelection == 1) { // Quit the game
-                    // button animation
-                    pauseMenuSelection = 2;
-                    pausePanel.repaint();
-
-                    Timer showQuitImageTimer = new Timer(200, new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            pauseMenuSelection = 1;
-                            pausePanel.repaint();
-
-                            Timer quitTimer = new Timer(100, new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    System.exit(0); // Quit the game
-                                }
-                            });
-                            quitTimer.setRepeats(false); // Only run once
-                            quitTimer.start();
-                        }
-                    });
-                    showQuitImageTimer.setRepeats(false); // Only run once
-                    showQuitImageTimer.start();
-                }
-                break;
-        }
-    }
-
-    private void resumeGame() {
-        isPaused = false;
-        timer.start();
-        audio.playAudio();
-        pausePanel.setVisible(false); // Hide the pause menu
-    }
-
-    private void showEndScreen() {
-        isPaused = true; // Prevent further game actions
-        endScreenPanel.setVisible(true); // Show the end screen
     }
 
     public static void main(String[] args) {

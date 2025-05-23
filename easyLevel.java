@@ -12,7 +12,7 @@ import javax.swing.*;
 
 
 
-public class easyLevel implements KeyListener {
+public class EasyLevel implements KeyListener {
 
 
     static Audio testaudio = new Audio("res/Audio/15-minutes-of-silence.wav");
@@ -76,10 +76,10 @@ public class easyLevel implements KeyListener {
     int scounter = 0;
 
     public static void main(String[] args) {
-        new easyLevel();
+        new EasyLevel();
     }
 
-    easyLevel() {
+    EasyLevel() {
         intro1 = new Image("res/easylevel/Intro1", 10);
         intro2 = new Image("res/easylevel/intro2", 8);
         intro3 = new Image("res/easylevel/intro3", 7);

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class main implements KeyListener {
+public class Main implements KeyListener {
 	
 
 	//load of images
@@ -68,11 +68,11 @@ public class main implements KeyListener {
 	boolean scrollpaused = false;
 	
 	public static void main(String[] args) {
-		new main();
+		new Main();
 	}
 	
 
-	main() {
+	Main() {
 
 		//frame
 		JFrame frame = new JFrame();
@@ -307,7 +307,7 @@ public class main implements KeyListener {
 		if(e.getKeyCode() == KeyEvent.VK_K) {
 			if (currentpanel.equals("easy")) {
 				mainpanel.setVisible(false);
-				new ratgame();
+				new RatGame();
 			}
 
 			if (currentpanel.equals("test")) {

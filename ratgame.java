@@ -12,11 +12,11 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.*;
-public class ratgame implements KeyListener{
+public class RatGame implements KeyListener{
 	
 	
 	public static void main(String[] args) {
-		new ratgame();
+		new RatGame();
 	}
 	
 	DrawPanel panel;
@@ -35,7 +35,7 @@ public class ratgame implements KeyListener{
 	boolean hit = false;
 	boolean miss = false;
 	Font font = new Font("Monospaced",50,50);
-	ratgame() {
+	RatGame() {
 		JFrame frame = new JFrame();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
