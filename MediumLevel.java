@@ -27,8 +27,8 @@ public class MediumLevel extends JFrame implements ActionListener, KeyListener{
 
     DrawingPanel panel;
     Timer timer;
-    Audio audio = new Audio("res/Audio/Carrier (Dreamcast) - File 1.wav");
-    int songLength = 10000 ;//109000; // song length in milliseconds
+    Audio audio = new Audio("res/Audio/firstSong.wav");
+    int songLength = 10000 ;
 
     int milliElapsed; // how much time has passed so far
     int numPerfects = 0;
@@ -70,7 +70,7 @@ public class MediumLevel extends JFrame implements ActionListener, KeyListener{
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
-        this.setTitle("Rhythm Game Prototype");
+        this.setTitle("Star of the Show");
         this.addKeyListener(this);
 
         panel = new DrawingPanel();
@@ -91,11 +91,11 @@ public class MediumLevel extends JFrame implements ActionListener, KeyListener{
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
             // receiveTime button
-            ReceiveTimeReader.loadTapBlocks("res/prototypeTapTimes.txt", "prototype", allReceivers), 
+            ReceiveTimeReader.loadTapBlocks("res/MediumLevelTxt/mediumTapTimes.txt", "medium", allReceivers), 
             // receiveTime spamTime numSpam button
-            ReceiveTimeReader.loadSpamBlocks("res/prototypeSpamTimes.txt", "prototype", allReceivers),
+            ReceiveTimeReader.loadSpamBlocks("res/MediumLevelTxt/mediumSpamTimes.txt", "medium", allReceivers),
             // receiveTime holdDuration button
-            ReceiveTimeReader.loadHoldBlocks("res/prototypeHoldTimes.txt", "prototype", allReceivers)
+            ReceiveTimeReader.loadHoldBlocks("res/MediumLevelTxt/mediumHoldTimes.txt", "medium", allReceivers)
         );
         aBlocks = ReceiveTimeReader.pull(allBlocks, "A");
         bBlocks = ReceiveTimeReader.pull(allBlocks, "B");
@@ -751,7 +751,7 @@ public class MediumLevel extends JFrame implements ActionListener, KeyListener{
     public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new Prototype();
+				new MediumLevel();
 			}
 		});
 	}
