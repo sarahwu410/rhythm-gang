@@ -338,9 +338,15 @@ public class ReceiveTimeReader {
         double myY = (int) (b.enterY + b.velocityY * myHeadTime);
         double myTailX = (int) (b.enterX + b.velocityX * myTailTime);
         double myTailY = (int) (b.enterY + b.velocityY * myTailTime);
+		System.out.println("Head: (" + myX + ", " + myY + ")");
+		System.out.println("Tail: (" + myTailX + ", " + myTailY + ")");
 
+		// Find the holdblock's dimensions
+		double height = Math.pow(Math.abs(myX - myTailX), 2) + Math.pow(Math.abs(myY - myTailY), 2);
+		height = Math.sqrt(height);
+		
 		// Print out what kind of image is required for the hold block
-		System.out.println("You need an image that is " + (b.width + Math.abs(myX - myTailX)) + "x" + (b.length + Math.abs(myY - myTailY)));
-		System.out.println("Draw your image from corner to corner based on what angle it's coming from.");
+		System.out.println("You need an image that is at least " + height + " pixels tall.");
+		System.out.println("Draw it head-up, tail-down. Width doesn't matter.");
 	}
 }

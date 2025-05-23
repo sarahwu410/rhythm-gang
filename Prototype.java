@@ -40,7 +40,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     ArrayList<Block> yBlocks;
     HashMap<String, Receiver> allReceivers = new HashMap<>();
     Set<Integer> heldKeys;
-    Image smiley, meh, mehMove;
+    Image smiley, meh, mehMove, shortRoll, longRoll;
 
     Image ratingSpriteSheet;
     WordPlayer rater;
@@ -84,6 +84,8 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
         smiley = loadImage("res/smilingCube.png");
         meh = loadImage("res/squareSpamBlock.png");
         mehMove = loadImage("res/squareSpamBlock (1).png");
+        shortRoll = loadImage("res/shortSquareHoldBlock.png");
+        longRoll = loadImage("res/longSquareHoldBlock.png");
 
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
@@ -113,6 +115,9 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     System.out.println("HoldBlock " + b.button + ": ");
                     ReceiveTimeReader.myHoldBlockImageSize((HoldBlock) b);
                     System.out.println();
+                    b.setMoveAnimation(new AnimationHorizontal(shortRoll, b.x, b.y, 0, 0, 2, 100, 500));
+                    ((HoldBlock) b).setHoldAnimation(new AnimationHorizontal(shortRoll, b.x, b.y, 200, 0, 2, 100, 500));
+                    b.setHitAnimation(new AnimationHorizontal(shortRoll, b.x, b.y, 300, 0, 6, 100, 500));
                 }
             } catch (Exception e) {
                 System.out.println("No block type.");
