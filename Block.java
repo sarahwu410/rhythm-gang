@@ -17,6 +17,7 @@ public abstract class Block implements KeyListener {
     int x, y, length, width;
     double enterX, enterY;
     double speed;
+    double angle;
     String button; // which button corrosponds to a particular block
     Receiver someReceiver;
     int enterTime;
@@ -33,6 +34,7 @@ public abstract class Block implements KeyListener {
     Animation movement, beenHit;
     Image moving, amHit;
     boolean hitPlaying;
+    boolean rotate;
 
     /**
      * constructor to set the unique coordinates, buttons, and receive time for evey block per level and button
@@ -54,6 +56,7 @@ public abstract class Block implements KeyListener {
         this.moving = null; // image
         this.amHit = null; // image
         this.hitPlaying = false;
+        this.rotate = true; // temporary
 
         // each level will have unique block coordinates for each receiver
         // assigns those coordinates here
@@ -222,7 +225,51 @@ public abstract class Block implements KeyListener {
 
         // Calculate velocity
         calculateVelocity(myReceiver);
+
+        // Calculate angle for the image
+        calculateAngle(myReceiver);
+        System.out.println("My angle is " + angle + ".");
 	}
+
+    /**
+     * This method assumes that the holdBlock image/animation is upright (head up, tail down)
+     * It finds the angle the image should be rotated to face the receiver
+     * @param aReceiver
+     */
+    public void calculateAngle(Receiver aReceiver) {
+        // IT'S GOING TO BE DIFFERENT DEPENDING ON THE DIRECTION
+        // MUST UTILIZE NEG. AND POS. VALUES TO DIFFERENTIATE
+        // Width and height of an angle
+        double width = this.x - aReceiver.x;
+        double height = this.y - aReceiver.y;
+
+        // Determine angle based on direction
+        if (width < 0) {
+            if (height < 0) { // neg. width and height
+                this.angle = 180 - Math.tan((width*-1)/(height*-1));
+            } else if (height > 0) { // neg. width and pos. height
+                this.angle = Math.tan((width*-1)/height);
+            } else { // neg. width and no height angle
+                this.angle = Math.PI/2;
+            }
+        } else if (width > 0) { 
+            if (height < 0) { // pos. width and neg. height
+                this.angle = 180 + Math.tan(width/(height*-1));
+            } else if (height > 0) { // pos. width and pos. height
+                this.angle = 360 - Math.tan(width/height);
+            } else { // pos. width and no height angle
+                this.angle = 2*Math.PI - Math.PI/2;
+            }
+        } else if (width == 0) {
+            if (height < 0) { // no width angle and neg. height
+                this.angle = Math.PI;
+            } else if (height > 0) { // no width angle and pos. height
+                this.angle = 0;
+            } else if (height == 0) System.out.println("You can't do that.");
+        }
+
+        Math.tan(height/width);
+    }
 
     /**
      * calculates the valocity of the block
