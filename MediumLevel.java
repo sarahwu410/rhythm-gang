@@ -91,11 +91,11 @@ public class MediumLevel extends JFrame implements ActionListener, KeyListener{
         // Create arraylist with the different types of Blocks read from a file
         allBlocks = ReceiveTimeReader.sortBlocks(
             // receiveTime button
-            ReceiveTimeReader.loadTapBlocks("res/MediumLevelTxt/mediumTapTimes.txt", "medium", allReceivers), 
+            ReceiveTimeReader.loadTapBlocks("res/mediumTapTimes.txt", "medium", allReceivers), 
             // receiveTime spamTime numSpam button
-            ReceiveTimeReader.loadSpamBlocks("res/MediumLevelTxt/mediumSpamTimes.txt", "medium", allReceivers),
+            ReceiveTimeReader.loadSpamBlocks("res/mediumSpamTimes.txt", "medium", allReceivers),
             // receiveTime holdDuration button
-            ReceiveTimeReader.loadHoldBlocks("res/MediumLevelTxt/mediumHoldTimes.txt", "medium", allReceivers)
+            ReceiveTimeReader.loadHoldBlocks("res/mediumHoldTimes.txt", "medium", allReceivers)
         );
         aBlocks = ReceiveTimeReader.pull(allBlocks, "A");
         bBlocks = ReceiveTimeReader.pull(allBlocks, "B");
