@@ -97,10 +97,12 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                 if (b.Blocktype.equals("TapBlock")) {
                     b.setMoveAnimation(new AnimationHorizontal(smiley, b.x, b.y, 0, 0, 2, 100, 100));
                     b.setHitAnimation(new AnimationHorizontal(smiley, b.x, b.y, 100, 0, 10, 100, 100));
+                    b.setRotation();
                 } else if (b.Blocktype.equals("SpamBlock")) {
                     b.setMoveImage(mehMove);
                     ((SpamBlock) b).setSpammingAnimation(new AnimationHorizontal(meh, b.x, b.y, 300, 0, 2, 100, 100));
                     b.setHitAnimation(new AnimationHorizontal(meh, b.x, b.y, 500, 0, 7, 100, 100));
+                    b.setRotation();
                 } else if (b.Blocktype.equals("HoldBlock")) {
                     System.out.println("HoldBlock " + b.button + ": ");
                     ReceiveTimeReader.myHoldBlockImageSize((HoldBlock) b);
@@ -108,6 +110,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     b.setMoveAnimation(new AnimationHorizontal(shortRoll, b.x, b.y, 0, 0, 2, 100, 500));
                     ((HoldBlock) b).setHoldAnimation(new AnimationHorizontal(shortRoll, b.x, b.y, 200, 0, 2, 100, 500));
                     b.setHitAnimation(new AnimationHorizontal(shortRoll, b.x, b.y, 300, 0, 6, 100, 500));
+                    b.setRotation();
                 }
             } catch (Exception e) {
                 System.out.println("No block type.");
@@ -215,10 +218,6 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
                     // draw the block
                     allBlocks.get(i).draw(g2, milliElapsed);
                 }
-
-                if (i == allBlocks.get(i).length - 1 && (allBlocks.get(i).received || allBlocks.get(i).missed)) { // If the last block has been received
-                    // This portion would be for the end of a song? probably not necessary, songs end on their own afterall
-                }
             }
 
             // paint rating
@@ -247,7 +246,10 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        heldKeys.add(e.getKeyCode());
+        if (! heldKeys.contains(e.getKeyCode())) {
+            heldKeys.add(e.getKeyCode());
+            System.out.println("Adding " + KeyEvent.getKeyText(e.getKeyCode()) + " to held keys.");
+        }
 
         // Handle end screen input
         if (EndPanel.endScreenPanel.isVisible()) {
@@ -303,6 +305,7 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     @Override
     public void keyReleased(KeyEvent e) {
         heldKeys.remove(e.getKeyCode());
+        System.out.println("Removing " + KeyEvent.getKeyText(e.getKeyCode()) + " from held keys.");
 
         // Deactivate the corresponding receiver
         switch (e.getKeyCode()) {
@@ -372,7 +375,28 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     public void handleHeldKeys(KeyEvent e) {
         if (heldKeys.contains(KeyEvent.VK_U)) {
             for (Block b: aBlocks) {
+<<<<<<< Updated upstream
                 if (heldKeysAction(e, b)) break;
+=======
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyPressed(e);
+                    //For hold blocks only
+                    try {
+                        if (((HoldBlock)b).isPressed) {
+                            rater.setRating(((HoldBlock) b).holdRate(), b);
+                        }
+                    } catch (Exception z) {
+                        // do nothing
+                    }
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(), b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                    }
+                    break;
+                }
+>>>>>>> Stashed changes
             }
         }
 
@@ -405,7 +429,29 @@ public class Prototype extends JFrame implements ActionListener, KeyListener{
     public void handleReleasedKeys(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_U) {
             for (Block b: aBlocks) {
+<<<<<<< Updated upstream
                 if (releaseKeysAction(e, b)) break;
+=======
+                System.out.println();
+                if (b.canReceive && !b.received && !b.missed && !b.missPassed) {
+                    // required to set the timeReceived attribute within the Block object itself before calling keyPressed
+                    b.setTimeReceived(milliElapsed);
+                    b.keyReleased(e);
+                    if (b.received || b.missed) {
+                        rater.setRating(b.rate(), b);
+                        System.out.println("RECEIVED: " + b.received + "; MISSED: " + b.missed + "; MISSPASSED: "+b.missPassed);
+                    }
+                    //For hold blocks only
+                    try {
+                        if (!((HoldBlock)b).beenRated) {
+                            b.beenRated = true;
+                        }
+                    } catch (Exception z) {
+                        System.out.println("Caught.");
+                    }
+                    break;
+                }
+>>>>>>> Stashed changes
             }
         }
 

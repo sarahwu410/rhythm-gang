@@ -46,6 +46,9 @@ public class SpamBlock extends Block {
         //g2.setFont(new Font("monospaced", Font.PLAIN, 50));
         //g2.drawString(String.valueOf(this.numSpam), this.x+40, this.y+60);
 
+        // Rotate the image if it can
+        if (rotate) g2.rotate(angle, this.x + (this.width/2), this.y + (this.length/2));
+
         if (this.spammed == true) {
             if (this.spamming != null) {
                 spamming.setX(this.x);
@@ -82,6 +85,9 @@ public class SpamBlock extends Block {
                 if (this.timeReceived + 100 < audioTime) hitPlaying = false;
             }
         }
+
+        // Un-rotate the graphics object
+        if (rotate) g2.rotate(-angle, this.x + this.width/2, this.y + (this.length/2));
 
         // Draw the amount of spams left
         g2.setPaint(Color.BLUE);

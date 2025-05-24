@@ -45,7 +45,8 @@ public class HoldBlock extends Block {
         g2.setPaint(Color.WHITE);
         g2.drawLine(this.x, this.y, this.tailX, this.tailY);
 
-        if (rotate) g2.rotate(angle, this.x + (this.width/2), this.y);
+        // Rotate the image if it can
+        if (rotate) g2.rotate(angle, this.x + (this.width/2), this.y + this.length/2);
 
         if (this.isPressed) {
             if (this.hold != null) {
@@ -75,7 +76,8 @@ public class HoldBlock extends Block {
             }
         }
 
-        if (rotate) g2.rotate(-angle, this.x + this.width/2, this.y);
+        // Un-rotate the graphics object
+        if (rotate) g2.rotate(-angle, this.x + this.width/2, this.y + this.length/2);
     }
 
     /**

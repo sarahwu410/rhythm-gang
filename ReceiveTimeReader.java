@@ -32,7 +32,7 @@ public class ReceiveTimeReader {
 
 		// Check if the file exists or quit
 		if (textFile.exists()) {
-			System.out.println("I already exist.");
+			// do nothing
 		} else {
 			System.out.println("Bruh.");
 			System.out.println("It ain't even there.");
@@ -46,7 +46,6 @@ public class ReceiveTimeReader {
 			
 			// first read in the total number of notes
 			while ((line = readFile.readLine()) != null) {
-				System.out.println(line);
 				try {
 					totalNotes++;
 				} catch (Exception e) {
@@ -113,7 +112,7 @@ public class ReceiveTimeReader {
 
 		// Check if the file exists or quit
 		if (textFile.exists()) {
-			System.out.println("I already exist.");
+			// do nothing
 		} else {
 			System.out.println("Bruh.");
 			System.out.println("It ain't even there.");
@@ -127,7 +126,6 @@ public class ReceiveTimeReader {
 			
 			// first read in the total number of notes
 			while ((line = readFile.readLine()) != null) {
-				System.out.println(line);
 				try {
 					totalNotes++;
 				} catch (Exception e) {
@@ -194,7 +192,7 @@ public class ReceiveTimeReader {
 
 		// Check if the file exists or quit
 		if (textFile.exists()) {
-			System.out.println("I already exist.");
+			// do nothing
 		} else {
 			System.out.println("Bruh.");
 			System.out.println("It ain't even there.");
@@ -208,7 +206,6 @@ public class ReceiveTimeReader {
 			
 			// first read in the total number of notes
 			while ((line = readFile.readLine()) != null) {
-				System.out.println(line);
 				try {
 					totalNotes++;
 				} catch (Exception e) {

@@ -56,7 +56,7 @@ public abstract class Block implements KeyListener {
         this.moving = null; // image
         this.amHit = null; // image
         this.hitPlaying = false;
-        this.rotate = true; // temporary
+        this.rotate = false;
 
         // each level will have unique block coordinates for each receiver
         // assigns those coordinates here
@@ -165,6 +165,7 @@ public abstract class Block implements KeyListener {
         this.enterX = this.x;
         this.enterY = this.y;
         calculateEnterTime(this.speed, this.receiveTime, this.enterX, this.enterY, this.someReceiver);
+        calculateVelocity(this.someReceiver);
     }
 
     /**
@@ -214,22 +215,23 @@ public abstract class Block implements KeyListener {
 		double distanceX, distanceY, distance;
 		
 		// Calculate the distance in X and Y components
-		distanceX = Math.abs(myReceiver.x - enterX);
-		distanceY = Math.abs(myReceiver.y - enterY);
+		distanceX = Math.abs((myReceiver.x + myReceiver.width) - (enterX + this.width));
+		distanceY = Math.abs((myReceiver.y + myReceiver.height) - (enterY + this.length));
 		
 		// Find the total distance
 		distance = Math.sqrt((Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
 		
 		// Find the enter time
 		this.enterTime = (int) (finalTime - (distance/speed));
-
-        // Calculate velocity
-        calculateVelocity(myReceiver);
-
-        // Calculate angle for the image
-        calculateAngle(myReceiver);
-        System.out.println("My angle is " + angle + ".");
 	}
+    
+    /**
+     * Allows the block to rotate in the direction of the receiver when drawn
+     */
+    public void setRotation() {
+        this.rotate = true;
+        this.calculateAngle(someReceiver);
+    }
 
     /**
      * This method assumes that the holdBlock image/animation is upright (head up, tail down)
@@ -237,26 +239,24 @@ public abstract class Block implements KeyListener {
      * @param aReceiver
      */
     public void calculateAngle(Receiver aReceiver) {
-        // IT'S GOING TO BE DIFFERENT DEPENDING ON THE DIRECTION
-        // MUST UTILIZE NEG. AND POS. VALUES TO DIFFERENTIATE
         // Width and height of an angle
-        double width = this.x - aReceiver.x;
-        double height = this.y - aReceiver.y;
+        double width = (this.x + this.width/2) - (aReceiver.x + aReceiver.width/2);
+        double height = (this.y + this.length/2) - (aReceiver.y + aReceiver.height/2);
 
         // Determine angle based on direction
         if (width < 0) {
             if (height < 0) { // neg. width and height
-                this.angle = 180 - Math.tan((width*-1)/(height*-1));
+                this.angle = Math.PI - Math.atan((width*-1)/(height*-1));
             } else if (height > 0) { // neg. width and pos. height
-                this.angle = Math.tan((width*-1)/height);
+                this.angle = Math.atan((width*-1)/height);
             } else { // neg. width and no height angle
                 this.angle = Math.PI/2;
             }
         } else if (width > 0) { 
             if (height < 0) { // pos. width and neg. height
-                this.angle = 180 + Math.tan(width/(height*-1));
+                this.angle = Math.PI + Math.atan(width/(height*-1));
             } else if (height > 0) { // pos. width and pos. height
-                this.angle = 360 - Math.tan(width/height);
+                this.angle = 2*Math.PI - Math.atan(width/height);
             } else { // pos. width and no height angle
                 this.angle = 2*Math.PI - Math.PI/2;
             }
@@ -267,8 +267,6 @@ public abstract class Block implements KeyListener {
                 this.angle = 0;
             } else if (height == 0) System.out.println("You can't do that.");
         }
-
-        Math.tan(height/width);
     }
 
     /**
